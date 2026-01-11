@@ -1,0 +1,8 @@
+{
+  "verifyOtp": "Verify OTP",
+  "enterOtp": "Enter the 6-digit code sent to your email",
+  "verifyButton": "Verify",
+  "invalidCode": "Invalid OTP",
+  "sentMessage": "OTP sent — check your inbox",
+  "resend": "Resend code"
+}

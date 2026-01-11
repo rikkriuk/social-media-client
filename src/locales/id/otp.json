@@ -1,0 +1,8 @@
+{
+  "verifyOtp": "Verifikasi OTP",
+  "enterOtp": "Masukkan kode 6 digit yang dikirim ke email Anda",
+  "verifyButton": "Verifikasi",
+  "invalidCode": "OTP tidak valid",
+  "sentMessage": "OTP terkirim — periksa kotak masuk Anda",
+  "resend": "Kirim ulang kode"
+}

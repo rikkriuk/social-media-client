@@ -1,0 +1,8 @@
+{
+  "verifyOtp": "Pastikeun OTP",
+  "enterOtp": "Lebetkeun kode 6-digit anu dikintunkeun ka email anjeun",
+  "verifyButton": "Pastikeun",
+  "invalidCode": "OTP henteu valid",
+  "sentMessage": "OTP dikintun — parios kotak surat anjeun",
+  "resend": "Kirimkeun deui kode"
+}

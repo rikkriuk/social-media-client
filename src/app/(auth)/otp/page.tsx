@@ -6,6 +6,7 @@ import { useTranslationCustom } from '@/i18n/client';
 import useLanguage from '@/zustand/useLanguage';
 import { useState } from 'react';
 import OtpInputs from '@/components/OtpInputs';
+import WebSample from '@/components/ui/web-sample';
 
 export default function OtpPage() {
   const { lng } = useLanguage();
@@ -36,21 +37,24 @@ export default function OtpPage() {
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg">
-            <span className="text-white text-3xl">S</span>
-          </div>
-          <h1 className="text-gray-900 dark:text-white text-3xl mb-2">{t('verifyOtp')}</h1>
-          <p className="text-gray-500">{t('enterOtp')}</p>
-        </div>
+        <WebSample
+          title={t("verifyOtp")}
+          description={t("enterOtp")}
+        />
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="code">{t('enterOtp')}</Label>
+              <Label 
+                htmlFor="code">{t('enterOtp')}
+              </Label>
 
               <div className="mt-2">
-                <OtpInputs length={6} value={code} onChange={(v) => setCode(v)} />
+                <OtpInputs 
+                  length={6} 
+                  value={code} 
+                  onChange={(v) => setCode(v)} 
+                />
               </div>
             </div>
 
@@ -58,8 +62,20 @@ export default function OtpPage() {
               {loading ? '...' : t('verifyButton')}
             </Button>
 
-            {msg && <p className="text-sm text-green-600 mt-2">{msg}</p>}
+            {
+              msg && 
+                <p className="text-sm text-green-600 mt-2">{msg}</p>
+            }
           </form>
+
+          <p className="text-center mt-4">
+            <button 
+              onClick={() => window.history.back()} 
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              {t('backToLogin')}
+            </button>
+          </p>
         </div>
       </div>
     </section>

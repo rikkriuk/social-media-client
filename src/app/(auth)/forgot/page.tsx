@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import WebSample from '@/components/ui/web-sample';
 import { useTranslationCustom } from '@/i18n/client';
 import useLanguage from '@/zustand/useLanguage';
 import { useState } from 'react';
@@ -36,17 +37,10 @@ export default function ForgotPage() {
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg">
-            <span className="text-white text-3xl">S</span>
-          </div>
-          <h1 className="text-gray-900 dark:text-white text-3xl mb-2">{t('resetPassword')}</h1>
-          <p 
-            className="text-gray-500 text-center"
-          >
-              {t('enterEmail')}
-          </p>
-        </div>
+        <WebSample
+          title={t("resetPassword")}
+          description={t("enterEmail")}
+        />
 
         <div 
           className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-8"

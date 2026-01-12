@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import Auth from '@/components/Auth';
 import { webRequest } from '@/helpers/api';
-import Toast from '@/components/ui/toast';
 import useLanguage from '@/zustand/useLanguage';
 import { useTranslationCustom } from '@/i18n/client';
 import { useRouter } from "next/navigation";
+import { ApiError } from '@/types/api';
 
 const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
   const { lng } = useLanguage();
   const { t } = useTranslationCustom(lng, "auth");
@@ -28,11 +28,14 @@ const RegisterPage = () => {
         password: data.password
       });
 
-      setIsSuccess(true);
       setToLocalStorage(response.data)
 
+      toast.success(t("register.successRegister"));
       router.push('/otp');
-    } catch (err) {
+    } catch (err: unknown) {
+      const error = err as ApiError;
+      
+      toast.error(error.data?.message);
       console.error('Register error:', err);
     } finally {
       setLoading(false);
@@ -53,14 +56,6 @@ const RegisterPage = () => {
         onSubmit={handleSubmit}
         t={t}
       />
-
-      {isSuccess && (
-        <Toast 
-          status="success"
-          message={t("register.successRegister")}
-          duration={3000}
-        />
-      )}
     </section>
   )
 }

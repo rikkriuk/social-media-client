@@ -3,24 +3,36 @@
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { FormItem } from "./ui/form-item";
+import { PasswordInput } from "./ui/password-input";
 import { useRouter } from "next/navigation";
 import { AuthProps, initialAuth } from "@/types/auth";
 import { useState } from "react";
 import { cn } from "./ui/utils";
+import WebSample from "./ui/web-sample";
+import { ValidationResult } from "@/helpers/validation";
 
 const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
    const router = useRouter()
 
    const [data, setData] = useState(initialAuth);
    const [isSamePassword, setIsSamePassword] = useState(true);
+   const [_isPasswordValid, setIsPasswordValid] = useState(false);
 
    const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { id, value } = e.target;
-      setData({ ...data, [id]: value });
+      const newData = { ...data, [id]: value };
+      setData(newData);
 
-      if (id === "confirmPassword") {
-         setIsSamePassword(value === data.password);
+      if (id === "password") {
+         setIsSamePassword(newData.confirmPassword === "" || value === newData.confirmPassword);
+      } else if (id === "confirmPassword") {
+         setIsSamePassword(value === newData.password);
       }
+   }
+
+   const getConfirmPasswordError = () => {
+      if (data.confirmPassword === "" || isSamePassword) return undefined;
+      return t('register.passwordNotMatch');
    }
 
    const handleSubmit = () => {
@@ -35,21 +47,21 @@ const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
       }
    }
 
-   const _renderLogo = () => {
-      return (
-         <div className="flex flex-col items-center mb-8">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg">
-               <span className="text-white text-3xl">N</span>
-            </div>
-            <h1 className="text-gray-900 dark:text-white text-3xl mb-2">Ngahiji</h1>
-            <p className="text-gray-500">{t('description')}</p>
-         </div>
-      )
+   const _renderButtonText = () => {
+      const buttonText = isRegister ? 
+         t('register.registerButton') : 
+         t('login.loginButton')
+      
+      const additional = loading ? "..." : ""
+      return buttonText + additional;
    }
    
    return (
       <div className="w-full max-w-md">
-         {_renderLogo()}
+         <WebSample
+          title="Ngahiji"
+          description={t("description")}
+        />
 
          {/* Form Card */}
          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-8">
@@ -92,13 +104,18 @@ const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
                name="password"
                required
             >
-               <Input
+               <PasswordInput
                   id="password"
-                  type="password"
                   value={data.password}
                   placeholder={t(isRegister ? 'register.passwordPlaceholder' : 'login.passwordPlaceholder')}
                   className="mt-1 rounded-xl"
                   onChange={handleDataChange}
+                  showValidation={isRegister}
+                  validationMessages={{
+                     minLength: t('register.passwordMinLength'),
+                     specialChar: t('register.passwordSpecialChar')
+                  }}
+                  onValidationChange={(result: ValidationResult) => setIsPasswordValid(result.isValid)}
                />
             </FormItem>
 
@@ -108,14 +125,14 @@ const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
                   name="confirmPassword"
                   required
                >
-                  <Input
+                  <PasswordInput
                      id="confirmPassword"
-                     type="password"
                      inputType={isSamePassword ? "normal" : "danger"}
                      value={data.confirmPassword}
                      placeholder={t('register.confirmPasswordPlaceholder')}
                      className="mt-1 rounded-xl"
                      onChange={handleDataChange}
+                     errorMessage={getConfirmPasswordError()}
                   />
                </FormItem>
             )} 
@@ -134,7 +151,7 @@ const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
                   loading && "opacity-70 cursor-not-allowed"
                )}
             >
-               {isRegister ? t('register.registerButton') : t('login.loginButton')}
+               {_renderButtonText()}
             </Button>
 
             <div className="relative">

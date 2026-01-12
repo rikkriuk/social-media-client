@@ -36,12 +36,16 @@ export default function ForgotPage() {
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+        <div className="flex flex-col items-center mb-8">
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg">
             <span className="text-white text-3xl">S</span>
           </div>
           <h1 className="text-gray-900 dark:text-white text-3xl mb-2">{t('resetPassword')}</h1>
-          <p className="text-gray-500">{t('otpSent')}</p>
+          <p 
+            className="text-gray-500 text-center"
+          >
+              {t('enterEmail')}
+          </p>
         </div>
 
         <div 
@@ -62,7 +66,7 @@ export default function ForgotPage() {
                 type="email" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                placeholder="name@example.com" 
+                placeholder={t('emailPlaceholder')} 
                 className="mt-1 rounded-xl" 
               />
             </div>

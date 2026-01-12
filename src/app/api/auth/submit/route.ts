@@ -1,4 +1,5 @@
 import { httpRequest } from '@/helpers/api';
+import { ApiError } from '@/types/api';
 import { stat } from 'fs';
 import { NextResponse } from 'next/server';
 
@@ -59,11 +60,12 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ ok: false, message: 'Unknown action' }, { status: 400 });
-  } catch (err: any) {
-    console.error('Auth submit error:', err);
+  } catch (err: unknown) {
+    const error = err as ApiError;
+    console.error('Auth submit error:', error);
     return NextResponse.json(
-      { ok: false, message: err?.data?.message || 'Bad request' },
-      { status: err?.status || 400 }
+      { ok: false, message: error?.data?.message || 'Bad request' },
+      { status: error?.status || 400 }
     );
   }
 }

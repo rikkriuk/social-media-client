@@ -1,16 +1,31 @@
 "use client";
 
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { Button } from "./ui/button";
+import { FormItem } from "./ui/form-item";
 import { useRouter } from "next/navigation";
-import useLanguage from "@/zustand/useLanguage";
-import { useTranslationCustom } from "@/i18n/client";
+import { AuthProps, initialAuth } from "@/types/auth";
+import { useState } from "react";
+import { cn } from "./ui/utils";
 
-const Auth = ({ isRegister, onLogin }: { isRegister: boolean; onLogin: () => void }) => {
-   const { lng } = useLanguage();
-   const { t } = useTranslationCustom(lng, "auth");
+const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
    const router = useRouter()
+
+   const [data, setData] = useState(initialAuth);
+   const [isSamePassword, setIsSamePassword] = useState(true);
+
+   const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { id, value } = e.target;
+      setData({ ...data, [id]: value });
+
+      if (id === "confirmPassword") {
+         setIsSamePassword(value === data.password);
+      }
+   }
+
+   const handleSubmit = () => {
+      onSubmit(data);
+   }
 
    const navigateAuth = () => {
       if (isRegister) {
@@ -40,47 +55,69 @@ const Auth = ({ isRegister, onLogin }: { isRegister: boolean; onLogin: () => voi
          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-8">
             <div className="space-y-4">
             {isRegister && (
-               <div>
-                  <Label htmlFor="username">{t('register.username')}</Label>
+               <FormItem
+                  label={t('register.username')}
+                  name="username"
+                  required
+               >
                   <Input
+                     required
                      id="username"
                      type="text"
+                     value={data.username}
                      placeholder={t('register.usernamePlaceholder')}
                      className="mt-1 rounded-xl"
+                     onChange={handleDataChange}
                   />
-               </div>
+               </FormItem>
             )} 
 
-            <div>
-               <Label htmlFor="email">{t(isRegister ? 'register.email' : 'login.email')}</Label>
+            <FormItem
+               label={t(isRegister ? 'register.email' : 'login.email')}
+               name="email"
+               required
+               type="email"
+            >
                <Input
-                  id="email"
                   type="email"
+                  value={data.email}
                   placeholder={t(isRegister ? 'register.emailPlaceholder' : 'login.emailPlaceholder')}
                   className="mt-1 rounded-xl"
+                  onChange={handleDataChange}
                />
-            </div>
+            </FormItem>
 
-            <div>
-               <Label htmlFor="password">{t(isRegister ? 'register.password' : 'login.password')}</Label>
+            <FormItem
+               label={t(isRegister ? 'register.password' : 'login.password')}
+               name="password"
+               required
+            >
                <Input
                   id="password"
                   type="password"
+                  value={data.password}
                   placeholder={t(isRegister ? 'register.passwordPlaceholder' : 'login.passwordPlaceholder')}
                   className="mt-1 rounded-xl"
+                  onChange={handleDataChange}
                />
-            </div>
+            </FormItem>
 
             {isRegister && (
-               <div>
-                  <Label htmlFor="confirm">{t('register.confirmPassword')}</Label>
+               <FormItem
+                  label={t('register.confirmPassword')}
+                  name="confirmPassword"
+                  required
+               >
                   <Input
-                     id="confirm"
+                     id="confirmPassword"
                      type="password"
+                     inputType={isSamePassword ? "normal" : "danger"}
+                     value={data.confirmPassword}
                      placeholder={t('register.confirmPasswordPlaceholder')}
                      className="mt-1 rounded-xl"
+                     onChange={handleDataChange}
                   />
-               </div>
+               </FormItem>
             )} 
 
             {!isRegister && (
@@ -92,8 +129,10 @@ const Auth = ({ isRegister, onLogin }: { isRegister: boolean; onLogin: () => voi
             )}
 
             <Button
-               onClick={onLogin}
-               className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+               onClick={handleSubmit}
+               className={cn("w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white", 
+                  loading && "opacity-70 cursor-not-allowed"
+               )}
             >
                {isRegister ? t('register.registerButton') : t('login.loginButton')}
             </Button>

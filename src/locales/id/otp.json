@@ -4,5 +4,6 @@
   "verifyButton": "Verifikasi",
   "invalidCode": "OTP tidak valid",
   "sentMessage": "OTP terkirim — periksa kotak masuk Anda",
-  "resend": "Kirim ulang kode"
+  "resend": "Kirim ulang kode",
+  "backToLogin": "Kembali"
 }

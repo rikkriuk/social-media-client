@@ -4,5 +4,6 @@
   "verifyButton": "Verify",
   "invalidCode": "Invalid OTP",
   "sentMessage": "OTP sent — check your inbox",
-  "resend": "Resend code"
+  "resend": "Resend code",
+  "backToLogin": "Back"
 }

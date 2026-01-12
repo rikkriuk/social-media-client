@@ -4,5 +4,6 @@
   "verifyButton": "Pastikeun",
   "invalidCode": "OTP henteu valid",
   "sentMessage": "OTP dikintun — parios kotak surat anjeun",
-  "resend": "Kirimkeun deui kode"
+  "resend": "Kirimkeun deui kode",
+  "backToLogin": "Balik"
 }

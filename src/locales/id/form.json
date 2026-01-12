@@ -1,0 +1,12 @@
+{
+  "required": "Field ini wajib diisi",
+  "invalidFormat": "Format tidak valid",
+  "invalid": "Nilai tidak valid",
+  "minLength": "Minimal {{min}} karakter",
+  "maxLength": "Maksimal {{max}} karakter",
+  "email": "Masukkan alamat email yang valid",
+  "phone": "Masukkan nomor telepon yang valid",
+  "url": "Masukkan URL yang valid",
+  "alphanumeric": "Hanya boleh huruf dan angka",
+  "numeric": "Hanya boleh angka"
+}

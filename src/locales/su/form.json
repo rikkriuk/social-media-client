@@ -1,0 +1,12 @@
+{
+  "required": "Kolom ieu wajib dieusian",
+  "invalidFormat": "Format teu valid",
+  "invalid": "Nilai teu valid",
+  "minLength": "Minimal {{min}} karakter",
+  "maxLength": "Maksimal {{max}} karakter",
+  "email": "Asupkeun alamat email anu leres",
+  "phone": "Asupkeun nomer telepon anu leres",
+  "url": "Asupkeun URL anu leres",
+  "alphanumeric": "Ngan ukur hurup sareng angka",
+  "numeric": "Ngan ukur angka"
+}

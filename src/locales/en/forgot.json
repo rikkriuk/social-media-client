@@ -1,0 +1,9 @@
+{
+   "resetPassword": "Reset Password",
+   "enterEmail": "Enter your email address to reset your password.",
+   "emailPlaceholder": "name@gmail.com",
+   "backToLogin": "Back to Login",
+   "sendOtp": "Send OTP",
+   "otpSent": "OTP has been sent to your email.",
+   "email": "Email"
+}

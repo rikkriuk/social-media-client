@@ -1,0 +1,9 @@
+{
+   "resetPassword": "Atur Ulang Kata Sandi",
+   "enterEmail": "Masukkan alamat email Anda untuk mengatur ulang kata sandi Anda.",
+   "emailPlaceholder": "nama@gmail.com",
+   "backToLogin": "Kembali ke Masuk",
+   "sendOtp": "Kirim OTP",
+   "otpSent": "OTP telah dikirim ke email Anda.",
+   "email": "Email"
+}

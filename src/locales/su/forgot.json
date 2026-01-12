@@ -1,0 +1,9 @@
+{
+   "forgotPassword": "Hilapkeun Sandi",
+   "enterEmail": "Lebetkeun alamat email anjeun pikeun ngatur ulang kecap akses anjeun.",
+   "emailPlaceholder": "nami@gmail.com",
+   "backToLogin": "Balik ka Login",
+   "sendOtp": "Kirim OTP",
+   "otpSent": "OTP parantos dikirim ka email anjeun.",
+   "email": "Email"
+}

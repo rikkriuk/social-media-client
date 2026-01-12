@@ -3,6 +3,8 @@
 import * as React from "react";
 import { cn } from "./utils";
 import { Label } from "./label";
+import { useTranslationCustom } from "@/i18n/client";
+import useLanguage from "@/zustand/useLanguage";
 
 // Built-in patterns
 const PATTERNS = {
@@ -56,8 +58,17 @@ const getPattern = (pattern: RegExp | PatternType): RegExp => {
   return pattern;
 };
 
-// Default error messages for pattern types
-const getPatternErrorMessage = (type: PatternType, label: string): string => {
+// Default error message keys for pattern types
+const PATTERN_ERROR_KEYS: Record<PatternType, string> = {
+  email: "email",
+  phone: "phone",
+  url: "url",
+  alphanumeric: "alphanumeric",
+  numeric: "numeric",
+};
+
+// Fallback messages (English)
+const getFallbackMessage = (type: PatternType, label: string): string => {
   const messages: Record<PatternType, string> = {
     email: `Please enter a valid email address`,
     phone: `Please enter a valid phone number`,
@@ -79,15 +90,37 @@ const FormItem = ({
   required,
   type,
 }: FormItemProps) => {
-  const [internalError, setInternalError] = React.useState<string | null>(null);
+  const { lng } = useLanguage();
+  const { t } = useTranslationCustom(lng, "form");
 
-  const displayError = externalError || internalError;
+  const [internalError, setInternalError] = React.useState<string | null>(null);
+  const [hasTyped, setHasTyped] = React.useState(false);
+
+  const displayError = externalError || (hasTyped ? internalError : null);
+
+  const getTranslatedMessage = React.useCallback(
+    (key: string, fallback: string): string => {
+      const translated = t(key);
+      return translated !== key ? translated : fallback;
+    },
+    [t]
+  );
+
+  const getPatternErrorMessage = React.useCallback(
+    (patternType: PatternType, fieldLabel: string): string => {
+      const key = PATTERN_ERROR_KEYS[patternType];
+      const fallback = getFallbackMessage(patternType, fieldLabel);
+      return getTranslatedMessage(key, fallback);
+    },
+    [getTranslatedMessage]
+  );
 
   const allRules = React.useMemo(() => {
     const combinedRules: ValidationRule[] = [];
 
     if (required) {
-      combinedRules.push({ required: true, message: `${label || name} is required` });
+      const requiredMsg = getTranslatedMessage("required", `${label || name} is required`);
+      combinedRules.push({ required: true, message: requiredMsg });
     }
 
     if (type && PATTERNS[type]) {
@@ -100,13 +133,13 @@ const FormItem = ({
     combinedRules.push(...rules);
 
     return combinedRules;
-  }, [required, type, rules, label, name]);
+  }, [required, type, rules, label, name, getTranslatedMessage, getPatternErrorMessage]);
 
   const validateField = React.useCallback(
     (value: string): string | null => {
       for (const rule of allRules) {
         if (rule.required && (!value || value.trim() === "")) {
-          return rule.message || `${label || name} is required`;
+          return rule.message || getTranslatedMessage("required", `${label || name} is required`);
         }
 
         if (!value) continue;
@@ -117,25 +150,25 @@ const FormItem = ({
             if (typeof rule.pattern === "string") {
               return rule.message || getPatternErrorMessage(rule.pattern, label || name);
             }
-            return rule.message || `${label || name} format is invalid`;
+            return rule.message || getTranslatedMessage("invalidFormat", `${label || name} format is invalid`);
           }
         }
 
         if (rule.min !== undefined && value.length < rule.min) {
-          return rule.message || `${label || name} must be at least ${rule.min} characters`;
+          return rule.message || getTranslatedMessage("minLength", `${label || name} must be at least ${rule.min} characters`);
         }
 
         if (rule.max !== undefined && value.length > rule.max) {
-          return rule.message || `${label || name} must be at most ${rule.max} characters`;
+          return rule.message || getTranslatedMessage("maxLength", `${label || name} must be at most ${rule.max} characters`);
         }
 
         if (rule.validator && !rule.validator(value)) {
-          return rule.message || `${label || name} is invalid`;
+          return rule.message || getTranslatedMessage("invalid", `${label || name} is invalid`);
         }
       }
       return null;
     },
-    [allRules, label, name]
+    [allRules, label, name, getTranslatedMessage, getPatternErrorMessage]
   );
 
   const handleValidation = React.useCallback(
@@ -152,10 +185,14 @@ const FormItem = ({
     name: name,
     "aria-invalid": !!displayError,
     "aria-describedby": displayError ? `${name}-error` : undefined,
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
-      handleValidation(e.target.value);
-      const childOnBlur = children.props.onBlur as ((e: React.FocusEvent<HTMLInputElement>) => void) | undefined;
-      childOnBlur?.(e);
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      if (!hasTyped && value.length > 0) {
+        setHasTyped(true);
+      }
+      handleValidation(value);
+      const childOnChange = children.props.onChange as ((e: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+      childOnChange?.(e);
     },
     className: cn(
       children.props.className,
@@ -187,7 +224,7 @@ const FormItem = ({
         {displayError && (
           <p
             id={`${name}-error`}
-            className="text-red-500 text-sm mt-1 animate-in fade-in slide-in-from-top-1 duration-200"
+            className="text-red-500 text-xs mt-1 animate-in fade-in slide-in-from-top-1 duration-200"
           >
             {displayError}
           </p>

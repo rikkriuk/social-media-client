@@ -1,3 +1,5 @@
+import { httpRequest } from '@/helpers/api';
+import { stat } from 'fs';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -7,12 +9,16 @@ export async function POST(req: Request) {
 
     if (type === 'forgot') {
       const { email } = body;
+      // TODO: Hit backend API untuk kirim OTP
+      // const response = await httpRequest.post('/auth/forgot-password', { email });
       console.log('Send OTP to', email);
       return NextResponse.json({ ok: true, message: 'OTP sent — check your inbox' });
     }
 
     if (type === 'otp') {
       const { code } = body;
+      // TODO: Hit backend API untuk verify OTP
+      // const response = await httpRequest.post('/auth/verify-otp', { code });
       if (code === '123456') {
         return NextResponse.json({ ok: true, message: 'OTP verified' });
       }
@@ -20,23 +26,44 @@ export async function POST(req: Request) {
     }
 
     if (type === 'login') {
-      const { email, password } = body;
-      if (email === 'test@example.com' && password === 'password') {
-        return NextResponse.json({ ok: true, message: 'Logged in' });
+      const { username, email, password } = body;
+      if (username && email && password) {
+        const response = await httpRequest.post('/auth/signin', {
+          username,
+          email,
+          password
+        });
+        console.log('Logged in user:', response.data);
+        return NextResponse.json({ ok: true, message: 'Logged in', data: response.data });
       }
       return NextResponse.json({ ok: false, message: 'Invalid credentials' }, { status: 401 });
     }
 
-    if (type === 'register') {
-      const { fullname, email, password, confirm } = body;
-      if (email && password && password === confirm) {
-        return NextResponse.json({ ok: true, message: 'Registered' });
+    if (type === "register") {
+      const { username, email, password } = body;
+      if (!username || !email || !password) {
+        return NextResponse.json({ ok: false, message: 'Invalid registration data' }, { status: 400 });
       }
-      return NextResponse.json({ ok: false, message: 'Invalid registration data' }, { status: 400 });
+
+      const response = await httpRequest.post('/auth/signup', {
+        username,
+        email,
+        password
+      });
+
+      return NextResponse.json({ 
+        ok: true, 
+        status: response.status, 
+        data: response.data 
+      });
     }
 
     return NextResponse.json({ ok: false, message: 'Unknown action' }, { status: 400 });
-  } catch (err) {
-    return NextResponse.json({ ok: false, message: 'Bad request' }, { status: 400 });
+  } catch (err: any) {
+    console.error('Auth submit error:', err);
+    return NextResponse.json(
+      { ok: false, message: err?.data?.message || 'Bad request' },
+      { status: err?.status || 400 }
+    );
   }
 }

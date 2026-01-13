@@ -25,17 +25,18 @@ export async function POST(req: Request) {
     }
 
     if (type === "login") {
-      const { username, email, password } = body;
-      if (username && email && password) {
-        const response = await httpRequest.post("/auth/signin", {
-          username,
-          email,
+      const { identifier, password } = body;
+
+      if (identifier && password) {
+        const response = await httpRequest.post("/auth/login", {
+          identifierType: "Email",
+          identifier,
           password
         });
-        console.log("Logged in user:", response.data);
-        return NextResponse.json({ ok: true, message: "Logged in", data: response.data });
+
+        console.log(response.data)
+        return NextResponse.json(response.data);
       }
-      return NextResponse.json({ ok: false, message: "Invalid credentials" }, { status: 401 });
     }
 
     if (type === "register") {

@@ -35,7 +35,21 @@ const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
       return t('register.passwordNotMatch');
    }
 
+   const isFormValid = () => {
+      if (loading) return false;
+      if (isRegister) {
+         return data.username.trim() !== "" &&
+            data.email.trim() !== "" &&
+            data.password !== "" &&
+            _isPasswordValid &&
+            data.confirmPassword !== "" &&
+            isSamePassword;
+      }
+      return data.email.trim() !== "" && data.password !== "";
+   }
+
    const handleSubmit = () => {
+      if (!isFormValid()) return;
       onSubmit(data);
    }
 
@@ -147,8 +161,9 @@ const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
 
             <Button
                onClick={handleSubmit}
+               disabled={!isFormValid()}
                className={cn("w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white", 
-                  loading && "opacity-70 cursor-not-allowed"
+                  (loading || !isFormValid()) && "opacity-70 cursor-not-allowed"
                )}
             >
                {_renderButtonText()}

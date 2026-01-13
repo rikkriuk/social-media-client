@@ -34,7 +34,6 @@ export async function POST(req: Request) {
           password
         });
 
-        console.log(response.data)
         return NextResponse.json(response.data);
       }
     }

@@ -28,9 +28,14 @@ export default function OtpPage() {
       code,
     }));
 
-    // localStorage.removeItem("otp");
+    clearLocalStorage();
   }, [])
 
+  const clearLocalStorage = () => {
+    ["otp", "userId"].forEach((field) => {
+      localStorage.removeItem(field);
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,10 +48,12 @@ export default function OtpPage() {
       });
 
       toast.success(t("otpVerified"));
+      clearLocalStorage();
+
       window.location.href = "/login";
     } catch (err: unknown) {
       const error = err as ApiError;
-      
+
       toast.error(error.data?.message || t("invalidCode"));
       console.error("OTP verify error:", err);
     } finally {

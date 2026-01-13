@@ -1,18 +1,21 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { useTranslationCustom } from '@/i18n/client';
-import useLanguage from '@/zustand/useLanguage';
-import { useEffect, useState } from 'react';
-import OtpInputs from '@/components/OtpInputs';
-import WebSample from '@/components/ui/web-sample';
-import { initialOtp } from '@/types/auth';
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { useTranslationCustom } from "@/i18n/client";
+import useLanguage from "@/zustand/useLanguage";
+import { useEffect, useState } from "react";
+import OtpInputs from "@/components/OtpInputs";
+import WebSample from "@/components/ui/web-sample";
+import { initialOtp } from "@/types/auth";
+import { toast } from "sonner";
+import { ApiError } from "@/types/api";
+import { webRequest } from "@/helpers/api";
 
 export default function OtpPage() {
   const { lng } = useLanguage();
-  const { t } = useTranslationCustom(lng, 'otp');
-  const [msg, setMsg] = useState<string | null>(null);
+  const { t } = useTranslationCustom(lng, "otp");
+
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(initialOtp)
 
@@ -32,17 +35,20 @@ export default function OtpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMsg(null);
+
     try {
-      const res = await fetch('/api/auth/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'otp', data }),
+      await webRequest.post("/auth/submit", {
+        type: "otp",
+        data,
       });
 
-      setMsg(data.message || 'OK');
-    } catch (err) {
-      setMsg(t('invalidCode'));
+      toast.success(t("otpVerified"));
+      window.location.href = "/login";
+    } catch (err: unknown) {
+      const error = err as ApiError;
+      
+      toast.error(error.data?.message || t("invalidCode"));
+      console.error("OTP verify error:", err);
     } finally {
       setLoading(false);
     }
@@ -60,7 +66,7 @@ export default function OtpPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label 
-                htmlFor="code">{t('enterOtp')}
+                htmlFor="code">{t("enterOtp")}
               </Label>
 
               <div className="mt-2">
@@ -76,7 +82,7 @@ export default function OtpPage() {
             </div>
 
             <Button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white" disabled={loading || data.code.length !== 6}>
-              {loading ? t('verifyButton') + '...' : t('verifyButton')}
+              {loading ? t("verifyButton") + "..." : t("verifyButton")}
             </Button>
           </form>
 
@@ -85,7 +91,7 @@ export default function OtpPage() {
               onClick={() => window.history.back()} 
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
-              {t('backToLogin')}
+              {t("backToLogin")}
             </button>
           </p>
         </div>

@@ -1,8 +1,13 @@
 export const initialAuth: Record<string, string> = {
-   username: "testuser",
-   email: "testuser@gmail.com",
-   password: "test",
-   confirmPassword: "test",
+   username: "testuser12",
+   email: "testuser12@gmail.com",
+   password: "test123!",
+   confirmPassword: "test123!",
+}
+
+export const initialOtp: Record<string, string> = {
+   userId: "",
+   code: "",
 }
 
 export type AuthProps = {

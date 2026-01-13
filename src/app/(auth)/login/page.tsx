@@ -4,14 +4,16 @@ import { useState } from 'react';
 import Auth from '@/components/Auth';
 import { useTranslationCustom } from '@/i18n/client';
 import useLanguage from '@/zustand/useLanguage';
-import { initialAuth } from '@/types/auth';
 import { webRequest } from '@/helpers/api';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const { lng } = useLanguage();
   const { t } = useTranslationCustom(lng, "auth");
 
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (data: Record<string, string>) => {
     setLoading(true);
@@ -24,11 +26,15 @@ export default function LoginPage() {
         password
       };
 
-      const response = webRequest.post("/auth/submit", {
+      const response = await webRequest.post("/auth/submit", {
         type: "login",
         ...body
       })
 
+      localStorage.setItem("token", response.data.token);
+
+      toast.message(t("login.successLogin"));
+      router.push("/");
     } catch (err) {
     } finally {
       setLoading(false);

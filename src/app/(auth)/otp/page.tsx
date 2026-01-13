@@ -4,16 +4,30 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useTranslationCustom } from '@/i18n/client';
 import useLanguage from '@/zustand/useLanguage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OtpInputs from '@/components/OtpInputs';
 import WebSample from '@/components/ui/web-sample';
+import { initialOtp } from '@/types/auth';
 
 export default function OtpPage() {
   const { lng } = useLanguage();
   const { t } = useTranslationCustom(lng, 'otp');
-  const [code, setCode] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(initialOtp)
+
+  useEffect(() => {
+    const code = localStorage.getItem("otp") || "";
+    const userId = localStorage.getItem("userId") || "";
+    setData((prev) => ({
+      ...prev,
+      userId,
+      code,
+    }));
+
+    // localStorage.removeItem("otp");
+  }, [])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +37,9 @@ export default function OtpPage() {
       const res = await fetch('/api/auth/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'otp', code }),
+        body: JSON.stringify({ type: 'otp', data }),
       });
-      const data = await res.json();
+
       setMsg(data.message || 'OK');
     } catch (err) {
       setMsg(t('invalidCode'));
@@ -52,20 +66,18 @@ export default function OtpPage() {
               <div className="mt-2">
                 <OtpInputs 
                   length={6} 
-                  value={code} 
-                  onChange={(v) => setCode(v)} 
+                  value={data.code} 
+                  onChange={(v) => setData((prev) => ({
+                    ...prev,
+                    code: v
+                  }))} 
                 />
               </div>
             </div>
 
-            <Button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white" disabled={loading || code.length !== 6}>
-              {loading ? '...' : t('verifyButton')}
+            <Button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white" disabled={loading || data.code.length !== 6}>
+              {loading ? t('verifyButton') + '...' : t('verifyButton')}
             </Button>
-
-            {
-              msg && 
-                <p className="text-sm text-green-600 mt-2">{msg}</p>
-            }
           </form>
 
           <p className="text-center mt-4">

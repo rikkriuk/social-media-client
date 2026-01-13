@@ -17,13 +17,12 @@ export async function POST(req: Request) {
     }
 
     if (type === 'otp') {
-      const { code } = body;
-      // TODO: Hit backend API untuk verify OTP
-      // const response = await httpRequest.post('/auth/verify-otp', { code });
-      if (code === '123456') {
-        return NextResponse.json({ ok: true, message: 'OTP verified' });
-      }
-      return NextResponse.json({ ok: false, message: 'Invalid OTP' }, { status: 400 });
+      const response = await httpRequest.post('/auth/verify', body.data);
+      console.log(response.data)
+      // if (otp === '123456') {
+      //   return NextResponse.json({ ok: true, message: 'OTP verified' });
+      // }
+      // return NextResponse.json({ ok: false, message: 'Invalid OTP' }, { status: 400 });
     }
 
     if (type === 'login') {
@@ -52,11 +51,7 @@ export async function POST(req: Request) {
         password
       });
 
-      return NextResponse.json({ 
-        ok: true, 
-        status: response.status, 
-        data: response.data 
-      });
+      return NextResponse.json(response.data);
     }
 
     return NextResponse.json({ ok: false, message: 'Unknown action' }, { status: 400 });

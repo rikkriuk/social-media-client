@@ -7,6 +7,7 @@ import useLanguage from '@/zustand/useLanguage';
 import { webRequest } from '@/helpers/api';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { ApiError } from '@/types/api';
 
 export default function LoginPage() {
   const { lng } = useLanguage();
@@ -35,7 +36,11 @@ export default function LoginPage() {
 
       toast.message(t("login.successLogin"));
       router.push("/");
-    } catch (err) {
+    } catch (err: unknown) {
+      const error = err as ApiError;
+
+      toast.error(error.data?.message || t("invalidCode"));
+      console.error("OTP verify error:", err);
     } finally {
       setLoading(false);
     }

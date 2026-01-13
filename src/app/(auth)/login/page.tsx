@@ -30,11 +30,20 @@ export default function LoginPage() {
       const response = await webRequest.post("/auth/submit", {
         type: "login",
         ...body
-      })
+      });
+
+      if (response.data.requiresVerification) {
+        localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("otp", response.data.otp);
+
+        toast.info(t("login.requiresVerification"));
+        router.push("/otp");
+        return;
+      }
 
       localStorage.setItem("token", response.data.token);
 
-      toast.message(t("login.successLogin"));
+      toast.success(t("login.successLogin"));
       router.push("/");
     } catch (err: unknown) {
       const error = err as ApiError;

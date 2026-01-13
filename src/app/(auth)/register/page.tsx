@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { toast } from 'sonner';
-import Auth from '@/components/Auth';
-import { webRequest } from '@/helpers/api';
-import useLanguage from '@/zustand/useLanguage';
-import { useTranslationCustom } from '@/i18n/client';
+import { useState } from "react";
+import { toast } from "sonner";
+import Auth from "@/components/Auth";
+import { webRequest } from "@/helpers/api";
+import useLanguage from "@/zustand/useLanguage";
+import { useTranslationCustom } from "@/i18n/client";
 import { useRouter } from "next/navigation";
-import { ApiError } from '@/types/api';
+import { ApiError } from "@/types/api";
 
 const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
@@ -21,8 +21,8 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const response = await webRequest.post('/auth/submit', {
-        type: 'register',
+      const response = await webRequest.post("/auth/submit", {
+        type: "register",
         username: data.username,
         email: data.email,
         password: data.password
@@ -31,12 +31,12 @@ const RegisterPage = () => {
       setToLocalStorage(response.data)
 
       toast.success(t("register.successRegister"));
-      router.push('/otp');
+      router.push("/otp");
     } catch (err: unknown) {
       const error = err as ApiError;
       
       toast.error(error.data?.message);
-      console.error('Register error:', err);
+      console.error("Register error:", err);
     } finally {
       setLoading(false);
     }

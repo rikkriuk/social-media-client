@@ -28,7 +28,7 @@ export default function OtpPage() {
       code,
     }));
 
-    clearLocalStorage();
+    // clearLocalStorage();
   }, [])
 
   const clearLocalStorage = () => {

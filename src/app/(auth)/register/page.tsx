@@ -43,6 +43,7 @@ const RegisterPage = () => {
   };
 
   const setToLocalStorage = (data: Record<string, any>) => {
+    console.log(data)
     Object.entries(data).forEach(([key, value]) => {
       localStorage.setItem(key, value);
     });

@@ -1,8 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { FormItem } from "@/components/ui/form-item";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/components/ui/utils";
 import WebSample from "@/components/ui/web-sample";
 import { webRequest } from "@/helpers/api";
 import { useTranslationCustom } from "@/i18n/client";
@@ -46,6 +48,11 @@ export default function ForgotPage() {
     }
   };
 
+  const isFormValid = () => {
+    if (loading) return false;
+    return email.trim() !== "";
+  };
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -61,12 +68,11 @@ export default function ForgotPage() {
             onSubmit={handleSubmit} 
             className="space-y-4"
           >
-            <div>
-              <Label 
-                htmlFor="email"
-              >
-                {t("email")}
-              </Label>
+            <FormItem
+              label={t("email")}
+              name="email"
+              required
+            >
               <Input 
                 id="email" 
                 type="email" 
@@ -75,12 +81,15 @@ export default function ForgotPage() {
                 placeholder={t("emailPlaceholder")} 
                 className="mt-1 rounded-xl" 
               />
-            </div>
+            </FormItem>
 
             <Button 
               type="submit" 
-              className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white" 
-              disabled={loading}
+              disabled={!isFormValid()}
+              className={cn(
+                "w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white" ,
+                (loading || !isFormValid()) && "opacity-70 cursor-not-allowed"
+              )}
             >
               {loading ? t("sendOtp") + "..." : t("sendOtp")}
             </Button>

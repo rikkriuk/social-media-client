@@ -5,5 +5,6 @@
   "invalidCode": "OTP tidak valid",
   "sentMessage": "OTP terkirim — periksa kotak masuk Anda",
   "resend": "Kirim ulang kode",
+  "resendIn": "Kirim ulang kode dalam {{min}}:{{sec}}",
   "backToLogin": "Kembali"
 }

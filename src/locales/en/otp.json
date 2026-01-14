@@ -5,6 +5,7 @@
   "invalidCode": "Invalid OTP",
   "sentMessage": "OTP sent — check your inbox",
   "resend": "Resend code",
+  "resendIn": "Resend code in {{min}}:{{sec}}",
   "backToLogin": "Back",
   "otpVerified": "OTP Verified!"
 }

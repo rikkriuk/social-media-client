@@ -5,7 +5,7 @@ const WebSample = ({ title, description }: Record<string, string>) => {
             <span className="text-white text-3xl">N</span>
          </div>
          <h1 className="text-gray-900 dark:text-white text-3xl mb-2">{title}</h1>
-         <p className="text-gray-500">{description}</p>
+         <p className="text-gray-500 text-center">{description}</p>
       </section>
    )
 }

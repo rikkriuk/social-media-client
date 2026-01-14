@@ -17,20 +17,35 @@ export default function OtpInputs({ length = 6, value = "", onChange, onComplete
   });
 
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const lastEmittedRef = useRef("");
+  const lastValueRef = useRef<string>(value);
 
   useEffect(() => {
-    // sync when parent value changes
-    if (value && value.length) {
+    const val = value || "";
+    const joined = digits.join("");
+
+    if (val !== joined) {
       const arr = new Array(length).fill("");
-      for (let i = 0; i < Math.min(value.length, length); i++) arr[i] = value[i];
+      for (let i = 0; i < Math.min(val.length, length); i++) {
+        arr[i] = val[i];
+      }
       setDigits(arr);
     }
+
+    lastValueRef.current = val;
   }, [value, length]);
 
   useEffect(() => {
     const joined = digits.join("");
-    onChange?.(joined);
-    if (joined.length === length) onComplete?.(joined);
+
+    if (joined !== lastEmittedRef.current) {
+      lastEmittedRef.current = joined;
+      onChange?.(joined);
+    }
+
+    if (joined.length === length) {
+      onComplete?.(joined);
+    }
   }, [digits, length, onChange, onComplete]);
 
   const focusInput = (index: number) => {
@@ -39,16 +54,16 @@ export default function OtpInputs({ length = 6, value = "", onChange, onComplete
   };
 
   const handleChange = (val: string, idx: number) => {
-    if (!val) return; // empty handled by onKeyDown/backspace
+    if (!val) return;
     const char = val.replace(/[^0-9]/g, "").slice(0, 1);
     if (!char) return;
+
     setDigits((prev) => {
       const next = [...prev];
       next[idx] = char;
-      // autofill next empty
       return next;
     });
-    // focus next
+
     if (idx < length - 1) focusInput(idx + 1);
   };
 
@@ -57,7 +72,6 @@ export default function OtpInputs({ length = 6, value = "", onChange, onComplete
     const el = e.currentTarget;
     if (key === "Backspace") {
       if (el.value === "" || el.selectionStart === 0) {
-        // clear previous
         setDigits((prev) => {
           const next = [...prev];
           if (next[idx]) {
@@ -90,6 +104,7 @@ export default function OtpInputs({ length = 6, value = "", onChange, onComplete
     const text = e.clipboardData.getData("Text").replace(/[^0-9]/g, "");
     if (!text) return;
     const chars = text.slice(0, length).split("");
+
     setDigits((prev) => {
       const next = [...prev];
       for (let i = 0; i < chars.length; i++) {
@@ -97,7 +112,7 @@ export default function OtpInputs({ length = 6, value = "", onChange, onComplete
       }
       return next;
     });
-    // focus the next empty or last
+
     const firstEmpty = chars.length < length ? chars.length : length - 1;
     focusInput(firstEmpty);
   };
@@ -107,7 +122,7 @@ export default function OtpInputs({ length = 6, value = "", onChange, onComplete
       {digits.map((d, i) => (
         <input
           key={i}
-          ref={(el) => (inputsRef.current[i] = el)}
+          ref={(el) => { inputsRef.current[i] = el; }}
           inputMode="numeric"
           pattern="[0-9]*"
           type="text"

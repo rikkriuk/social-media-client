@@ -4,6 +4,6 @@
    "emailPlaceholder": "nama@gmail.com",
    "backToLogin": "Kembali ke Masuk",
    "sendOtp": "Kirim OTP",
-   "otpSent": "OTP telah dikirim ke email Anda.",
+   "resetInformation": "Informasi reset password telah dikirim ke email Anda.",
    "email": "Email"
 }

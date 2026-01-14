@@ -4,6 +4,7 @@
    "emailPlaceholder": "name@gmail.com",
    "backToLogin": "Back to Login",
    "sendOtp": "Send OTP",
-   "otpSent": "OTP has been sent to your email.",
-   "email": "Email"
+   "resetInformation": "Reset password information has been sent to your email.",
+   "email": "Email",
+   "requiresVerification": "User not verified. Please verify your account!"
 }

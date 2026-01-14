@@ -94,7 +94,7 @@ export default function OtpPage() {
       });
       const payload = res?.data;
       toast.success(t("sentMessage"));
-      console.log(payload)
+      
       if (payload?.otp) {
         const otpStr = String(payload.otp);
         localStorage.setItem("otp", otpStr);

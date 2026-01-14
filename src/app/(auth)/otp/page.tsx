@@ -94,7 +94,7 @@ export default function OtpPage() {
       });
       const payload = res?.data;
       toast.success(t("sentMessage"));
-      
+
       if (payload?.otp) {
         const otpStr = String(payload.otp);
         localStorage.setItem("otp", otpStr);
@@ -111,6 +111,30 @@ export default function OtpPage() {
       setResending(false);
     }
   };
+
+  const _renderResend = (canResend: boolean) => (
+    <>
+      {!canResend ? (
+        <p className="text-sm">
+          {t("resendIn", {
+            min: Math.floor(timeLeft / 60),
+            sec: String(timeLeft % 60).padStart(2, "0"),
+          })}
+        </p>
+      ) : (
+        <p className="text-sm">
+          <button
+            type="button"
+            onClick={handleResend}
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+            disabled={resending}
+          >
+            {resending ? t("resend") + "..." : t("resend")}
+          </button>
+        </p>
+      )}
+    </>
+  )
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
@@ -139,27 +163,7 @@ export default function OtpPage() {
               </div>
             </div>
 
-            <div>
-                {!canResend ? (
-                  <p className="text-sm">
-                    {t("resendIn", {
-                      min: Math.floor(timeLeft / 60),
-                      sec: String(timeLeft % 60).padStart(2, "0"),
-                    })}
-                  </p>
-                ) : (
-                  <p className="text-sm">
-                    <button
-                      type="button"
-                      onClick={handleResend}
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
-                      disabled={resending}
-                    >
-                      {resending ? t("resend") + "..." : t("resend")}
-                    </button>
-                  </p>
-                )}
-              </div>
+            {_renderResend(canResend)}
 
             <Button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white" disabled={loading || data.code.length !== 6}>
               {loading ? t("verifyButton") + "..." : t("verifyButton")}

@@ -161,7 +161,7 @@ const Auth = ({ isRegister, loading, onSubmit, t }: AuthProps) => {
 
             <Button
                onClick={handleSubmit}
-               disabled={!isFormValid()}
+               disabled={!isFormValid() || loading}
                className={cn("w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white", 
                   (loading || !isFormValid()) && "opacity-70 cursor-not-allowed"
                )}

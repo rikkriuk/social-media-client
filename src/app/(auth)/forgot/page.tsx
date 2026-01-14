@@ -31,13 +31,18 @@ export default function ForgotPage() {
         email,
       });
 
-      const { userId, otp } = response.data;
+      const { userId, otp, requiresVerification } = response.data;
 
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("otp", otp);
+      if (requiresVerification) {
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("otp", otp);
+
+        toast.success(t("requiresVerification"));
+        router.push("/otp");
+      }
       
-      toast.success(t("otpSent"));
-      router.push("/otp")
+      toast.success(t("resetInformation"));
+      router.push("/login")
     } catch (err: unknown) {
       const error = err as ApiError;
 

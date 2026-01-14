@@ -8,6 +8,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { type } = body as any;
 
+    if (type === "forgot-password") {
+      const { email } = body;
+      const response = await httpRequest.post("/auth/forgot-password", { 
+        identifierType: "Email",
+        identifier: email,
+      });
+
+      return NextResponse.json(response.data);
+    }
+
     if (type === "resend") {
       const { userId } = body;
       const response = await httpRequest.post("/auth/resend", { userId });
@@ -32,6 +42,8 @@ export async function POST(req: Request) {
           identifier,
           password
         });
+
+        console.log("response.data", response.data)
 
         return NextResponse.json(response.data);
       }

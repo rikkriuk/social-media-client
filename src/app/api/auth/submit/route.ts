@@ -8,12 +8,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { type } = body as any;
 
-    if (type === "forgot") {
-      const { email } = body;
-      // TODO: Hit backend API untuk kirim OTP
-      // const response = await httpRequest.post("/auth/forgot-password", { email });
-      console.log("Send OTP to", email);
-      return NextResponse.json({ ok: true, message: "OTP sent — check your inbox" });
+    if (type === "resend") {
+      const { userId } = body;
+      const response = await httpRequest.post("/auth/resend", { userId });
+      console.log("Send OTP to", userId);
+      return NextResponse.json(response.data);
     }
 
     if (type === "otp") {

@@ -1,34 +1,46 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import WebSample from '@/components/ui/web-sample';
-import { useTranslationCustom } from '@/i18n/client';
-import useLanguage from '@/zustand/useLanguage';
-import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import WebSample from "@/components/ui/web-sample";
+import { webRequest } from "@/helpers/api";
+import { useTranslationCustom } from "@/i18n/client";
+import { ApiError } from "@/types/api";
+import useLanguage from "@/zustand/useLanguage";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ForgotPage() {
   const { lng } = useLanguage();
-  const { t } = useTranslationCustom(lng, 'forgot');
-  const [email, setEmail] = useState('');
-  const [msg, setMsg] = useState<string | null>(null);
+  const { t } = useTranslationCustom(lng, "forgot");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMsg(null);
     try {
-      const res = await fetch('/api/auth/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'forgot', email }),
+      const response = await webRequest.post("/auth/submit", {
+        type: "forgot-password",
+        email,
       });
-      const data = await res.json();
-      setMsg(data.message || 'OK');
-    } catch (err) {
-      setMsg('Error');
+
+      const { userId, otp } = response.data;
+
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("otp", otp);
+      
+      toast.success(t("otpSent"));
+      router.push("/otp")
+    } catch (err: unknown) {
+      const error = err as ApiError;
+
+      toast.error(error?.data?.message || t("invalidCode"));
+      console.error("Error:", err);
     } finally {
       setLoading(false);
     }
@@ -53,14 +65,14 @@ export default function ForgotPage() {
               <Label 
                 htmlFor="email"
               >
-                {t('email')}
+                {t("email")}
               </Label>
               <Input 
                 id="email" 
                 type="email" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                placeholder={t('emailPlaceholder')} 
+                placeholder={t("emailPlaceholder")} 
                 className="mt-1 rounded-xl" 
               />
             </div>
@@ -70,10 +82,8 @@ export default function ForgotPage() {
               className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white" 
               disabled={loading}
             >
-              {loading ? '...' : t('sendOtp')}
+              {loading ? t("sendOtp") + "..." : t("sendOtp")}
             </Button>
-
-            {msg && <p className="text-sm text-green-600 mt-2">{msg}</p>}
           </form>
 
           <p className="text-center mt-4">
@@ -81,7 +91,7 @@ export default function ForgotPage() {
               onClick={() => window.history.back()} 
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
-              {t('backToLogin')}
+              {t("backToLogin")}
             </button>
           </p>
         </div>

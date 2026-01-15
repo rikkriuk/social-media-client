@@ -1,35 +1,32 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Moon, Sun, Monitor, ChevronDown } from "lucide-react";
 import useTheme, { type Theme } from "@/zustand/useTheme";
 
-const THEME_META: Record<Theme, { label: string; icon: string }> = {
-  light: { label: "Light", icon: "☀️" },
-  dark: { label: "Dark", icon: "🌙" },
-  system: { label: "System", icon: "💻" },
-};
-
-const themes: Theme[] = ["light", "dark", "system"];
+const THEME_OPTIONS: { theme: Theme; label: string; icon: React.ReactNode }[] = [
+  { theme: "light", label: "Light", icon: <Sun className="w-4 h-4" /> },
+  { theme: "dark", label: "Dark", icon: <Moon className="w-4 h-4" /> },
+  { theme: "system", label: "System", icon: <Monitor className="w-4 h-4" /> },
+];
 
 export default function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const onDoc = (e: MouseEvent) => {
-      if (!ref.current) return;
-      if (e.target instanceof Node && !ref.current.contains(e.target)) {
-        setOpen(false);
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !(e.target instanceof Node && ref.current.contains(e.target))) {
+        setIsOpen(false);
       }
     };
-    document.addEventListener("click", onDoc);
-    return () => document.removeEventListener("click", onDoc);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   useEffect(() => {
     const root = document.documentElement;
-
     const applyTheme = (isDark: boolean) => {
       if (isDark) {
         root.classList.add("dark");
@@ -50,41 +47,42 @@ export default function ThemeSwitcher() {
     }
   }, [theme]);
 
-  const handleSelect = (newTheme: Theme) => {
-    setTheme(newTheme);
-    setOpen(false);
-  };
+  const currentOption = THEME_OPTIONS.find((opt) => opt.theme === theme);
+
+  const renderThemeOptions = () =>
+    THEME_OPTIONS.map((option) => (
+      <button
+        key={option.theme}
+        onClick={() => {
+          setTheme(option.theme);
+          setIsOpen(false);
+        }}
+        className={`w-full text-left px-4 py-2.5 text-sm transition-all flex items-center gap-2 ${
+          theme === option.theme
+            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium"
+            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+        }`}
+      >
+        {option.icon}
+        {option.label}
+      </button>
+    ));
 
   return (
-    <div ref={ref} className="relative inline-block text-left">
+    <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen((s) => !s)}
-        aria-expanded={open}
-        aria-label="Toggle theme"
-        className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/90 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition"
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+        title="Change theme"
       >
-        <span className="text-lg leading-none">{THEME_META[theme].icon}</span>
-        <span className="text-sm font-medium hidden sm:inline-block">
-          {THEME_META[theme].label}
-        </span>
+        {currentOption?.icon}
+        <ChevronDown className={`w-3.5 h-3.5 ml-0.5 opacity-60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {open && (
-        <div className="absolute right-0 mt-2 w-36 rounded-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg z-20">
-          <div className="py-1">
-            {themes.map((t) => (
-              <button
-                key={t}
-                onClick={() => handleSelect(t)}
-                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
-              >
-                <span className="text-lg leading-none">{THEME_META[t].icon}</span>
-                <span className="flex-1">{THEME_META[t].label}</span>
-                {t === theme && <span className="text-xs text-blue-600">✓</span>}
-              </button>
-            ))}
-          </div>
+      {isOpen && (
+        <div className="absolute right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden z-50">
+          {renderThemeOptions()}
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Globe } from "lucide-react";
+import { Globe, ChevronDown } from "lucide-react";
 import useLanguage from "@/zustand/useLanguage";
 import i18next from "i18next";
 import { languages, type ListLangType } from "@/i18n/settings";
@@ -53,10 +53,11 @@ export default function LanguageSwitcher() {
          <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+            className="flex items-center p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
             title="Change language"
          >
             <Globe className="w-5 h-5" />
+            <ChevronDown className={`w-3.5 h-3.5 ml-0.5 opacity-60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
          </button>
 
          {isOpen && (

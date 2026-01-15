@@ -3,6 +3,7 @@
 import { useTranslationCustom } from "@/i18n/client";
 import useLanguage from "@/zustand/useLanguage";
 import { Users, TrendingUp, Calendar, Bookmark } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const LeftSidebar = () => {
    const { lng } = useLanguage();
@@ -52,9 +53,10 @@ const RightSidebar = () => {
    const _renderAvatar = (friend: any, index: number) => (
       <div key={index} className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-all">
          <div className="relative">
-            <div className="w-10 h-10 text-gray-500 flex justify-center items-center">
-               <span>{friend.name[0]}</span>
-            </div>
+            <Avatar>
+               <AvatarImage src={friend.avatar} />
+               <AvatarFallback>{friend.name[0]}</AvatarFallback>
+            </Avatar>
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full" />
          </div>
          <span className="text-gray-900 dark:text-white text-sm">{friend.name}</span>

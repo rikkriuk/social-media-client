@@ -1,69 +1,67 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Globe } from "lucide-react";
 import useLanguage from "@/zustand/useLanguage";
 import i18next from "i18next";
 import { languages, type ListLangType } from "@/i18n/settings";
-
-const LANG_META: Record<ListLangType, { label: string; flag: string }> = {
-  en: { label: "English", flag: "EN" },
-  id: { label: "Bahasa Indonesia", flag: "ID" },
-  su: { label: "Basa Sunda", flag: "SU" },
-};
+import { LANGUAGES } from "@/const/languages";
 
 export default function LanguageSwitcher() {
    const { lng, setLng } = useLanguage();
-   const [open, setOpen] = useState(false);
+   const [isOpen, setIsOpen] = useState(false);
    const ref = useRef<HTMLDivElement | null>(null);
 
    useEffect(() => {
-      const onDoc = (e: MouseEvent) => {
-         if (!ref.current) return;
-         if (e.target instanceof Node && !ref.current.contains(e.target)) {
-         setOpen(false);
+      const handleClickOutside = (e: MouseEvent) => {
+         if (ref.current && !(e.target instanceof Node && ref.current.contains(e.target))) {
+            setIsOpen(false);
          }
       };
-      document.addEventListener("click", onDoc);
-      return () => document.removeEventListener("click", onDoc);
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
    }, []);
 
-   const handleSelect = (newLng: ListLangType) => {
-      setLng(newLng);
+   const handleSelect = (newLng: string) => {
+      setLng(newLng as ListLangType);
       try {
          i18next.changeLanguage(newLng);
       } catch (e) {
          // ignore
       }
-      setOpen(false);
+      setIsOpen(false);
    };
 
+   const renderLanguageOptions = () => (
+      LANGUAGES.map((lang) => (
+         <button
+            key={lang.code}
+            onClick={() => handleSelect(lang.code)}
+            className={`w-full text-left px-4 py-2.5 text-sm transition-all ${
+               lng === lang.code
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+            }`}
+         >
+            {lang.label}
+         </button>
+      ))
+   );
+
    return (
-      <div ref={ref} className="relative inline-block text-left">
+      <div ref={ref} className="relative">
          <button
             type="button"
-            onClick={() => setOpen((s) => !s)}
-            aria-expanded={open}
-            className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/90 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition"
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+            title="Change language"
          >
-            <span className="text-lg font-bold leading-none">{LANG_META[lng].flag}</span>
-            <span className="text-sm font-medium hidden sm:inline-block">{LANG_META[lng].label}</span>
+            <Globe className="w-5 h-5" />
          </button>
 
-         {open && (
-            <div className="absolute right-0 mt-2 w-44 rounded-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg z-20">
-               <div className="py-1">
-                  {languages.map((l) => (
-                  <button
-                     key={l}
-                     onClick={() => handleSelect(l as ListLangType)}
-                     className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
-                  >
-                     <span className="text-lg leading-none">{LANG_META[l as ListLangType].flag}</span>
-                     <span className="flex-1">{LANG_META[l as ListLangType].label}</span>
-                     {l === lng && <span className="text-xs text-blue-600">✓</span>}
-                  </button>
-                  ))}
-               </div>
+         {isOpen && (
+            <div className="absolute right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden z-50">
+               {renderLanguageOptions()}
             </div>
          )}
       </div>

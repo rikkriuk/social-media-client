@@ -3,13 +3,23 @@
 import { Home, User, MessageCircle, Bell, Settings, Search, Globe } from "lucide-react";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
+import { useRouter, usePathname } from "next/navigation";
 
 const Navbar = () => {
    const { lng } = useLanguage();
    const { t } = useTranslationCustom(lng, "navbar");
+   const pathname = usePathname();
+   const router = useRouter();
 
-   const currentPage: string = "home"
-   const onNavigate = (page: string) => {};
+   const currentPage = pathname === "/" ? "home" : pathname.split("/")[1];
+
+   const onNavigate = (path: string) => {
+      if (path === "home") {
+         router.push("/");
+      } else {
+         router.push(`/${path}`);
+      }
+   };
 
    return (
       <nav className="sticky top-0 z-50 border-b bg-white dark:bg-gray-900 dark:border-gray-800">
@@ -39,75 +49,84 @@ const Navbar = () => {
 
                {/* Desktop Navigation */}
                <div className="hidden md:flex items-center gap-2">
-                  <NavButton
-                     icon={<Home className="w-5 h-5" />}
-                     active={currentPage === "home"}
-                     onClick={() => onNavigate("home")}
-                  />
-                  <NavButton
-                     icon={<MessageCircle className="w-5 h-5" />}
-                     active={currentPage === "messages"}
-                     onClick={() => onNavigate("messages")}
-                     badge={3}
-                  />
-                  <NavButton
-                     icon={<Bell className="w-5 h-5" />}
-                     active={currentPage === "notifications"}
-                     onClick={() => onNavigate("notifications")}
-                     badge={5}
-                  />
-                  <NavButton
-                     icon={<User className="w-5 h-5" />}
-                     active={currentPage === "profile"}
-                     onClick={() => onNavigate("profile")}
-                  />
-                  <NavButton
-                     icon={<Settings className="w-5 h-5" />}
-                     active={currentPage === "settings"}
-                     onClick={() => onNavigate("settings")}
-                  />
+                  <button onClick={() => onNavigate("home")}>
+                     <NavButton
+                        icon={<Home className="w-5 h-5" />}
+                        active={currentPage === ""}
+                     />
+                  </button>
+                  <button onClick={() => onNavigate("messages")}>
+                     <NavButton
+                        icon={<MessageCircle className="w-5 h-5" />}
+                        active={currentPage === "messages"}
+                        badge={3}
+                     />
+                  </button>
+                  <button onClick={() => onNavigate("notifications")}>
+                     <NavButton
+                        icon={<Bell className="w-5 h-5" />}
+                        active={currentPage === "notifications"}
+                        badge={5}
+                     />
+                  </button>
+                  <button onClick={() => onNavigate("profile")}>
+                     <NavButton
+                        icon={<User className="w-5 h-5" />}
+                        active={currentPage === "profile"}
+                     />
+                  </button>
+                  <button onClick={() => onNavigate("settings")}>
+                     <NavButton
+                        icon={<Settings className="w-5 h-5" />}
+                        active={currentPage === "settings"}
+                     />
+                  </button>
                </div>
             </div>
          </div>
 
          {/* Mobile Bottom Navigation */}
          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t dark:border-gray-800 px-4 py-2 flex items-center justify-around">
-            <MobileNavButton
-               icon={<Home className="w-6 h-6" />}
-               active={currentPage === "home"}
-               onClick={() => onNavigate("home")}
-            />
-            <MobileNavButton
-               icon={<MessageCircle className="w-6 h-6" />}
-               active={currentPage === "messages"}
-               onClick={() => onNavigate("messages")}
-               badge={3}
-            />
-            <MobileNavButton
-               icon={<Bell className="w-6 h-6" />}
-               active={currentPage === "notifications"}
-               onClick={() => onNavigate("notifications")}
-               badge={5}
-            />
-            <MobileNavButton
-               icon={<User className="w-6 h-6" />}
-               active={currentPage === "profile"}
-               onClick={() => onNavigate("profile")}
-            />
-            <MobileNavButton
-               icon={<Settings className="w-6 h-6" />}
-               active={currentPage === "settings"}
-               onClick={() => onNavigate("settings")}
-            />
+            <button onClick={() => onNavigate("home")}>
+               <MobileNavButton
+                  icon={<Home className="w-6 h-6" />}
+                  active={currentPage === ""}
+               />
+            </button>
+            <button onClick={() => onNavigate("messages")}>
+               <MobileNavButton
+                  icon={<MessageCircle className="w-6 h-6" />}
+                  active={currentPage === "messages"}
+                  badge={3}
+               />
+            </button>
+            <button onClick={() => onNavigate("notifications")}>
+               <MobileNavButton
+                  icon={<Bell className="w-6 h-6" />}
+                  active={currentPage === "notifications"}
+                  badge={5}
+               />
+            </button>
+            <button onClick={() => onNavigate("profile")}>
+               <MobileNavButton
+                  icon={<User className="w-6 h-6" />}
+                  active={currentPage === "profile"}
+               />
+            </button>
+            <button onClick={() => onNavigate("settings")}>
+               <MobileNavButton
+                  icon={<Settings className="w-6 h-6" />}
+                  active={currentPage === "settings"}
+               />
+            </button>
          </div>
       </nav>
    );
 }
 
-const NavButton = ({ icon, active, onClick, badge }: any) => {
+const NavButton = ({ icon, active, badge }: any) => {
    return (
       <button
-         onClick={onClick}
          className={`relative p-3 rounded-xl transition-all ${
          active
             ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
@@ -124,10 +143,9 @@ const NavButton = ({ icon, active, onClick, badge }: any) => {
    );
 }
 
-const MobileNavButton = ({ icon, active, onClick, badge }: any) => {
+const MobileNavButton = ({ icon, active, badge }: any) => {
    return (
       <button
-         onClick={onClick}
          className={`relative p-2 rounded-xl transition-all ${
          active
             ? "text-blue-600 dark:text-blue-400"

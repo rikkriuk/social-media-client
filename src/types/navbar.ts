@@ -1,5 +1,3 @@
-import { Home, User, MessageCircle, Bell, Settings } from "lucide-react";
-
 export interface NavItem {
    id: string;
    icon: React.ReactNode;

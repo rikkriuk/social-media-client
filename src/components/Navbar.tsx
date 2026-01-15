@@ -88,7 +88,8 @@ const Navbar = () => {
                   <div className="border-l border-gray-200 dark:border-gray-700 mx-2 h-6" />
                </div>
 
-               <div>
+               <div className="flex items-center gap-2">
+                  <ThemeSwitcher />
                   <LanguageSwitcher />
                </div>
             </div>

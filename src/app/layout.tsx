@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import { LeftSidebar, RightSidebar } from "@/components/Sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +31,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <Navbar />
+        <div className="flex justify-between">
+          <LeftSidebar />
+
+          {children}
+          
+          <RightSidebar />
+        </div>
         <Toaster richColors position="top-center" />
       </body>
     </html>

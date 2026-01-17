@@ -21,18 +21,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
+import useAuth from "@/zustand/useAuth";
+import { formatDateWithMonth } from "@/helpers/date";
 
 const ProfilePage = () => {
    const { lng } = useLanguage();
    const { t } = useTranslationCustom(lng, "profile");
+   const { t: tDate } = useTranslationCustom(lng, "date");
+
    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-   const [profileData, setProfileData] = useState({
-      name: "Your Name",
-      username: "@username",
-      bio: "Digital creator and technology enthusiast. Love to share my journey and connect with amazing people around the world.",
-      location: "Bandung, Indonesia",
-      website: "yourwebsite.com",
-   });
+   const { currentUser, currentProfile } = useAuth();
+
+   const [profileData, setProfileData] = useState(currentProfile);
 
    const handleSaveProfile = () => {
       toast.success(t("profileUpdated"));
@@ -66,6 +66,14 @@ const ProfilePage = () => {
       },
    ];
 
+   const getInitialAvatarFallback = () => {
+      const initial = currentProfile?.name 
+         ? currentProfile.name.charAt(0).toUpperCase() 
+         : currentUser?.username.charAt(0).toUpperCase();
+
+      return initial;
+   };
+
    return (
       <div className="max-w-4xl flex-1 mx-auto pb-20 md:pb-6">
          {/* Cover Photo */}
@@ -87,7 +95,9 @@ const ProfilePage = () => {
             <div className="flex flex-col md:flex-row items-center md:items-end gap-4 mb-6">
                <div className="relative group">
                   <Avatar className="w-40 h-40 border-4 border-white dark:border-gray-900">
-                     <AvatarFallback className="text-4xl">Y</AvatarFallback>
+                     <AvatarFallback className="text-4xl">
+                        {getInitialAvatarFallback()}
+                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors" />
                   <Button
@@ -100,21 +110,21 @@ const ProfilePage = () => {
                </div>
 
                <div className="flex-1 text-center md:text-left">
-                  <h1 className="text-gray-900 dark:text-white text-2xl">{profileData.name}</h1>
+                  <h1 className="text-gray-900 dark:text-white text-2xl">{profileData.name || "-"}</h1>
                   <p className="text-gray-500 mb-3">{profileData.username}</p>
 
                   <div className="flex flex-wrap gap-4 justify-center md:justify-start text-gray-600 dark:text-gray-400 text-sm">
                      <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
-                        {profileData.location}
+                        {profileData.location || "-"}
                      </div>
                      <div className="flex items-center gap-1">
                         <LinkIcon className="w-4 h-4" />
-                        {profileData.website}
+                        {profileData.website || "-"}
                      </div>
                      <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
-                        {t("joined")} March 2024
+                        {t("joined")} {formatDateWithMonth(currentUser?.createdAt || "", tDate)}
                      </div>
                   </div>
                </div>
@@ -139,46 +149,46 @@ const ProfilePage = () => {
                      <div className="space-y-2">
                         <Label htmlFor="name">{t("fullName")}</Label>
                         <Input
-                        id="name"
-                        value={profileData.name}
-                        onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                        className="rounded-xl"
+                           id="name"
+                           value={profileData.name}
+                           onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                           className="rounded-xl"
                         />
                      </div>
                      <div className="space-y-2">
                         <Label htmlFor="username">{t("username")}</Label>
                         <Input
-                        id="username"
-                        value={profileData.username}
-                        onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
-                        className="rounded-xl"
+                           id="username"
+                           value={profileData.username}
+                           onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
+                           className="rounded-xl"
                         />
                      </div>
                      <div className="space-y-2">
                         <Label htmlFor="bio">{t("bio")}</Label>
                         <Textarea
-                        id="bio"
-                        value={profileData.bio}
-                        onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                        className="rounded-xl min-h-[100px]"
+                           id="bio"
+                           value={profileData.bio}
+                           onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                           className="rounded-xl min-h-[100px]"
                         />
                      </div>
                      <div className="space-y-2">
                         <Label htmlFor="location">{t("location")}</Label>
                         <Input
-                        id="location"
-                        value={profileData.location}
-                        onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                        className="rounded-xl"
+                           id="location"
+                           value={profileData.location}
+                           onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
+                           className="rounded-xl"
                         />
                      </div>
                      <div className="space-y-2">
                         <Label htmlFor="website">{t("website")}</Label>
                         <Input
-                        id="website"
-                        value={profileData.website}
-                        onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
-                        className="rounded-xl"
+                           id="website"
+                           value={profileData.website}
+                           onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
+                           className="rounded-xl"
                         />
                      </div>
                   </div>
@@ -240,7 +250,7 @@ const ProfilePage = () => {
                   <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
                      <h3 className="text-gray-900 dark:text-white mb-4">{t("about")}</h3>
                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {profileData.bio}
+                        {profileData.bio || "-"}
                      </p>
                      <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -253,7 +263,7 @@ const ProfilePage = () => {
                         </div>
                         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                            <Calendar className="w-4 h-4" />
-                           {t("joined")} March 2024
+                           {t("joined")} {formatDateWithMonth(currentUser?.createdAt || "", tDate)}
                         </div>
                      </div>
                   </div>

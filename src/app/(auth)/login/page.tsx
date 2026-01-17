@@ -8,10 +8,12 @@ import { webRequest } from '@/helpers/api';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { ApiError } from '@/types/api';
+import useAuth from '@/zustand/useAuth';
 
 export default function LoginPage() {
   const { lng } = useLanguage();
   const { t } = useTranslationCustom(lng, "auth");
+  const { doLogin } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -27,21 +29,7 @@ export default function LoginPage() {
         password
       };
 
-      const response = await webRequest.post("/auth/submit", {
-        type: "login",
-        ...body
-      });
-
-      if (response.data.requiresVerification) {
-        localStorage.setItem("userId", response.data.userId);
-        localStorage.setItem("otp", response.data.otp);
-
-        toast.info(t("login.requiresVerification"));
-        router.push("/otp");
-        return;
-      }
-
-      localStorage.setItem("token", response.data.token);
+      await doLogin(body, t);
 
       toast.success(t("login.successLogin"));
       router.push("/");

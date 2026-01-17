@@ -64,6 +64,13 @@ export async function POST(req: Request) {
       return NextResponse.json(response.data);
     }
 
+    if (type === "logout") {
+      const response = await httpRequest.post("/auth/logout", {
+        authorization: req.headers.get("Authorization"),
+      });
+      return NextResponse.json(response.data);
+    }
+
     return NextResponse.json({ ok: false, message: "Unknown action" }, { status: 400 });
   } catch (err: unknown) {
     const error = err as ApiError;

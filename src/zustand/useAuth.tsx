@@ -1,10 +1,11 @@
 import { webRequest } from "@/helpers/api"
 import { toast } from "sonner";
 import Cookie from "js-cookie";
+import { Profile, UpdateProfileDto } from "@/types/profile";
 
 const useAuth = () => {
    const currentUser = JSON.parse(Cookie.get("user") || "null");
-   const currentProfile = JSON.parse(Cookie.get("profile") || "null");
+   const currentProfile: Profile | null = JSON.parse(Cookie.get("profile") || "null");
    const token = Cookie.get("token");
 
    const doLogin = async (body: any, t: any) => {
@@ -33,19 +34,39 @@ const useAuth = () => {
          webRequest.post("/api/auth/submit", { type: "logout" });
          ["token", "user", "profile", "userId"].forEach((key) => {
             localStorage.removeItem(key);
+            Cookie.remove(key);
          });
          window.location.href = "/login";
       } catch (error) {
          console.error("Logout error:", error);
       }
    }
-   
-   return { 
+
+   const updateProfile = async (profileId: string, data: UpdateProfileDto) => {
+      const response = await webRequest.patch("/api/profile/update", {
+         profileId,
+         ...data
+      });
+
+      if (response.data.ok) {
+         const updatedProfile = {
+            ...currentProfile,
+            ...data
+         };
+         Cookie.set("profile", JSON.stringify(updatedProfile), { expires: 1 });
+         return { ok: true, data: updatedProfile };
+      }
+
+      return { ok: false, message: response.data.message };
+   }
+
+   return {
       currentUser,
       currentProfile,
       token,
-      doLogin, 
-      doLogout 
+      doLogin,
+      doLogout,
+      updateProfile,
    };
 }
 

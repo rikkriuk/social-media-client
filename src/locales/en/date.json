@@ -12,5 +12,12 @@
     "october": "October",
     "november": "November",
     "december": "December"
-  }
+  },
+  "justNow": "just now",
+  "minutesAgo": "minutes ago",
+  "hoursAgo": "hours ago",
+  "daysAgo": "days ago",
+  "weeksAgo": "weeks ago",
+  "monthsAgo": "months ago",
+  "yearsAgo": "years ago"
 }

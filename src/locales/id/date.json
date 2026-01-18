@@ -12,5 +12,12 @@
     "october": "Oktober",
     "november": "November",
     "december": "Desember"
-  }
+  },
+  "justNow": "baru saja",
+  "minutesAgo": "menit yang lalu",
+  "hoursAgo": "jam yang lalu",
+  "daysAgo": "hari yang lalu",
+  "weeksAgo": "minggu yang lalu",
+  "monthsAgo": "bulan yang lalu",
+  "yearsAgo": "tahun yang lalu"
 }

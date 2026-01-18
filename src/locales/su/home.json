@@ -1,8 +1,17 @@
 {
   "whatsOnYourMind": "Naon hyang aya sa pikiran anjeun?",
   "post": "Posting",
+  "posting": "Keur posting...",
   "hoursAgo": "jam tukang",
   "photo": "Poto",
   "video": "Vidéo",
-  "feeling": "Pasir"
+  "feeling": "Pasir",
+  "event": "Acara",
+  "eventDetails": "Detail Acara",
+  "date": "Tanggal",
+  "time": "Waktu",
+  "location": "Lokasi",
+  "enterLocation": "Asupkeun lokasi",
+  "online": "Online",
+  "noPosts": "Acan aya postingan. Janten nu mimiti!"
 }

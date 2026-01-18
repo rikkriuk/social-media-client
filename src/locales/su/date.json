@@ -12,5 +12,12 @@
     "october": "Oktober",
     "november": "Nopémber",
     "december": "Désémber"
-  }
+  },
+  "justNow": "kakara pisan",
+  "minutesAgo": "menit nu geus kaliwat",
+  "hoursAgo": "jam nu geus kaliwat",
+  "daysAgo": "poé nu geus kaliwat",
+  "weeksAgo": "minggu nu geus kaliwat",
+  "monthsAgo": "bulan nu geus kaliwat",
+  "yearsAgo": "taun nu geus kaliwat"
 }

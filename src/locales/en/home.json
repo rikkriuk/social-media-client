@@ -1,8 +1,17 @@
 {
   "whatsOnYourMind": "What's on your mind?",
   "post": "Post",
+  "posting": "Posting...",
   "hoursAgo": "hours ago",
   "photo": "Photo",
   "video": "Video",
-  "feeling": "Feeling"
+  "feeling": "Feeling",
+  "event": "Event",
+  "eventDetails": "Event Details",
+  "date": "Date",
+  "time": "Time",
+  "location": "Location",
+  "enterLocation": "Enter location",
+  "online": "Online",
+  "noPosts": "No posts yet. Be the first to post!"
 }

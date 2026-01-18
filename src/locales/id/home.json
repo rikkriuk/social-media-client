@@ -1,8 +1,17 @@
 {
   "whatsOnYourMind": "Apa yang ada di pikiranmu?",
   "post": "Posting",
+  "posting": "Memposting...",
   "hoursAgo": "jam lalu",
   "photo": "Foto",
   "video": "Video",
-  "feeling": "Perasaan"
+  "feeling": "Perasaan",
+  "event": "Acara",
+  "eventDetails": "Detail Acara",
+  "date": "Tanggal",
+  "time": "Waktu",
+  "location": "Lokasi",
+  "enterLocation": "Masukkan lokasi",
+  "online": "Online",
+  "noPosts": "Belum ada postingan. Jadilah yang pertama!"
 }

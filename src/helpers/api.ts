@@ -17,7 +17,6 @@ httpRequest.interceptors.request.use(
       } else {
          delete config.headers["Content-Type"];
       }
-      //  config.headers["Authorization"] = "Bearer " + getToken();
       config.headers["X-Platform"] = "web";
       config.headers["X-Device-Id"] = getDeviceId();
       config.headers["X-Device-Name"] = getDeviceName();

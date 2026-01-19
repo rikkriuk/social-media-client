@@ -95,8 +95,14 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
    ]);
 
    let isFollowing = false;
+   let isFollowingMe = false;
    if (!isOwnProfile && currentUser?.id && targetUserId) {
-      isFollowing = await checkIsFollowing(currentUser.id, targetUserId);
+      const [followingStatus, followingMeStatus] = await Promise.all([
+         checkIsFollowing(currentUser.id, targetUserId),
+         checkIsFollowing(targetUserId, currentUser.id),
+      ]);
+      isFollowing = followingStatus;
+      isFollowingMe = followingMeStatus;
    }
 
    return (
@@ -111,6 +117,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
          initialPosts={posts}
          isOwnProfile={isOwnProfile}
          isFollowing={isFollowing}
+         isFollowingMe={isFollowingMe}
          currentUserId={currentUser?.id || null}
       />
    );

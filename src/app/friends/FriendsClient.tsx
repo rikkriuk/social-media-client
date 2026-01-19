@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Search, UserMinus, UserPlus, MoreHorizontal, MessageCircle, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,8 @@ interface FriendsClientProps {
    currentUserId: string;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const FriendsClient = ({
    initialFollowers,
    initialFollowing,
@@ -37,7 +39,7 @@ const FriendsClient = ({
    const { t } = useTranslationCustom(lng, "friends");
 
    const [searchQuery, setSearchQuery] = useState("");
-   const [followers, setFollowers] = useState<UserFollow[]>(initialFollowers);
+   const [followers, _setFollowers] = useState<UserFollow[]>(initialFollowers);
    const [following, setFollowing] = useState<UserFollow[]>(initialFollowing);
    const [suggestions, setSuggestions] = useState<UserSuggestion[]>(initialSuggestions);
    const [searchResults, setSearchResults] = useState<UserSuggestion[]>([]);
@@ -45,6 +47,59 @@ const FriendsClient = ({
    const [unfollowingId, setUnfollowingId] = useState<string | null>(null);
    const [followingId, setFollowingId] = useState<string | null>(null);
    const [activeTab, setActiveTab] = useState("following");
+
+   const [suggestionsOffset, setSuggestionsOffset] = useState(ITEMS_PER_PAGE);
+   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(initialSuggestions.length >= ITEMS_PER_PAGE);
+   const [isLoadingMore, setIsLoadingMore] = useState(false);
+   const suggestionsEndRef = useRef<HTMLDivElement>(null);
+
+   const loadMoreSuggestions = useCallback(async () => {
+      if (isLoadingMore || !hasMoreSuggestions) return;
+
+      setIsLoadingMore(true);
+      try {
+         const response = await webRequest.get("/follow", {
+            params: {
+               type: "suggestions",
+               userId: currentUserId,
+               limit: ITEMS_PER_PAGE,
+               offset: suggestionsOffset,
+            },
+         });
+
+         const newSuggestions = response.data?.data?.rows || [];
+         if (newSuggestions.length > 0) {
+            setSuggestions(prev => [...prev, ...newSuggestions]);
+            setSuggestionsOffset(prev => prev + ITEMS_PER_PAGE);
+         }
+         if (newSuggestions.length < ITEMS_PER_PAGE) {
+            setHasMoreSuggestions(false);
+         }
+      } catch (error) {
+         console.error("Load more suggestions error:", error);
+      } finally {
+         setIsLoadingMore(false);
+      }
+   }, [currentUserId, suggestionsOffset, isLoadingMore, hasMoreSuggestions]);
+
+   useEffect(() => {
+      if (activeTab !== "suggestions") return;
+
+      const observer = new IntersectionObserver(
+         (entries) => {
+            if (entries[0].isIntersecting && hasMoreSuggestions && !isLoadingMore) {
+               loadMoreSuggestions();
+            }
+         },
+         { threshold: 0.1 }
+      );
+
+      if (suggestionsEndRef.current) {
+         observer.observe(suggestionsEndRef.current);
+      }
+
+      return () => observer.disconnect();
+   }, [activeTab, hasMoreSuggestions, isLoadingMore, loadMoreSuggestions]);
 
    // Debounced search
    useEffect(() => {
@@ -64,9 +119,7 @@ const FriendsClient = ({
                   currentUserId,
                },
             });
-            if (response.data.ok) {
-               setSearchResults(response.data.data?.data || []);
-            }
+            setSearchResults(response.data?.data?.rows || []);
          } catch (error) {
             console.error("Search error:", error);
          } finally {
@@ -380,9 +433,23 @@ const FriendsClient = ({
 
             <TabsContent value="suggestions" className="space-y-4">
                {suggestions.length > 0 ? (
-                  suggestions.map((user) => (
-                     <SuggestionCard key={user.id} user={user} />
-                  ))
+                  <>
+                     {suggestions.map((user) => (
+                        <SuggestionCard key={user.id} user={user} />
+                     ))}
+                     
+                     {/* Infinite scroll trigger */}
+                     <div ref={suggestionsEndRef} className="py-4">
+                        {isLoadingMore && (
+                           <div className="flex justify-center">
+                              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                           </div>
+                        )}
+                        {!hasMoreSuggestions && suggestions.length >= ITEMS_PER_PAGE && (
+                           <p className="text-center text-sm text-gray-400">{t("noMoreSuggestions")}</p>
+                        )}
+                     </div>
+                  </>
                ) : (
                   <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800">
                      <p className="text-gray-500">{t("noSuggestions")}</p>

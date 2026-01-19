@@ -38,6 +38,7 @@ interface ProfileClientProps {
   initialPosts?: Post[];
   isOwnProfile?: boolean;
   isFollowing?: boolean;
+  isFollowingMe?: boolean;
   currentUserId?: string | null;
 }
 
@@ -48,6 +49,7 @@ const ProfileClient = ({
   initialPosts = [],
   isOwnProfile = true,
   isFollowing: initialIsFollowing = false,
+  isFollowingMe = false,
   currentUserId = null
 }: ProfileClientProps) => {
   const { lng } = useLanguage();
@@ -384,7 +386,7 @@ const ProfileClient = ({
               ) : (
                 <>
                   <UserPlus className="w-4 h-4 mr-2" />
-                  {t("follow")}
+                  {isFollowingMe ? t("followBack") : t("follow")}
                 </>
               )}
             </Button>

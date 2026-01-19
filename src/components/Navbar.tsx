@@ -1,6 +1,6 @@
 "use client"
 
-import { Search } from "lucide-react";
+import { Search, LogOut } from "lucide-react";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
 import { useRouter, usePathname } from "next/navigation";
@@ -8,6 +8,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Home, User, MessageCircle, Bell, Settings } from "lucide-react";
 import type { NavItem } from "../types/navbar";
+import useAuth from "@/zustand/useAuth";
 
 const NAV_ITEMS: NavItem[] = [
    { id: "home", icon: <Home className="w-5 h-5" />, path: "home" },
@@ -22,6 +23,7 @@ const Navbar = () => {
    const { t } = useTranslationCustom(lng, "navbar");
    const pathname = usePathname();
    const router = useRouter();
+   const { doLogout } = useAuth();
 
    const currentPage = pathname === "/" ? "home" : pathname.split("/")[1];
 
@@ -91,6 +93,13 @@ const Navbar = () => {
                <div className="flex items-center gap-2">
                   <ThemeSwitcher />
                   <LanguageSwitcher />
+                  <button
+                     onClick={doLogout}
+                     className="p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all"
+                     title="Logout"
+                  >
+                     <LogOut className="w-5 h-5" />
+                  </button>
                </div>
             </div>
          </div>

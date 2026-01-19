@@ -46,3 +46,20 @@ export interface Post {
   updatedAt?: string;
   profile?: Profile;
 }
+
+export interface UserFollow {
+  id: string;
+  followerId: string;
+  followingId: string;
+  createdAt: string;
+  follower?: {
+    id: string;
+    username: string;
+    profile?: Profile;
+  };
+  following?: {
+    id: string;
+    username: string;
+    profile?: Profile;
+  };
+}

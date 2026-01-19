@@ -1,0 +1,14 @@
+{
+  "title": "Friends",
+  "subtitle": "Connect with people you follow",
+  "searchPlaceholder": "Search friends...",
+  "following": "Following",
+  "followers": "Followers",
+  "noFollowing": "You are not following anyone yet",
+  "noFollowers": "You don't have any followers yet",
+  "unfollow": "Unfollow",
+  "unfollowing": "Unfollowing...",
+  "unfollowSuccess": "Unfollowed successfully",
+  "unfollowFailed": "Failed to unfollow",
+  "viewProfile": "View Profile"
+}

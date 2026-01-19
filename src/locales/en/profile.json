@@ -31,5 +31,7 @@
   "followed": "Followed successfully!",
   "unfollowed": "Unfollowed successfully!",
   "followFailed": "Failed to process follow action",
-  "loginRequired": "Please login to follow users"
+  "loginRequired": "Please login to follow users",
+  "postCreated": "Post created successfully!",
+  "postCreateFailed": "Failed to create post"
 }

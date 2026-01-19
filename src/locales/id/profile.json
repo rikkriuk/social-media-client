@@ -31,5 +31,7 @@
   "followed": "Berhasil mengikuti!",
   "unfollowed": "Berhasil berhenti mengikuti!",
   "followFailed": "Gagal memproses aksi follow",
-  "loginRequired": "Silakan login untuk mengikuti pengguna"
+  "loginRequired": "Silakan login untuk mengikuti pengguna",
+  "postCreated": "Postingan berhasil dibuat!",
+  "postCreateFailed": "Gagal membuat postingan"
 }

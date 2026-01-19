@@ -1,0 +1,14 @@
+{
+  "title": "Teman",
+  "subtitle": "Terhubung dengan orang yang kamu ikuti",
+  "searchPlaceholder": "Cari teman...",
+  "following": "Mengikuti",
+  "followers": "Pengikut",
+  "noFollowing": "Kamu belum mengikuti siapapun",
+  "noFollowers": "Kamu belum memiliki pengikut",
+  "unfollow": "Berhenti Ikuti",
+  "unfollowing": "Memproses...",
+  "unfollowSuccess": "Berhasil berhenti mengikuti",
+  "unfollowFailed": "Gagal berhenti mengikuti",
+  "viewProfile": "Lihat Profil"
+}

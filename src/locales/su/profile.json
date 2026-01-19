@@ -31,5 +31,7 @@
   "followed": "Hasil nuturkeun!",
   "unfollowed": "Hasil eureun nuturkeun!",
   "followFailed": "Gagal ngolah aksi follow",
-  "loginRequired": "Mangga login heula pikeun nuturkeun pamaké"
+  "loginRequired": "Mangga login heula pikeun nuturkeun pamaké",
+  "postCreated": "Postingan hasil dijieun!",
+  "postCreateFailed": "Gagal nyieun postingan"
 }

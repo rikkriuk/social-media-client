@@ -32,7 +32,7 @@ export default function LoginPage() {
       await doLogin(body, t);
 
       toast.success(t("login.successLogin"));
-      router.push("/");
+      window.location.href = "/";
     } catch (err: unknown) {
       const error = err as ApiError;
 

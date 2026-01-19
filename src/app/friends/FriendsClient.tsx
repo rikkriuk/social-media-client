@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Search, UserMinus, MoreHorizontal, MessageCircle } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Search, UserMinus, UserPlus, MoreHorizontal, MessageCircle, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,19 +15,21 @@ import {
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { UserFollow } from "@/types/profile";
+import { UserFollow, UserSuggestion } from "@/types/profile";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
 
 interface FriendsClientProps {
    initialFollowers: UserFollow[];
    initialFollowing: UserFollow[];
+   initialSuggestions: UserSuggestion[];
    currentUserId: string;
 }
 
 const FriendsClient = ({
    initialFollowers,
    initialFollowing,
+   initialSuggestions,
    currentUserId
 }: FriendsClientProps) => {
    const router = useRouter();
@@ -35,9 +37,89 @@ const FriendsClient = ({
    const { t } = useTranslationCustom(lng, "friends");
 
    const [searchQuery, setSearchQuery] = useState("");
-   const [followers, _setFollowers] = useState<UserFollow[]>(initialFollowers);
+   const [followers, setFollowers] = useState<UserFollow[]>(initialFollowers);
    const [following, setFollowing] = useState<UserFollow[]>(initialFollowing);
+   const [suggestions, setSuggestions] = useState<UserSuggestion[]>(initialSuggestions);
+   const [searchResults, setSearchResults] = useState<UserSuggestion[]>([]);
+   const [isSearching, setIsSearching] = useState(false);
    const [unfollowingId, setUnfollowingId] = useState<string | null>(null);
+   const [followingId, setFollowingId] = useState<string | null>(null);
+   const [activeTab, setActiveTab] = useState("following");
+
+   // Debounced search
+   useEffect(() => {
+      if (!searchQuery.trim()) {
+         setSearchResults([]);
+         setIsSearching(false);
+         return;
+      }
+
+      const timer = setTimeout(async () => {
+         setIsSearching(true);
+         try {
+            const response = await webRequest.get("/follow", {
+               params: {
+                  type: "search",
+                  search: searchQuery,
+                  currentUserId,
+               },
+            });
+            if (response.data.ok) {
+               setSearchResults(response.data.data?.data || []);
+            }
+         } catch (error) {
+            console.error("Search error:", error);
+         } finally {
+            setIsSearching(false);
+         }
+      }, 300);
+
+      return () => clearTimeout(timer);
+   }, [searchQuery, currentUserId]);
+
+   const handleFollow = async (userId: string, userFromSuggestion?: UserSuggestion) => {
+      setFollowingId(userId);
+      try {
+         const response = await webRequest.post("/follow", {
+            type: "follow",
+            followerId: currentUserId,
+            followingId: userId,
+         });
+
+         if (response.data.ok) {
+            const userToAdd = userFromSuggestion ||
+               suggestions.find(s => s.id === userId) ||
+               searchResults.find(s => s.id === userId);
+
+            if (userToAdd) {
+               const newFollowEntry: UserFollow = {
+                  id: response.data.data?.id || `temp-${Date.now()}`,
+                  followerId: currentUserId,
+                  followingId: userId,
+                  createdAt: new Date().toISOString(),
+                  following: {
+                     id: userToAdd.id,
+                     username: userToAdd.username,
+                     profile: userToAdd.profile,
+                  },
+               };
+               setFollowing(prev => [newFollowEntry, ...prev]);
+            }
+
+            // Remove from suggestions and search results
+            setSuggestions(prev => prev.filter(s => s.id !== userId));
+            setSearchResults(prev => prev.filter(s => s.id !== userId));
+            toast.success(t("followSuccess"));
+         } else {
+            toast.error(response.data.message || t("followFailed"));
+         }
+      } catch (error: any) {
+         console.error("Follow error:", error);
+         toast.error(error?.data?.message || t("followFailed"));
+      } finally {
+         setFollowingId(null);
+      }
+   };
 
    const handleUnfollow = async (followingUserId: string) => {
       setUnfollowingId(followingUserId);
@@ -49,7 +131,17 @@ const FriendsClient = ({
          });
 
          if (response.data.ok) {
-            setFollowing(following.filter(f => f.followingId !== followingUserId));
+            const unfollowedEntry = following.find(f => f.followingId === followingUserId);
+            if (unfollowedEntry?.following) {
+               const userToSuggest: UserSuggestion = {
+                  id: unfollowedEntry.following.id,
+                  username: unfollowedEntry.following.username,
+                  profile: unfollowedEntry.following.profile,
+               };
+               setSuggestions(prev => [userToSuggest, ...prev]);
+            }
+
+            setFollowing(prev => prev.filter(f => f.followingId !== followingUserId));
             toast.success(t("unfollowSuccess"));
          } else {
             toast.error(response.data.message || t("unfollowFailed"));
@@ -66,7 +158,8 @@ const FriendsClient = ({
       router.push(`/profile/${profileId}`);
    };
 
-   const filteredFollowers = followers.filter((follow) => {
+   const filteredFollowers = (followers || []).filter((follow) => {
+      if (!searchQuery.trim()) return true;
       const name = follow.follower?.profile?.name || follow.follower?.username || "";
       const username = follow.follower?.username || "";
       return (
@@ -76,6 +169,7 @@ const FriendsClient = ({
    });
 
    const filteredFollowing = following.filter((follow) => {
+      if (!searchQuery.trim()) return true;
       const name = follow.following?.profile?.name || follow.following?.username || "";
       const username = follow.following?.username || "";
       return (
@@ -172,6 +266,49 @@ const FriendsClient = ({
       );
    };
 
+   const SuggestionCard = ({ user }: { user: UserSuggestion }) => {
+      const profile = user.profile;
+      const name = profile?.name || user.username || "Unknown";
+      const username = user.username || "";
+      const isFollowingUser = followingId === user.id;
+
+      return (
+         <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+            <div className="flex items-center gap-3">
+               <Avatar className="w-14 h-14 cursor-pointer" onClick={() => profile?.id && handleViewProfile(profile.id)}>
+                  <AvatarImage src={undefined} />
+                  <AvatarFallback className="text-lg">{name.charAt(0).toUpperCase()}</AvatarFallback>
+               </Avatar>
+               <div className="flex-1 min-w-0">
+                  <h3
+                     className="font-semibold text-gray-900 dark:text-white truncate cursor-pointer hover:underline"
+                     onClick={() => profile?.id && handleViewProfile(profile.id)}
+                  >
+                     {name}
+                  </h3>
+                  <p className="text-sm text-gray-500 truncate">@{username}</p>
+                  {profile?.bio && (
+                     <p className="text-xs text-gray-400 truncate">{profile.bio}</p>
+                  )}
+               </div>
+               <Button
+                  size="sm"
+                  className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => handleFollow(user.id)}
+                  disabled={isFollowingUser}
+               >
+                  {isFollowingUser ? (
+                     <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                  ) : (
+                     <UserPlus className="w-4 h-4 mr-1" />
+                  )}
+                  {t("follow")}
+               </Button>
+            </div>
+         </div>
+      );
+   };
+
    return (
       <div className="max-w-4xl flex-1 mx-auto px-4 py-6 pb-20 md:pb-6">
          <div className="mb-6">
@@ -188,15 +325,32 @@ const FriendsClient = ({
                onChange={(e) => setSearchQuery(e.target.value)}
                className="pl-10 rounded-xl bg-gray-100 dark:bg-gray-800 border-0"
             />
+            {isSearching && (
+               <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 animate-spin" />
+            )}
          </div>
 
-         <Tabs defaultValue="following" className="w-full">
-            <TabsList className="w-full grid grid-cols-2 rounded-xl mb-6">
+         {searchQuery.trim() && searchResults.length > 0 && (
+            <div className="mb-6">
+               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t("searchResults")}</h2>
+               <div className="space-y-4">
+                  {searchResults.map((user) => (
+                     <SuggestionCard key={user.id} user={user} />
+                  ))}
+               </div>
+            </div>
+         )}
+
+         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="w-full grid grid-cols-3 rounded-xl mb-6">
                <TabsTrigger value="following" className="rounded-xl">
                   {t("following")} ({following.length})
                </TabsTrigger>
                <TabsTrigger value="followers" className="rounded-xl">
                   {t("followers")} ({followers.length})
+               </TabsTrigger>
+               <TabsTrigger value="suggestions" className="rounded-xl">
+                  {t("suggestions")}
                </TabsTrigger>
             </TabsList>
 
@@ -220,6 +374,18 @@ const FriendsClient = ({
                ) : (
                   <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800">
                      <p className="text-gray-500">{t("noFollowers")}</p>
+                  </div>
+               )}
+            </TabsContent>
+
+            <TabsContent value="suggestions" className="space-y-4">
+               {suggestions.length > 0 ? (
+                  suggestions.map((user) => (
+                     <SuggestionCard key={user.id} user={user} />
+                  ))
+               ) : (
+                  <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800">
+                     <p className="text-gray-500">{t("noSuggestions")}</p>
                   </div>
                )}
             </TabsContent>

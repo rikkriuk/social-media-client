@@ -2,14 +2,14 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import FriendsClient from "./FriendsClient";
 import { httpRequest } from "@/helpers/api";
-import { UserFollow } from "@/types/profile";
+import { UserFollow, UserSuggestion } from "@/types/profile";
 
 async function getFollowers(userId: string): Promise<UserFollow[]> {
    try {
       const response = await httpRequest.get(`/user-follows/followers`, {
          params: { userId },
       });
-      return response.data?.data || response.data || [];
+      return response.data?.rows || [];
    } catch (error) {
       console.error("Failed to fetch followers:", error);
       return [];
@@ -21,9 +21,21 @@ async function getFollowing(userId: string): Promise<UserFollow[]> {
       const response = await httpRequest.get(`/user-follows/following`, {
          params: { userId },
       });
-      return response.data?.data || response.data || [];
+      return response.data?.rows || [];
    } catch (error) {
       console.error("Failed to fetch following:", error);
+      return [];
+   }
+}
+
+async function getSuggestions(userId: string): Promise<UserSuggestion[]> {
+   try {
+      const response = await httpRequest.get(`/user-follows/suggestions`, {
+         params: { userId },
+      });
+      return response.data?.rows || [];
+   } catch (error) {
+      console.error("Failed to fetch suggestions:", error);
       return [];
    }
 }
@@ -44,15 +56,17 @@ const FriendsPage = async () => {
       redirect("/login");
    }
 
-   const [followers, following] = await Promise.all([
+   const [followers, following, suggestions] = await Promise.all([
       getFollowers(currentUser.id),
       getFollowing(currentUser.id),
+      getSuggestions(currentUser.id),
    ]);
 
    return (
       <FriendsClient
          initialFollowers={followers}
          initialFollowing={following}
+         initialSuggestions={suggestions}
          currentUserId={currentUser.id}
       />
    );

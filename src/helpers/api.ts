@@ -1,8 +1,20 @@
 import axios from "axios";
+import Cookie from "js-cookie";
 import { getDeviceId, getDeviceName } from "./device";
 import pkg from "../../package.json";
 
 axios.defaults.timeout = 300000;
+
+const handleAutoLogout = () => {
+   ["token", "user", "profile", "userId"].forEach((key) => {
+      localStorage.removeItem(key);
+      Cookie.remove(key);
+   });
+
+   if (typeof window !== "undefined") {
+      window.location.href = "/login";
+   }
+};
 
 export const httpRequest = axios.create({
    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -74,6 +86,14 @@ webRequest.interceptors.response.use(
       if (!error?.response) {
          console.error(error);
          return Promise.reject(error);
+      }
+
+      const status = error.response?.status;
+
+      if (status === 401 || status === 403) {
+         console.error("Session expired or invalid, logging out...");
+         handleAutoLogout();
+         return Promise.reject(error.response);
       }
 
       console.error("webRequest: Error interceptor response:::", error.response);

@@ -35,7 +35,7 @@ const FriendsClient = ({
    const { t } = useTranslationCustom(lng, "friends");
 
    const [searchQuery, setSearchQuery] = useState("");
-   const [followers, setFollowers] = useState<UserFollow[]>(initialFollowers);
+   const [followers, _setFollowers] = useState<UserFollow[]>(initialFollowers);
    const [following, setFollowing] = useState<UserFollow[]>(initialFollowing);
    const [unfollowingId, setUnfollowingId] = useState<string | null>(null);
 

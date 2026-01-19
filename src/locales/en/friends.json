@@ -11,6 +11,8 @@
   "noMoreSuggestions": "No more suggestions",
   "searchResults": "Search Results",
   "follow": "Follow",
+  "followBack": "Follow Back",
+  "mutualFollow": "Following each other",
   "unfollow": "Unfollow",
   "unfollowing": "Unfollowing...",
   "followSuccess": "Followed successfully",

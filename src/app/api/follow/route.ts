@@ -45,8 +45,10 @@ export async function GET(req: Request) {
       }
 
       if (type === "suggestions") {
+         const limit = searchParams.get("limit");
+         const offset = searchParams.get("offset");
          const response = await httpRequest.get(`/user-follows/suggestions`, {
-            params: { userId },
+            params: { userId, limit, offset },
          });
          return NextResponse.json({
             ok: true,
@@ -57,8 +59,10 @@ export async function GET(req: Request) {
       if (type === "search") {
          const search = searchParams.get("search");
          const currentUserId = searchParams.get("currentUserId");
+         const limit = searchParams.get("limit");
+         const offset = searchParams.get("offset");
          const response = await httpRequest.get(`/user-follows/search`, {
-            params: { search, currentUserId },
+            params: { search, currentUserId, limit, offset },
          });
          return NextResponse.json({
             ok: true,

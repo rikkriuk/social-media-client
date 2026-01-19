@@ -63,3 +63,10 @@ export interface UserFollow {
     profile?: Profile;
   };
 }
+
+export interface UserSuggestion {
+  id: string;
+  username: string;
+  email?: string;
+  profile?: Profile;
+}

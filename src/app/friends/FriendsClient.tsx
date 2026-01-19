@@ -236,6 +236,45 @@ const FriendsClient = ({
       const profile = user?.profile;
       const name = profile?.name || user?.username || "Unknown";
       const username = user?.username || "";
+      const followerId = user?.id || follow.followerId;
+
+      const isAlreadyFollowing = following.some(f => f.followingId === followerId);
+      const isFollowingUser = followingId === followerId;
+
+      const handleFollowBack = async () => {
+         if (!followerId) return;
+         setFollowingId(followerId);
+         try {
+            const response = await webRequest.post("/follow", {
+               type: "follow",
+               followerId: currentUserId,
+               followingId: followerId,
+            });
+
+            if (response.data.ok) {
+               const newFollowEntry: UserFollow = {
+                  id: response.data.data?.id || `temp-${Date.now()}`,
+                  followerId: currentUserId,
+                  followingId: followerId,
+                  createdAt: new Date().toISOString(),
+                  following: {
+                     id: followerId,
+                     username: user?.username || "",
+                     profile: user?.profile,
+                  },
+               };
+               setFollowing(prev => [newFollowEntry, ...prev]);
+               toast.success(t("followSuccess"));
+            } else {
+               toast.error(response.data.message || t("followFailed"));
+            }
+         } catch (error: any) {
+            console.error("Follow back error:", error);
+            toast.error(error?.data?.message || t("followFailed"));
+         } finally {
+            setFollowingId(null);
+         }
+      };
 
       return (
          <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
@@ -256,18 +295,37 @@ const FriendsClient = ({
                      <p className="text-xs text-gray-400 truncate">{profile.bio}</p>
                   )}
                </div>
-               <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                     <Button size="icon" variant="ghost" className="rounded-xl">
-                        <MoreHorizontal className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+               <div className="flex items-center gap-2">
+                  {!isAlreadyFollowing ? (
+                     <Button
+                        size="sm"
+                        className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+                        onClick={handleFollowBack}
+                        disabled={isFollowingUser}
+                     >
+                        {isFollowingUser ? (
+                           <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                        ) : (
+                           <UserPlus className="w-4 h-4 mr-1" />
+                        )}
+                        {t("followBack")}
                      </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="rounded-xl">
-                     <DropdownMenuItem onClick={() => profile?.id && handleViewProfile(profile.id)}>
-                        {t("viewProfile")}
-                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-               </DropdownMenu>
+                  ) : (
+                     <span className="text-xs text-gray-400 px-2">{t("mutualFollow")}</span>
+                  )}
+                  <DropdownMenu>
+                     <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost" className="rounded-xl">
+                           <MoreHorizontal className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                        </Button>
+                     </DropdownMenuTrigger>
+                     <DropdownMenuContent align="end" className="rounded-xl">
+                        <DropdownMenuItem onClick={() => profile?.id && handleViewProfile(profile.id)}>
+                           {t("viewProfile")}
+                        </DropdownMenuItem>
+                     </DropdownMenuContent>
+                  </DropdownMenu>
+               </div>
             </div>
          </div>
       );

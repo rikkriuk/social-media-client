@@ -44,6 +44,40 @@ export async function GET(req: Request) {
          });
       }
 
+      if (type === "suggestions") {
+         const response = await httpRequest.get(`/user-follows/suggestions`, {
+            params: { userId },
+         });
+         return NextResponse.json({
+            ok: true,
+            data: response.data,
+         });
+      }
+
+      if (type === "search") {
+         const search = searchParams.get("search");
+         const currentUserId = searchParams.get("currentUserId");
+         const response = await httpRequest.get(`/user-follows/search`, {
+            params: { search, currentUserId },
+         });
+         return NextResponse.json({
+            ok: true,
+            data: response.data,
+         });
+      }
+
+      if (type === "check") {
+         const followerId = searchParams.get("followerId");
+         const followingId = searchParams.get("followingId");
+         const response = await httpRequest.get(`/user-follows/check`, {
+            params: { followerId, followingId },
+         });
+         return NextResponse.json({
+            ok: true,
+            data: response.data,
+         });
+      }
+
       return NextResponse.json(
          { ok: false, message: "Invalid type parameter" },
          { status: 400 }

@@ -97,7 +97,7 @@ const HomeClient = ({ initialPosts, currentProfile, onViewPostDetail }: HomeClie
    };
 
    return (
-      <div className="max-w-2xl mx-auto px-4 py-6 pb-20 md:pb-6">
+      <div className="max-w-2xl flex-1 mx-auto px-4 py-6 pb-20 md:pb-6">
          {/* Create Post */}
          {currentProfile && (
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6">

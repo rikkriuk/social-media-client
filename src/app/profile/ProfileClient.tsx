@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Camera, MapPin, Link as LinkIcon, Calendar, Edit, UserPlus, UserMinus, ImagePlus, Video, Smile, X } from "lucide-react";
+import { useProgressRouter } from "@/components/ProgressLink";
 import { PostCard } from "../../components/PostCard";
 import { Avatar, AvatarFallback } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
@@ -41,6 +41,7 @@ interface ProfileClientProps {
   isFollowing?: boolean;
   isFollowingMe?: boolean;
   currentUserId?: string | null;
+  currentProfileId?: string | null;
 }
 
 const ProfileClient = ({
@@ -51,9 +52,10 @@ const ProfileClient = ({
   isOwnProfile = true,
   isFollowing: initialIsFollowing = false,
   isFollowingMe = false,
-  currentUserId = null
+  currentUserId = null,
+  currentProfileId = null
 }: ProfileClientProps) => {
-  const router = useRouter();
+  const router = useProgressRouter();
   const { lng } = useLanguage();
   const { t } = useTranslationCustom(lng, "profile");
   const { t: tHome } = useTranslationCustom(lng, "home");
@@ -79,6 +81,16 @@ const ProfileClient = ({
   useEffect(() => {
     setPosts(initialPosts);
   }, [initialPosts]);
+
+  const handleLikeChange = (postId: string, newLikeCount: number, isLiked: boolean) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId
+          ? { ...post, likesCount: newLikeCount, isLiked }
+          : post
+      )
+    );
+  };
 
   const handleToggleEvent = () => {
     setIsEventPost(!isEventPost);
@@ -546,6 +558,8 @@ const ProfileClient = ({
               posts.map((post) => (
                 <PostCard
                   key={post.id}
+                  postId={post.id}
+                  profileId={currentProfileId || undefined}
                   author={{
                     name: profileData.name || initialUser.username,
                     avatar: undefined,
@@ -556,6 +570,8 @@ const ProfileClient = ({
                   likes={post.likesCount}
                   comments={post.commentsCount}
                   shares={post.sharesCount}
+                  initialIsLiked={post.isLiked}
+                  onLikeChange={handleLikeChange}
                 />
               ))
             ) : (

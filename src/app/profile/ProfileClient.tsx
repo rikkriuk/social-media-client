@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Camera, MapPin, Link as LinkIcon, Calendar, Edit, UserPlus, UserMinus, ImagePlus, Video, Smile, X } from "lucide-react";
 import { PostCard } from "../../components/PostCard";
 import { Avatar, AvatarFallback } from "../../components/ui/avatar";
@@ -52,6 +53,7 @@ const ProfileClient = ({
   isFollowingMe = false,
   currentUserId = null
 }: ProfileClientProps) => {
+  const router = useRouter();
   const { lng } = useLanguage();
   const { t } = useTranslationCustom(lng, "profile");
   const { t: tHome } = useTranslationCustom(lng, "home");
@@ -399,11 +401,17 @@ const ProfileClient = ({
             <div className="text-gray-900 dark:text-white text-2xl mb-1">{posts.length}</div>
             <div className="text-gray-500 text-sm">{t("posts")}</div>
           </div>
-          <div className="text-center border-x border-gray-200 dark:border-gray-700">
+          <div
+            className="text-center border-x border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors py-2 -my-2"
+            onClick={() => router.push(`/friends?tab=followers&userId=${initialUser.id}`)}
+          >
             <div className="text-gray-900 dark:text-white text-2xl mb-1">{followCount.followers}</div>
             <div className="text-gray-500 text-sm">{t("followers")}</div>
           </div>
-          <div className="text-center">
+          <div
+            className="text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors py-2 -my-2"
+            onClick={() => router.push(`/friends?tab=following&userId=${initialUser.id}`)}
+          >
             <div className="text-gray-900 dark:text-white text-2xl mb-1">{followCount.following}</div>
             <div className="text-gray-500 text-sm">{t("following")}</div>
           </div>

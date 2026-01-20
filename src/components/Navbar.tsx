@@ -3,7 +3,8 @@
 import { Search, LogOut } from "lucide-react";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useProgressRouter } from "./ProgressLink";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Home, User, MessageCircle, Bell, Settings } from "lucide-react";
@@ -22,7 +23,7 @@ const Navbar = () => {
    const { lng } = useLanguage();
    const { t } = useTranslationCustom(lng, "navbar");
    const pathname = usePathname();
-   const router = useRouter();
+   const router = useProgressRouter();
    const { doLogout } = useAuth();
 
    const currentPage = pathname === "/" ? "home" : pathname.split("/")[1];

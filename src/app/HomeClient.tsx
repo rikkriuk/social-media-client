@@ -96,6 +96,16 @@ const HomeClient = ({ initialPosts, currentProfile, onViewPostDetail }: HomeClie
       return "U";
    };
 
+   const handleLikeChange = (postId: string, newLikeCount: number, isLiked: boolean) => {
+      setPosts(prevPosts =>
+         prevPosts.map(post =>
+            post.id === postId
+               ? { ...post, likesCount: newLikeCount, isLiked }
+               : post
+         )
+      );
+   };
+
    return (
       <div className="max-w-2xl flex-1 mx-auto px-4 py-6 pb-20 md:pb-6">
          {/* Create Post */}
@@ -216,6 +226,8 @@ const HomeClient = ({ initialPosts, currentProfile, onViewPostDetail }: HomeClie
                posts.map((post) => (
                   <PostCard
                      key={post.id}
+                     postId={post.id}
+                     profileId={currentProfile?.id}
                      author={{
                         name: post.profile?.name || "Unknown",
                         avatar: undefined,
@@ -226,7 +238,9 @@ const HomeClient = ({ initialPosts, currentProfile, onViewPostDetail }: HomeClie
                      likes={post.likesCount}
                      comments={post.commentsCount}
                      shares={post.sharesCount}
+                     initialIsLiked={post.isLiked}
                      onViewDetails={() => onViewPostDetail?.(post)}
+                     onLikeChange={handleLikeChange}
                   />
                ))
             ) : (

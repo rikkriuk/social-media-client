@@ -3,6 +3,7 @@
 import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import NProgress from "nprogress";
+import useLoading from "@/zustand/useLoading";
 
 NProgress.configure({
    showSpinner: false,
@@ -14,10 +15,19 @@ NProgress.configure({
 function NavigationProgressInner() {
    const pathname = usePathname();
    const searchParams = useSearchParams();
+   const { isLoading } = useLoading();
 
    useEffect(() => {
       NProgress.done();
    }, [pathname, searchParams]);
+
+   useEffect(() => {
+      if (isLoading) {
+         NProgress.start();
+      } else {
+         NProgress.done();
+      }
+   }, [isLoading]);
 
    return null;
 }

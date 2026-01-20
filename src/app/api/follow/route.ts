@@ -7,16 +7,12 @@ export async function GET(req: Request) {
    try {
       const { searchParams } = new URL(req.url);
       const userId = searchParams.get("userId");
-      const type = searchParams.get("type"); // 'count' | 'followers' | 'following'
-
-      if (!userId) {
-         return NextResponse.json(
-            { ok: false, message: "User ID is required" },
-            { status: 400 }
-         );
-      }
+      const type = searchParams.get("type"); // 'count' | 'followers' | 'following' | 'suggestions' | 'search' | 'check'
 
       if (type === "count") {
+         if (!userId) {
+            return NextResponse.json({ ok: false, message: "User ID is required" }, { status: 400 });
+         }
          const response = await httpRequest.get(`/user-follows/count/${userId}`);
          return NextResponse.json({
             ok: true,
@@ -25,6 +21,9 @@ export async function GET(req: Request) {
       }
 
       if (type === "followers") {
+         if (!userId) {
+            return NextResponse.json({ ok: false, message: "User ID is required" }, { status: 400 });
+         }
          const response = await httpRequest.get(`/user-follows/followers`, {
             params: { userId },
          });
@@ -35,6 +34,9 @@ export async function GET(req: Request) {
       }
 
       if (type === "following") {
+         if (!userId) {
+            return NextResponse.json({ ok: false, message: "User ID is required" }, { status: 400 });
+         }
          const response = await httpRequest.get(`/user-follows/following`, {
             params: { userId },
          });
@@ -45,6 +47,9 @@ export async function GET(req: Request) {
       }
 
       if (type === "suggestions") {
+         if (!userId) {
+            return NextResponse.json({ ok: false, message: "User ID is required" }, { status: 400 });
+         }
          const limit = searchParams.get("limit");
          const offset = searchParams.get("offset");
          const response = await httpRequest.get(`/user-follows/suggestions`, {
@@ -59,8 +64,8 @@ export async function GET(req: Request) {
       if (type === "search") {
          const search = searchParams.get("search");
          const currentUserId = searchParams.get("currentUserId");
-         const limit = searchParams.get("limit");
-         const offset = searchParams.get("offset");
+         const limit = searchParams.get("limit") || 10;
+         const offset = searchParams.get("offset") || 0;
          const response = await httpRequest.get(`/user-follows/search`, {
             params: { search, currentUserId, limit, offset },
          });

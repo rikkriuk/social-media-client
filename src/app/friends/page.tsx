@@ -4,6 +4,10 @@ import FriendsClient from "./FriendsClient";
 import { httpRequest } from "@/helpers/api";
 import { UserFollow, UserSuggestion } from "@/types/profile";
 
+interface FriendsPageProps {
+   searchParams: Promise<{ tab?: string; userId?: string }>;
+}
+
 async function getFollowers(userId: string): Promise<UserFollow[]> {
    try {
       const response = await httpRequest.get(`/user-follows/followers`, {
@@ -40,9 +44,10 @@ async function getSuggestions(userId: string): Promise<UserSuggestion[]> {
    }
 }
 
-const FriendsPage = async () => {
+const FriendsPage = async ({ searchParams }: FriendsPageProps) => {
    const cookieStore = await cookies();
    const userCookie = cookieStore.get("user");
+   const { tab, userId: targetUserId } = await searchParams;
 
    if (!userCookie) {
       redirect("/login");
@@ -56,11 +61,16 @@ const FriendsPage = async () => {
       redirect("/login");
    }
 
+   const userIdForData = targetUserId || currentUser.id;
+
    const [followers, following, suggestions] = await Promise.all([
-      getFollowers(currentUser.id),
-      getFollowing(currentUser.id),
+      getFollowers(userIdForData),
+      getFollowing(userIdForData),
       getSuggestions(currentUser.id),
    ]);
+
+   const validTabs = ["following", "followers", "suggestions"];
+   const initialTab = tab && validTabs.includes(tab) ? tab : "following";
 
    return (
       <FriendsClient
@@ -68,6 +78,7 @@ const FriendsPage = async () => {
          initialFollowing={following}
          initialSuggestions={suggestions}
          currentUserId={currentUser.id}
+         initialTab={initialTab}
       />
    );
 };

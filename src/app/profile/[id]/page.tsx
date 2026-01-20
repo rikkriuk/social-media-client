@@ -39,10 +39,33 @@ async function getFollowCount(userId: string): Promise<FollowCount> {
    }
 }
 
-async function getUserPosts(profileId: string): Promise<Post[]> {
+async function getUserPosts(profileId: string, currentProfileId?: string | null): Promise<Post[]> {
    try {
       const response = await httpRequest.get(`/posts/user/${profileId}?limit=10&offset=0`);
-      return response.data?.data || response.data || [];
+      const posts = response.data?.data || response.data || [];
+
+      if (currentProfileId && posts.length > 0) {
+         const likeStatusPromises = posts.map(async (post: Post) => {
+            try {
+               const likeResponse = await httpRequest.get(`/likes/check`, {
+                  params: { postId: post.id, profileId: currentProfileId }
+               });
+               return { postId: post.id, isLiked: likeResponse.data?.isLiked || false };
+            } catch {
+               return { postId: post.id, isLiked: false };
+            }
+         });
+
+         const likeStatuses = await Promise.all(likeStatusPromises);
+         const likeStatusMap = new Map(likeStatuses.map(s => [s.postId, s.isLiked]));
+
+         return posts.map((post: Post) => ({
+            ...post,
+            isLiked: likeStatusMap.get(post.id) || false
+         }));
+      }
+
+      return posts;
    } catch (error) {
       console.error("Failed to fetch user posts:", error);
       return [];
@@ -91,7 +114,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
 
    const [followCount, posts] = await Promise.all([
       targetUserId ? getFollowCount(targetUserId) : Promise.resolve({ followers: 0, following: 0 }),
-      getUserPosts(profileId),
+      getUserPosts(profileId, currentProfile?.id),
    ]);
 
    let isFollowing = false;
@@ -119,6 +142,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
          isFollowing={isFollowing}
          isFollowingMe={isFollowingMe}
          currentUserId={currentUser?.id || null}
+         currentProfileId={currentProfile?.id || null}
       />
    );
 };

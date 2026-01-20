@@ -2,5 +2,6 @@
   "like": "Suka",
   "comment": "Komentar",
   "share": "Bagikan",
-  "viewAll": "Lihat semua"
+  "viewAll": "Lihat semua",
+  "likeFailed": "Gagal menyukai/batal menyukai postingan"
 }

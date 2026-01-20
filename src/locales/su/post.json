@@ -2,5 +2,6 @@
   "like": "Resep",
   "comment": "Komentar",
   "share": "Sebarkeun",
-  "viewAll": "Tingal sadaya"
+  "viewAll": "Tingal sadaya",
+  "likeFailed": "Gagal ngalike/batal ngalike postingan"
 }

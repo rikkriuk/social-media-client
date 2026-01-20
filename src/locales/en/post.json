@@ -2,5 +2,6 @@
   "like": "Like",
   "comment": "Comment",
   "share": "Share",
-  "viewAll": "View all"
+  "viewAll": "View all",
+  "likeFailed": "Failed to like/unlike post"
 }

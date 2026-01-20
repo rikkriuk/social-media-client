@@ -1,9 +1,11 @@
 import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
+import { webRequest } from "@/helpers/api";
+import { toast } from "sonner";
 
 interface Comment {
    id: number;
@@ -16,6 +18,8 @@ interface Comment {
 }
 
 interface PostCardProps {
+   postId?: string;
+   profileId?: string;
    author: {
       name: string;
       avatar?: string;
@@ -26,7 +30,9 @@ interface PostCardProps {
    likes: number;
    comments: number;
    shares: number;
+   initialIsLiked?: boolean;
    onViewDetails?: () => void;
+   onLikeChange?: (postId: string, newLikeCount: number, isLiked: boolean) => void;
 }
 
 const previewComments: Comment[] = [
@@ -50,15 +56,67 @@ const previewComments: Comment[] = [
    },
 ];
 
-export function PostCard({ author, content, image, likes, comments, shares, onViewDetails }: PostCardProps) {
-   const [isLiked, setIsLiked] = useState(false);
+export function PostCard({
+   postId,
+   profileId,
+   author,
+   content,
+   image,
+   likes,
+   comments,
+   shares,
+   initialIsLiked = false,
+   onViewDetails,
+   onLikeChange
+}: PostCardProps) {
+   const [isLiked, setIsLiked] = useState(initialIsLiked);
    const [likeCount, setLikeCount] = useState(likes);
+   const [isLikeLoading, setIsLikeLoading] = useState(false);
    const { lng } = useLanguage();
    const { t } = useTranslationCustom(lng, "post");
 
-   const handleLike = () => {
-      setIsLiked(!isLiked);
-      setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+   useEffect(() => {
+      setLikeCount(likes);
+   }, [likes]);
+
+   useEffect(() => {
+      setIsLiked(initialIsLiked);
+   }, [initialIsLiked]);
+
+   const handleLike = async () => {
+      if (!postId || !profileId) {
+         setIsLiked(!isLiked);
+         setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+         return;
+      }
+
+      setIsLikeLoading(true);
+      try {
+         const response = await webRequest.post("/like", {
+            type: isLiked ? "unlike" : "like",
+            postId,
+            profileId,
+         });
+
+         if (response.data.ok) {
+            const newLikeCount = response.data.data.likesCount;
+            const newIsLiked = !isLiked;
+
+            setIsLiked(newIsLiked);
+            setLikeCount(newLikeCount);
+
+            if (onLikeChange) {
+               onLikeChange(postId, newLikeCount, newIsLiked);
+            }
+         } else {
+            toast.error(response.data.message || t("likeFailed"));
+         }
+      } catch (error: any) {
+         console.error("Like error:", error);
+         toast.error(error?.data?.message || t("likeFailed"));
+      } finally {
+         setIsLikeLoading(false);
+      }
    };
 
    return (
@@ -114,8 +172,9 @@ export function PostCard({ author, content, image, likes, comments, shares, onVi
                   isLiked ? "text-red-500 hover:text-red-600" : "text-gray-600 dark:text-gray-400"
                }`}
                onClick={handleLike}
+               disabled={isLikeLoading}
             >
-               <Heart className={`w-5 h-5 ${isLiked ? "fill-red-500" : ""}`} />
+               <Heart className={`w-5 h-5 ${isLiked ? "fill-red-500" : ""} ${isLikeLoading ? "animate-pulse" : ""}`} />
                {t("like")}
             </Button>
             <Button 

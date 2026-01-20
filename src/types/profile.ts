@@ -42,6 +42,7 @@ export interface Post {
   likesCount: number;
   commentsCount: number;
   sharesCount: number;
+  isLiked?: boolean;
   createdAt: string;
   updatedAt?: string;
   profile?: Profile;

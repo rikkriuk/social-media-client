@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookie from "js-cookie";
 import { getDeviceId, getDeviceName } from "./device";
 import pkg from "../../package.json";
+import { startGlobalLoading, stopGlobalLoading } from "@/zustand/useLoading";
 
 axios.defaults.timeout = 300000;
 
@@ -65,6 +66,10 @@ export const webRequest = axios.create({
 
 webRequest.interceptors.request.use(
    async (config: any) => {
+      if (typeof window !== "undefined") {
+         startGlobalLoading();
+      }
+
       if (!(config.data instanceof FormData)) {
          config.headers["Content-Type"] = "application/json";
       } else {
@@ -73,6 +78,9 @@ webRequest.interceptors.request.use(
       return config;
    },
    (error: any) => {
+      if (typeof window !== "undefined") {
+         stopGlobalLoading();
+      }
       console.error("webRequest: Error interceptor request:::", error.response);
       return Promise.reject(error);
    }
@@ -80,9 +88,16 @@ webRequest.interceptors.request.use(
 
 webRequest.interceptors.response.use(
    (response: any) => {
+      if (typeof window !== "undefined") {
+         stopGlobalLoading();
+      }
       return response;
    },
    (error: any) => {
+      if (typeof window !== "undefined") {
+         stopGlobalLoading();
+      }
+
       if (!error?.response) {
          console.error(error);
          return Promise.reject(error);

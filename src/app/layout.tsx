@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { LeftSidebar, RightSidebar } from "@/components/Sidebar";
+import { NavigationProgress } from "@/components/NavigationProgress";
 import { cn } from "@/lib/utils";
 import { cookies } from "next/headers";
 
@@ -36,6 +37,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
+        <NavigationProgress />
         {token && <Navbar />}
         <div className={cn("flex justify-between", !token && "justify-center")}>
           {token && <LeftSidebar />}

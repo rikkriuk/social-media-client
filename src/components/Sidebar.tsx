@@ -4,7 +4,7 @@ import { useTranslationCustom } from "@/i18n/client";
 import useLanguage from "@/zustand/useLanguage";
 import { Users, TrendingUp, Calendar, Bookmark } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import Link from "next/link";
+import { ProgressLink } from "./ProgressLink";
 
 const LeftSidebar = () => {
    const { lng } = useLanguage();
@@ -21,7 +21,7 @@ const LeftSidebar = () => {
     <div className="hidden lg:block w-64 fixed left-0 top-16 h-[calc(100vh-4rem)] p-4 overflow-y-auto">
       <div className="space-y-2">
         {menuItems.map((item, index) => (
-          <Link
+          <ProgressLink
             href={item.link}
             key={index}
             className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-all"
@@ -33,7 +33,7 @@ const LeftSidebar = () => {
             {item.badge && (
               <span className="text-gray-500 text-sm">{item.badge}</span>
             )}
-          </Link>
+          </ProgressLink>
         ))}
       </div>
     </div>

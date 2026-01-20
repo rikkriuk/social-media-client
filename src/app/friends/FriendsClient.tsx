@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
-import { useProgressRouter } from "@/components/ProgressLink";
 import { UserFollow, UserSuggestion } from "@/types/profile";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
+import { useRouter } from "next/navigation";
 
 interface FriendsClientProps {
    initialFollowers: UserFollow[];
@@ -36,7 +36,7 @@ const FriendsClient = ({
    currentUserId,
    initialTab = "following"
 }: FriendsClientProps) => {
-   const router = useProgressRouter();
+   const router = useRouter();
    const { lng } = useLanguage();
    const { t } = useTranslationCustom(lng, "friends");
 

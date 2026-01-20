@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Camera, MapPin, Link as LinkIcon, Calendar, Edit, UserPlus, UserMinus, ImagePlus, Video, Smile, X } from "lucide-react";
-import { useProgressRouter } from "@/components/ProgressLink";
+import { useRouter } from "next/navigation";
 import { PostCard } from "../../components/PostCard";
 import { Avatar, AvatarFallback } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";

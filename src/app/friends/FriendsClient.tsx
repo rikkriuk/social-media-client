@@ -24,6 +24,7 @@ interface FriendsClientProps {
    initialFollowing: UserFollow[];
    initialSuggestions: UserSuggestion[];
    currentUserId: string;
+   initialTab?: string;
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -32,7 +33,8 @@ const FriendsClient = ({
    initialFollowers,
    initialFollowing,
    initialSuggestions,
-   currentUserId
+   currentUserId,
+   initialTab = "following"
 }: FriendsClientProps) => {
    const router = useRouter();
    const { lng } = useLanguage();
@@ -46,7 +48,7 @@ const FriendsClient = ({
    const [isSearching, setIsSearching] = useState(false);
    const [unfollowingId, setUnfollowingId] = useState<string | null>(null);
    const [followingId, setFollowingId] = useState<string | null>(null);
-   const [activeTab, setActiveTab] = useState("following");
+   const [activeTab, setActiveTab] = useState(initialTab);
 
    const [suggestionsOffset, setSuggestionsOffset] = useState(ITEMS_PER_PAGE);
    const [hasMoreSuggestions, setHasMoreSuggestions] = useState(initialSuggestions.length >= ITEMS_PER_PAGE);
@@ -119,6 +121,7 @@ const FriendsClient = ({
                   currentUserId,
                },
             });
+            console.log("Search response:", response.data);
             setSearchResults(response.data?.data?.rows || []);
          } catch (error) {
             console.error("Search error:", error);

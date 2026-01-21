@@ -1,8 +1,22 @@
 {
   "notifications": "Notifications",
   "minutesAgo": "minutes ago",
+  "hoursAgo": "hours ago",
+  "daysAgo": "days ago",
+  "justNow": "just now",
   "all": "All",
   "unread": "Unread",
+  "read": "Read",
   "mentions": "Mentions",
-  "noMentions": "No mentions yet"
+  "noMentions": "No mentions yet",
+  "noUnreadNotifications": "No unread notifications",
+  "noReadNotifications": "No read notifications",
+  "markAllAsRead": "Mark all as read",
+  "allMarkedAsRead": "All notifications marked as read",
+  "likedYourPost": "liked your post",
+  "commentedOnYourPost": "commented on your post",
+  "startedFollowingYou": "started following you",
+  "errorLoadingNotifications": "Failed to load notifications",
+  "errorUpdatingNotification": "Failed to update notification",
+  "errorUpdatingNotifications": "Failed to update notifications"
 }

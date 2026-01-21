@@ -9,11 +9,12 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import { Home, User, MessageCircle, Bell, Settings } from "lucide-react";
 import type { NavItem } from "../types/navbar";
 import useAuth from "@/zustand/useAuth";
+import NotificationBadge from "./NotificationBadge";
 
 const NAV_ITEMS: NavItem[] = [
    { id: "home", icon: <Home className="w-5 h-5" />, path: "home" },
    { id: "messages", icon: <MessageCircle className="w-5 h-5" />, path: "messages", badge: 3 },
-   { id: "notifications", icon: <Bell className="w-5 h-5" />, path: "notifications", badge: 5 },
+   { id: "notifications", icon: "bell", path: "notifications" },
    { id: "profile", icon: <User className="w-5 h-5" />, path: "profile" },
    { id: "settings", icon: <Settings className="w-5 h-5" />, path: "settings" },
 ];
@@ -48,7 +49,9 @@ const Navbar = () => {
                active={isActive}
                badge={item.badge}
             >
-               {typeof item.icon === "string" ? (
+               {item.id === "notifications" ? (
+                  <NotificationBadge className={iconSize} />
+               ) : typeof item.icon === "string" ? (
                   <span className={iconSize}>{item.icon}</span>
                ) : (
                   item.icon

@@ -58,10 +58,14 @@ const NotificationsPage = () => {
             },
          });
 
-         const notifications = response.data?.data?.rows || response.data?.rows || [];
-         setAllNotifications(notifications);
-         setUnreadNotifications(notifications.filter((n: NotificationData) => !n.isRead));
-         setReadNotifications(notifications.filter((n: NotificationData) => n.isRead));
+         console.log("Notification response:", response.data);
+         
+         const rows = response.data?.rows || response.data?.data?.rows || [];
+         console.log("Parsed notifications:", rows);
+         
+         setAllNotifications(rows);
+         setUnreadNotifications(rows.filter((n: NotificationData) => !n.isRead));
+         setReadNotifications(rows.filter((n: NotificationData) => n.isRead));
       } catch (error) {
          console.error("Failed to fetch notifications:", error);
          toast.error(t("errorLoadingNotifications") || "Failed to load notifications");

@@ -1,8 +1,22 @@
 {
   "notifications": "Notifikasi",
   "minutesAgo": "menit lalu",
+  "hoursAgo": "jam lalu",
+  "daysAgo": "hari lalu",
+  "justNow": "baru saja",
   "all": "Semua",
   "unread": "Belum Dibaca",
+  "read": "Sudah Dibaca",
   "mentions": "Mention",
-  "noMentions": "Belum ada mention"
+  "noMentions": "Belum ada mention",
+  "noUnreadNotifications": "Tidak ada notifikasi yang belum dibaca",
+  "noReadNotifications": "Tidak ada notifikasi yang sudah dibaca",
+  "markAllAsRead": "Tandai semua sebagai dibaca",
+  "allMarkedAsRead": "Semua notifikasi ditandai sebagai dibaca",
+  "likedYourPost": "menyukai postmu",
+  "commentedOnYourPost": "berkomentar pada postmu",
+  "startedFollowingYou": "mulai mengikutimu",
+  "errorLoadingNotifications": "Gagal memuat notifikasi",
+  "errorUpdatingNotification": "Gagal memperbarui notifikasi",
+  "errorUpdatingNotifications": "Gagal memperbarui notifikasi"
 }

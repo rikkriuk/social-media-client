@@ -5,13 +5,38 @@ import useLanguage from "@/zustand/useLanguage";
 import { Users, TrendingUp, Calendar, Bookmark } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ProgressLink } from "./ProgressLink";
+import { useState, useEffect } from "react";
+import { webRequest } from "@/helpers/api";
+import useAuth from "@/zustand/useAuth";
 
 const LeftSidebar = () => {
    const { lng } = useLanguage();
    const { t } = useTranslationCustom(lng, "sidebar");
+   const { currentUser } = useAuth();
+   const [friendsCount, setFriendsCount] = useState<number | null>(null);
+
+   useEffect(() => {
+      if (!currentUser?.id) return;
+
+      const fetchFriendsCount = async () => {
+         try {
+            const response = await webRequest.get("/user-follows/following", {
+               params: {
+                  userId: currentUser.id,
+               },
+            });
+            const count = response.data?.data?.count || 0;
+            setFriendsCount(count);
+         } catch (error) {
+            console.error("Failed to fetch friends count:", error);
+         }
+      };
+
+      fetchFriendsCount();
+   }, [currentUser?.id]);
 
    const menuItems = [
-      { icon: <Users className="w-5 h-5" />, label: t("friends"), badge: "124", link: "/friends" },
+      { icon: <Users className="w-5 h-5" />, label: t("friends"), badge: friendsCount !== null ? String(friendsCount) : null, link: "/friends" },
       { icon: <Bookmark className="w-5 h-5" />, label: t("saved"), badge: null, link: "/saved" },
       { icon: <Calendar className="w-5 h-5" />, label: t("events"), badge: "3", link: "/events" },
       { icon: <TrendingUp className="w-5 h-5" />, label: t("trending"), badge: null, link: "/trending" },

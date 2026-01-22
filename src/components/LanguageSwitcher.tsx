@@ -6,6 +6,7 @@ import useLanguage from "@/zustand/useLanguage";
 import i18next from "i18next";
 import { type ListLangType } from "@/i18n/settings";
 import { LANGUAGES } from "@/const/languages";
+import { LanguageDropdownProps, LanguageOptionProps } from "@/types/lang";
 
 const BUTTON_CLASS = "flex items-center p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all";
 const DROPDOWN_CLASS = "absolute right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden z-50";
@@ -22,12 +23,6 @@ const useClickOutside = (ref: RefObject<HTMLDivElement | null>, callback: () => 
    }, [ref, callback]);
 };
 
-interface LanguageOptionProps {
-   lang: { code: string; label: string };
-   isActive: boolean;
-   onSelect: (code: string) => void;
-}
-
 function LanguageOption({ lang, isActive, onSelect }: LanguageOptionProps) {
    const baseClass = "w-full text-left px-4 py-2.5 text-sm transition-all";
    const activeClass = isActive
@@ -43,12 +38,6 @@ function LanguageOption({ lang, isActive, onSelect }: LanguageOptionProps) {
          {lang.label}
       </button>
    );
-}
-
-interface LanguageDropdownProps {
-   isOpen: boolean;
-   currentLng: string;
-   onSelect: (code: string) => void;
 }
 
 function LanguageDropdown({ isOpen, currentLng, onSelect }: LanguageDropdownProps) {

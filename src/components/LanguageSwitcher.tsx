@@ -10,7 +10,7 @@ import { LANGUAGES } from "@/const/languages";
 const BUTTON_CLASS = "flex items-center p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all";
 const DROPDOWN_CLASS = "absolute right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden z-50";
 
-const useClickOutside = (ref: React.RefObject<HTMLDivElement>, callback: () => void) => {
+const useClickOutside = (ref: RefObject<HTMLDivElement | null>, callback: () => void) => {
    useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
          if (ref.current && !(e.target instanceof Node && ref.current.contains(e.target))) {
@@ -23,7 +23,7 @@ const useClickOutside = (ref: React.RefObject<HTMLDivElement>, callback: () => v
 };
 
 interface LanguageOptionProps {
-   lang: (typeof LANGUAGES)[0];
+   lang: { code: string; label: string };
    isActive: boolean;
    onSelect: (code: string) => void;
 }

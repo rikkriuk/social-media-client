@@ -1,16 +1,7 @@
-import { UserFollow } from "@/types/profile";
+import type { FollowingCardProps } from "@/types/friend";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, UserMinus } from "lucide-react";
-
-interface FollowingCardProps {
-  follow: UserFollow;
-  isUnfollowing: boolean;
-  onUnfollow: () => void;
-  onViewProfile: (profileId: string) => void;
-  unfollowText: string;
-  unfollowingText: string;
-}
 
 export function FollowingCard({
   follow,

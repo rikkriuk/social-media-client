@@ -1,40 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserFollow } from "@/types/profile";
+import type { TabsContainerProps } from "@/types/friend";
 import { FollowingList } from "./FollowingList";
 import { FollowerList } from "./FollowerList";
 import { SuggestionsList } from "./SuggestionsList";
-
-interface TabsContainerProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-  following: UserFollow[];
-  followers: UserFollow[];
-  suggestions: any[];
-  unfollowingId: string | null;
-  followingIds: string[];
-  followingLoadingId: string | null;
-  hasMoreSuggestions: boolean;
-  isLoadingMore: boolean;
-  onUnfollow: (followingUserId: string) => void;
-  onFollowBack: (followerId: string) => void;
-  onFollow: (userId: string) => void;
-  onViewProfile: (profileId: string) => void;
-  onLoadMore: () => void;
-  suggestionsEndRef: React.RefObject<HTMLDivElement | null>;
-  followingTabTitle: string;
-  followersTabTitle: string;
-  suggestionsTabTitle: string;
-  mutualFollowText: string;
-  followBackText: string;
-  viewProfileText: string;
-  unfollowText: string;
-  unfollowingText: string;
-  noFollowingText: string;
-  noFollowersText: string;
-  noSuggestionsText: string;
-  noMoreSuggestionsText: string;
-  followText: string;
-}
 
 export function TabsContainer({
   activeTab,

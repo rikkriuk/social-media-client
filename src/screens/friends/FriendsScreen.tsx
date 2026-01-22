@@ -4,7 +4,8 @@ import { useState, useCallback } from "react";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
 import { useRouter } from "next/navigation";
-import type { UserFollow, UserSuggestion } from "@/types/profile";
+import type { UserFollow } from "@/types/profile";
+import type { FriendsScreenProps } from "@/types/friend";
 
 import { useFriendsLogic } from "./hooks/useFriendsLogic";
 import { useDebouncedSearch } from "./hooks/useDebouncedSearch";
@@ -12,14 +13,6 @@ import { useInfiniteScroll } from "./hooks/useInfiniteScroll";
 
 import { SearchSection } from "./components/SearchSection";
 import { TabsContainer } from "./components/TabsContainer";
-
-interface FriendsScreenProps {
-   initialFollowers: UserFollow[];
-   initialFollowing: UserFollow[];
-   initialSuggestions: UserSuggestion[];
-   currentUserId: string;
-   initialTab?: string;
-}
 
 export default function FriendsScreen({
    initialFollowers,

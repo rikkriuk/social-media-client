@@ -1,19 +1,8 @@
-import { UserFollow } from "@/types/profile";
+import type { FollowerCardProps } from "@/types/friend";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, UserPlus, Loader2 } from "lucide-react";
-
-interface FollowerCardProps {
-  follow: UserFollow;
-  isFollowing: boolean;
-  isLoading: boolean;
-  onFollowBack: () => void;
-  onViewProfile: (profileId: string) => void;
-  mutualFollowText: string;
-  followBackText: string;
-  viewProfileText: string;
-}
 
 export function FollowerCard({
    follow,

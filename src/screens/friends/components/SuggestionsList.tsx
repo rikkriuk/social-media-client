@@ -1,20 +1,6 @@
-import { UserSuggestion } from "@/types/profile";
+import type { SuggestionsListProps } from "@/types/friend";
 import { SuggestionCard } from "./SuggestionCard";
 import { Loader2 } from "lucide-react";
-
-interface SuggestionsListProps {
-  suggestions: UserSuggestion[];
-  followingIds: string[];
-  hasMoreSuggestions: boolean;
-  isLoadingMore: boolean;
-  onFollow: (userId: string) => void;
-  onViewProfile: (profileId: string) => void;
-  onLoadMore: () => void;
-  suggestionsEndRef: React.RefObject<HTMLDivElement | null>;
-  followText: string;
-  noMoreText: string;
-  emptyMessage: string;
-}
 
 export function SuggestionsList({
   suggestions,

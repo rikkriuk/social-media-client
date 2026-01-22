@@ -1,15 +1,7 @@
-import { UserSuggestion } from "@/types/profile";
+import type { SuggestionCardProps } from "@/types/friend";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { UserPlus, Loader2 } from "lucide-react";
-
-interface SuggestionCardProps {
-  user: UserSuggestion;
-  isLoading: boolean;
-  onFollow: () => void;
-  onViewProfile: (profileId: string) => void;
-  followText: string;
-}
 
 export function SuggestionCard({
   user,

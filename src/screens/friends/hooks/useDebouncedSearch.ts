@@ -1,26 +1,21 @@
-import { useEffect, useCallback } from "react";
-
-interface UseDebounceSearchProps {
-  query: string;
-  callback: (query: string) => void;
-  delay?: number;
-}
+import { UseDebouncedSearchProps } from "@/types/friend";
+import { useEffect } from "react";
 
 export const useDebouncedSearch = ({
-  query,
-  callback,
-  delay = 300,
-}: UseDebounceSearchProps) => {
-  useEffect(() => {
-    if (!query.trim()) {
-      callback("");
-      return;
-    }
+   query,
+   callback,
+   delay = 300,
+}: UseDebouncedSearchProps) => {
+   useEffect(() => {
+      if (!query.trim()) {
+         callback("");
+         return;
+      }
 
-    const timer = setTimeout(() => {
-      callback(query);
-    }, delay);
+      const timer = setTimeout(() => {
+         callback(query);
+      }, delay);
 
-    return () => clearTimeout(timer);
-  }, [query, callback, delay]);
+      return () => clearTimeout(timer);
+   }, [query, callback, delay]);
 };

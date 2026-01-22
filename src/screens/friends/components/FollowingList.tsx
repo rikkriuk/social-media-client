@@ -1,15 +1,5 @@
-import { UserFollow } from "@/types/profile";
+import type { FollowingListProps } from "@/types/friend";
 import { FollowingCard } from "./FollowingCard";
-
-interface FollowingListProps {
-  following: UserFollow[];
-  unfollowingId: string | null;
-  onUnfollow: (followingUserId: string) => void;
-  onViewProfile: (profileId: string) => void;
-  unfollowText: string;
-  unfollowingText: string;
-  emptyMessage: string;
-}
 
 export function FollowingList({
   following,

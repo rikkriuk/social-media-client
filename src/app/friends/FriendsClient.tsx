@@ -1,15 +1,7 @@
 "use client";
 
 import FriendsScreen from "@/screens/friends/FriendsScreen";
-import { UserFollow, UserSuggestion } from "@/types/profile";
-
-interface FriendsClientProps {
-  initialFollowers: UserFollow[];
-  initialFollowing: UserFollow[];
-  initialSuggestions: UserSuggestion[];
-  currentUserId: string;
-  initialTab?: string;
-}
+import type { FriendsClientProps } from "@/types/friend";
 
 export default function FriendsClient({
    initialFollowers,

@@ -1,20 +1,7 @@
 import { Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { UserSuggestion } from "@/types/profile";
+import type { SearchSectionProps } from "@/types/friend";
 import { SuggestionCard } from "./SuggestionCard";
-
-interface SearchSectionProps {
-  query: string;
-  isSearching: boolean;
-  results: UserSuggestion[];
-  followingIds: string[];
-  onQueryChange: (query: string) => void;
-  onFollow: (userId: string) => void;
-  onViewProfile: (profileId: string) => void;
-  searchPlaceholder: string;
-  searchResultsTitle: string;
-  followText: string;
-}
 
 export function SearchSection({
   query,

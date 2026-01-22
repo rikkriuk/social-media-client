@@ -1,4 +1,4 @@
-import { UseDebouncedSearchProps } from "@/types/friend";
+import type { UseDebouncedSearchProps } from "@/types/friend";
 import { useEffect } from "react";
 
 export const useDebouncedSearch = ({

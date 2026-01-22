@@ -6,7 +6,7 @@ import { useTranslationCustom } from "@/i18n/client";
 import { usePathname, useRouter } from "next/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeSwitcher from "./ThemeSwitcher";
-import type { NavItem } from "../types/navbar";
+import type { NavItem, NavItemsListProps, NavLinkProps } from "../types/navbar";
 import useAuth from "@/zustand/useAuth";
 import NotificationBadge from "./NotificationBadge";
 
@@ -81,13 +81,6 @@ function NavBadge({ count, isMobile = false }: BadgeProps) {
    );
 }
 
-interface NavLinkProps {
-   item: NavItem;
-   isActive: boolean;
-   onClick: () => void;
-   isMobile?: boolean;
-}
-
 function NavLink({ item, isActive, onClick, isMobile = false }: NavLinkProps) {
    const baseClass = isMobile ? MOBILE_NAV_LINK_CLASS : DESKTOP_NAV_LINK_CLASS;
    const activeClass = isMobile ? ACTIVE_MOBILE_CLASS : ACTIVE_DESKTOP_CLASS;
@@ -104,10 +97,6 @@ function NavLink({ item, isActive, onClick, isMobile = false }: NavLinkProps) {
          <NavBadge count={item.badge} isMobile={isMobile} />
       </button>
    );
-}
-
-interface NavItemsListProps {
-   isMobile?: boolean;
 }
 
 function NavItemsList({ isMobile = false }: NavItemsListProps) {

@@ -20,9 +20,11 @@ const LeftSidebar = () => {
 
       const fetchFriendsCount = async () => {
          try {
-            const response = await webRequest.get("/user-follows/following", {
+            const response = await webRequest.get("/follow", {
                params: {
+                  type: "following",
                   userId: currentUser.id,
+                  limit: 1,
                },
             });
             const count = response.data?.data?.count || 0;

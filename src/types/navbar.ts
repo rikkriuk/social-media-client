@@ -10,3 +10,13 @@ export interface NavbarProps {
   onNavigate: (page: string) => void;
 }
 
+export interface NavItemsListProps {
+  isMobile?: boolean;
+}
+
+export interface NavLinkProps {
+  item: NavItem;
+  isActive: boolean;
+  onClick: () => void;
+  isMobile?: boolean;
+}

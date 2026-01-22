@@ -1,12 +1,11 @@
 "use client"
 
-import { Search, LogOut } from "lucide-react";
+import { Search, LogOut, Home, User, MessageCircle, Settings } from "lucide-react";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
 import { usePathname, useRouter } from "next/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { Home, User, MessageCircle, Bell, Settings } from "lucide-react";
 import type { NavItem } from "../types/navbar";
 import useAuth from "@/zustand/useAuth";
 import NotificationBadge from "./NotificationBadge";
@@ -19,174 +18,188 @@ const NAV_ITEMS: NavItem[] = [
    { id: "settings", icon: <Settings className="w-5 h-5" />, path: "settings" },
 ];
 
-const Navbar = () => {
-   const { lng } = useLanguage();
-   const { t } = useTranslationCustom(lng, "navbar");
+const DESKTOP_ICON_SIZE = "w-5 h-5";
+const MOBILE_ICON_SIZE = "w-6 h-6";
+const DESKTOP_NAV_LINK_CLASS = "relative p-3 rounded-xl transition-all";
+const MOBILE_NAV_LINK_CLASS = "relative p-2 rounded-xl transition-all";
+const ACTIVE_DESKTOP_CLASS = "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400";
+const INACTIVE_DESKTOP_CLASS = "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800";
+const ACTIVE_MOBILE_CLASS = "text-blue-600 dark:text-blue-400";
+const INACTIVE_MOBILE_CLASS = "text-gray-600 dark:text-gray-400";
+const BADGE_CLASS = "absolute bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center";
+
+const useNavigation = () => {
    const pathname = usePathname();
    const router = useRouter();
-   const { doLogout } = useAuth();
 
    const currentPage = pathname === "/" ? "home" : pathname.split("/")[1];
 
-   const onNavigate = (path: string) => {
-      if (path === "home") {
-         router.push("/");
-      } else {
-         router.push(`/${path}`);
-      }
+   const navigate = (path: string) => {
+      router.push(path === "home" ? "/" : `/${path}`);
    };
 
-   const renderNavItems = (isMobile = false) =>
-      NAV_ITEMS.map((item) => {
-         const isActive = currentPage === (item.path === "home" ? "" : item.path);
-         const Component = isMobile ? MobileNavLink : NavLink;
-         const iconSize = isMobile ? "w-6 h-6" : "w-5 h-5";
+   const isActive = (itemPath: string) => {
+      return currentPage === (itemPath === "home" ? "" : itemPath);
+   };
 
-         return (
-            <Component
+   return { navigate, isActive };
+};
+
+interface NavIconProps {
+   item: NavItem;
+   isMobile?: boolean;
+}
+
+function NavIcon({ item, isMobile = false }: NavIconProps) {
+   const iconSize = isMobile ? MOBILE_ICON_SIZE : DESKTOP_ICON_SIZE;
+
+   if (item.id === "notifications") {
+      return <NotificationBadge className={iconSize} />;
+   }
+
+   if (typeof item.icon === "string") {
+      return <span className={iconSize}>{item.icon}</span>;
+   }
+
+   return item.icon;
+}
+
+interface BadgeProps {
+   count?: number;
+   isMobile?: boolean;
+}
+
+function NavBadge({ count, isMobile = false }: BadgeProps) {
+   if (!count) return null;
+
+   const positionClass = isMobile ? "top-0 -right-1" : "top-1 right-1";
+
+   return (
+      <span className={`${BADGE_CLASS} ${positionClass}`}>
+         {count}
+      </span>
+   );
+}
+
+interface NavLinkProps {
+   item: NavItem;
+   isActive: boolean;
+   onClick: () => void;
+   isMobile?: boolean;
+}
+
+function NavLink({ item, isActive, onClick, isMobile = false }: NavLinkProps) {
+   const baseClass = isMobile ? MOBILE_NAV_LINK_CLASS : DESKTOP_NAV_LINK_CLASS;
+   const activeClass = isMobile ? ACTIVE_MOBILE_CLASS : ACTIVE_DESKTOP_CLASS;
+   const inactiveClass = isMobile ? INACTIVE_MOBILE_CLASS : INACTIVE_DESKTOP_CLASS;
+   const statusClass = isActive ? activeClass : inactiveClass;
+
+   return (
+      <button
+         key={item.id}
+         onClick={onClick}
+         className={`${baseClass} ${statusClass}`}
+      >
+         <NavIcon item={item} isMobile={isMobile} />
+         <NavBadge count={item.badge} isMobile={isMobile} />
+      </button>
+   );
+}
+
+interface NavItemsListProps {
+   isMobile?: boolean;
+}
+
+function NavItemsList({ isMobile = false }: NavItemsListProps) {
+   const { navigate, isActive } = useNavigation();
+
+   return (
+      <>
+         {NAV_ITEMS.map((item) => (
+            <NavLink
                key={item.id}
-               onClick={() => onNavigate(item.path)}
-               active={isActive}
-               badge={item.badge}
-            >
-               {item.id === "notifications" ? (
-                  <NotificationBadge className={iconSize} />
-               ) : typeof item.icon === "string" ? (
-                  <span className={iconSize}>{item.icon}</span>
-               ) : (
-                  item.icon
-               )}
-            </Component>
-         );
-      });
+               item={item}
+               isActive={isActive(item.path)}
+               onClick={() => navigate(item.path)}
+               isMobile={isMobile}
+            />
+         ))}
+      </>
+   );
+}
 
+function Logo() {
+   const { navigate } = useNavigation();
+
+   return (
+      <div
+         className="cursor-pointer flex items-center gap-2"
+         onClick={() => navigate("home")}
+      >
+         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+            <span className="text-white">S</span>
+         </div>
+         <span className="hidden md:block text-gray-900 dark:text-white">SocialHub</span>
+      </div>
+   );
+}
+
+function SearchBar() {
+   const { lng } = useLanguage();
+   const { t } = useTranslationCustom(lng, "navbar");
+
+   return (
+      <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2 w-64">
+         <Search className="w-4 h-4 text-gray-400 mr-2" />
+         <input
+            type="text"
+            placeholder={t("search")}
+            className="bg-transparent border-none outline-none w-full text-gray-900 dark:text-white placeholder:text-gray-400"
+         />
+      </div>
+   );
+}
+
+function LogoutButton() {
+   const { doLogout } = useAuth();
+
+   return (
+      <button
+         onClick={doLogout}
+         className="p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all"
+         title="Logout"
+      >
+         <LogOut className="w-5 h-5" />
+      </button>
+   );
+}
+
+export default function Navbar() {
    return (
       <nav className="sticky top-0 z-50 border-b bg-white dark:bg-gray-900 dark:border-gray-800">
          <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center justify-between h-16">
                <div className="flex items-center gap-8">
-                  <div 
-                     className="cursor-pointer flex items-center gap-2"
-                     onClick={() => onNavigate("home")}
-                  >
-                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                        <span className="text-white">S</span>
-                     </div>
-                     <span className="hidden md:block text-gray-900 dark:text-white">SocialHub</span>
-                  </div>
-
-                  {/* Desktop Search */}
-                  <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2 w-64">
-                     <Search className="w-4 h-4 text-gray-400 mr-2" />
-                     <input
-                        type="text"
-                        placeholder={t("search")}
-                        className="bg-transparent border-none outline-none w-full text-gray-900 dark:text-white placeholder:text-gray-400"
-                     />
-                  </div>
+                  <Logo />
+                  <SearchBar />
                </div>
 
-               {/* Desktop Navigation */}
                <div className="hidden md:flex items-center gap-2">
-                  {renderNavItems(false)}
-                  
+                  <NavItemsList />
                   <div className="border-l border-gray-200 dark:border-gray-700 mx-2 h-6" />
                </div>
 
                <div className="flex items-center gap-2">
                   <ThemeSwitcher />
                   <LanguageSwitcher />
-                  <button
-                     onClick={doLogout}
-                     className="p-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all"
-                     title="Logout"
-                  >
-                     <LogOut className="w-5 h-5" />
-                  </button>
+                  <LogoutButton />
                </div>
             </div>
          </div>
 
-         {/* Mobile Bottom Navigation */}
          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t dark:border-gray-800 px-4 py-2 flex items-center justify-around">
-            {renderNavItems(true)}
+            <NavItemsList isMobile />
          </div>
       </nav>
    );
 }
-
-const NavLink = ({ onClick, active, badge, children }: any) => (
-   <button
-      onClick={onClick}
-      className={`relative p-3 rounded-xl transition-all ${
-         active
-            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-            : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-      }`}
-   >
-      {children}
-      {badge && (
-         <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {badge}
-         </span>
-      )}
-   </button>
-);
-
-const MobileNavLink = ({ onClick, active, badge, children }: any) => (
-   <button
-      onClick={onClick}
-      className={`relative p-2 rounded-xl transition-all ${
-         active
-            ? "text-blue-600 dark:text-blue-400"
-            : "text-gray-600 dark:text-gray-400"
-      }`}
-   >
-      {children}
-      {badge && (
-         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {badge}
-         </span>
-      )}
-   </button>
-);
-
-const NavButton = ({ icon, active, badge }: any) => {
-   return (
-      <button
-         className={`relative p-3 rounded-xl transition-all ${
-         active
-            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-            : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-         }`}
-      >
-         {icon}
-         {badge && (
-         <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {badge}
-         </span>
-         )}
-      </button>
-   );
-}
-
-const MobileNavButton = ({ icon, active, badge }: any) => {
-   return (
-      <button
-         className={`relative p-2 rounded-xl transition-all ${
-         active
-            ? "text-blue-600 dark:text-blue-400"
-            : "text-gray-600 dark:text-gray-400"
-         }`}
-      >
-         {icon}
-         {badge && (
-         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {badge}
-         </span>
-         )}
-      </button>
-   );
-}
-
-export default Navbar;

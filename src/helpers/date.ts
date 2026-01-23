@@ -1,6 +1,6 @@
-const formatDateWithMonth =(
+const formatDateWithMonth = (
    isoDate: string,
-   t: (key: string) => string,
+   t: (key: string) => string | undefined,
 ) => {
    const date = new Date(isoDate);
 

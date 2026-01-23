@@ -1,16 +1,5 @@
 import { PostCard } from "@/components/PostCard";
-import type { Post, Profile } from "@/types/profile";
-
-interface ProfilePostsProps {
-   posts: Post[];
-   profileData: Profile;
-   initialUser: { username: string };
-   currentProfileId: string | null | undefined;
-   formatPostTime: (createdAt: string) => string;
-   onLikeChange: (postId: string, newLikeCount: number, isLiked: boolean) => void;
-   isOwnProfile: boolean;
-   t: (key: string) => string | undefined;
-}
+import type { ProfilePostsProps } from "@/types/profile";
 
 export const ProfilePosts = ({
    posts,

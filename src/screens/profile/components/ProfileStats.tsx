@@ -1,12 +1,5 @@
 import { useRouter } from "next/navigation";
-import type { FollowCount } from "@/types/profile";
-
-interface ProfileStatsProps {
-   postsCount: number;
-   followCount: FollowCount;
-   userId: string;
-   t: (key: string) => string | undefined;
-}
+import type { ProfileStatsProps } from "@/types/profile";
 
 export const ProfileStats = ({
    postsCount,

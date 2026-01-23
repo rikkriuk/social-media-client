@@ -1,20 +1,7 @@
 import { useState, useCallback } from "react";
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
-import type { Post } from "@/types/profile";
-
-interface PostContent {
-   content: string;
-   mediaIds: string[];
-}
-
-interface EventData {
-   isEvent: boolean;
-   eventDate: string;
-   eventTime: string;
-   eventLocation: string;
-   isOnlineEvent: boolean;
-}
+import type { Post, PostContent, EventData } from "@/types/profile";
 
 export const usePostCreation = (
    initialPosts: Post[],

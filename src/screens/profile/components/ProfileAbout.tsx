@@ -1,13 +1,6 @@
 import { MapPin, Link as LinkIcon, Calendar } from "lucide-react";
 import { formatDateWithMonth } from "@/helpers/date";
-import type { Profile } from "@/types/profile";
-
-interface ProfileAboutProps {
-   profileData: Profile;
-   initialUser: { createdAt: string };
-   tDate: (key: string) => string | undefined;
-   t: (key: string) => string | undefined;
-}
+import type { ProfileAboutProps } from "@/types/profile";
 
 export const ProfileAbout = ({
    profileData,

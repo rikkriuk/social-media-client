@@ -2,34 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PostCreationForm } from "./PostCreationForm";
 import { ProfilePosts } from "./ProfilePosts";
 import { ProfileAbout } from "./ProfileAbout";
-import type { Post, Profile } from "@/types/profile";
-
-interface ProfileTabsSectionProps {
-   isOwnProfile: boolean;
-   profileData: Profile;
-   initialUser: { username: string; createdAt: string };
-   posts: Post[];
-   postContent: { content: string; mediaIds: string[] };
-   setPostContent: (content: { content: string; mediaIds: string[] }) => void;
-   isEventPost: boolean;
-   onToggleEvent: () => void;
-   eventDate: string;
-   setEventDate: (date: string) => void;
-   eventTime: string;
-   setEventTime: (time: string) => void;
-   eventLocation: string;
-   setEventLocation: (location: string) => void;
-   isOnlineEvent: boolean;
-   setIsOnlineEvent: (online: boolean) => void;
-   isPosting: boolean;
-   onCreatePost: () => void;
-   currentProfileId: string | null | undefined;
-   formatPostTime: (createdAt: string) => string;
-   onLikeChange: (postId: string, newLikeCount: number, isLiked: boolean) => void;
-   tHome: (key: string) => string | undefined;
-   tDate: (key: string) => string | undefined;
-   t: (key: string) => string | undefined;
-}
+import type { ProfileTabsSectionProps } from "@/types/profile";
 
 export const ProfileTabsSection = ({
    isOwnProfile,

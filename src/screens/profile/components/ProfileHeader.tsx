@@ -14,26 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDateWithMonth } from "@/helpers/date";
-import type { Profile } from "@/types/profile";
-
-interface ProfileHeaderProps {
-   isOwnProfile: boolean;
-   profileData: Profile;
-   initialUser: { id: string; username: string; createdAt: string };
-   isEditDialogOpen: boolean;
-   setIsEditDialogOpen: (open: boolean) => void;
-   editFormData: Profile;
-   setEditFormData: (data: Profile) => void;
-   onEditOpen: () => void;
-   isSaving: boolean;
-   onSave: (data: Profile) => void;
-   isFollowing: boolean;
-   isFollowLoading: boolean;
-   onFollowToggle: () => void;
-   isFollowingMe: boolean;
-   tDate: (key: string) => string | undefined;
-   t: (key: string) => string | undefined;
-}
+import type { ProfileHeaderProps } from "@/types/profile";
 
 export const ProfileHeader = ({
    isOwnProfile,

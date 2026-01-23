@@ -9,23 +9,7 @@ import { usePostCreation } from "./hooks/usePostCreation";
 import { ProfileHeader } from "./components/ProfileHeader";
 import { ProfileStats } from "./components/ProfileStats";
 import { ProfileTabsSection } from "./components/ProfileTabsSection";
-import type { Profile, FollowCount, Post } from "@/types/profile";
-
-interface ProfileScreenProps {
-   initialProfile: Profile;
-   initialUser: {
-      id: string;
-      username: string;
-      createdAt: string;
-   };
-   initialFollowCount: FollowCount;
-   initialPosts?: Post[];
-   isOwnProfile?: boolean;
-   isFollowing?: boolean;
-   isFollowingMe?: boolean;
-   currentUserId?: string | null;
-   currentProfileId?: string | null;
-}
+import type { ProfileScreenProps } from "@/types/profile";
 
 export default function ProfileScreen({
    initialProfile,

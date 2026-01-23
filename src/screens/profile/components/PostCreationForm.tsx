@@ -3,27 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { Profile } from "@/types/profile";
-
-interface PostCreationFormProps {
-   profileData: Profile;
-   initialUser: { username: string };
-   postContent: { content: string; mediaIds: string[] };
-   setPostContent: (content: { content: string; mediaIds: string[] }) => void;
-   isEventPost: boolean;
-   onToggleEvent: () => void;
-   eventDate: string;
-   setEventDate: (date: string) => void;
-   eventTime: string;
-   setEventTime: (time: string) => void;
-   eventLocation: string;
-   setEventLocation: (location: string) => void;
-   isOnlineEvent: boolean;
-   setIsOnlineEvent: (online: boolean) => void;
-   isPosting: boolean;
-   onCreatePost: () => void;
-   tHome: (key: string) => string | undefined;
-}
+import type { PostCreationFormProps } from "@/types/profile";
 
 export const PostCreationForm = ({
    profileData,

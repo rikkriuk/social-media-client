@@ -2,11 +2,11 @@ import { useState, useCallback } from "react";
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
 import Cookie from "js-cookie";
-import type { Profile, FollowCount } from "@/types/profile";
+import type { Profile, FollowCount, InitialUser } from "@/types/profile";
 
 export const useProfileLogic = (
    initialProfile: Profile,
-   initialUser: { id: string; username: string; createdAt: string },
+   initialUser: InitialUser,
    initialFollowCount: FollowCount,
    initialIsFollowing: boolean,
    isOwnProfile: boolean,

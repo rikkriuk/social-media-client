@@ -1,4 +1,4 @@
-import { NotificationData } from "./useNotificationsLogic";
+import type { NotificationData } from "@/types/notifications";
 
 export const getActorName = (notification: NotificationData): string => {
    return notification.actor

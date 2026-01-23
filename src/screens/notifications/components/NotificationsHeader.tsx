@@ -1,10 +1,5 @@
 import { Button } from "@/components/ui/button";
-
-interface NotificationsHeaderProps {
-   unreadCount: number;
-   onMarkAllAsRead: () => void;
-   t: (key: string) => string | undefined;
-}
+import { NotificationsHeaderProps } from "@/types/notifications";
 
 export const NotificationsHeader = ({
    unreadCount,

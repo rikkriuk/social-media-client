@@ -2,23 +2,7 @@ import { useState, useCallback } from "react";
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
 import useAuth from "@/zustand/useAuth";
-
-export interface NotificationData {
-   id: string;
-   type: "like" | "comment" | "follow";
-   recipientProfileId: string;
-   actorProfileId: string;
-   actor?: {
-      id?: string;
-      firstName?: string;
-      lastName?: string;
-      avatar?: string;
-   };
-   postId?: string;
-   commentId?: string;
-   isRead: boolean;
-   createdAt: string;
-}
+import type { NotificationData } from "@/types/notifications";
 
 export const useNotificationsLogic = (t: (key: string) => string | undefined) => {
    const { currentUser } = useAuth();

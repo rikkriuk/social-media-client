@@ -1,20 +1,13 @@
 import { Heart, MessageCircle, UserPlus, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { NotificationData } from "../hooks/useNotificationsLogic";
+import type { NotificationItemProps } from "@/types/notifications";
 import {
    getActorName,
    getActorAvatar,
    getActionText,
    formatTime,
 } from "../hooks/notificationHelpers";
-
-interface NotificationItemProps {
-   notification: NotificationData;
-   isMarking: boolean;
-   onMarkAsRead: (id: string) => void;
-   t: (key: string) => string | undefined;
-}
 
 export const NotificationItem = ({
    notification,

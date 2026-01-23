@@ -1,13 +1,5 @@
 import { NotificationItem } from "./NotificationItem";
-import { NotificationData } from "../hooks/useNotificationsLogic";
-
-interface NotificationsListProps {
-   notifications: NotificationData[];
-   markingAsRead: string | null;
-   onMarkAsRead: (id: string) => void;
-   isUnread?: boolean;
-   t: (key: string) => string | undefined;
-}
+import type { NotificationsListProps } from "@/types/notifications";
 
 export const NotificationsList = ({
    notifications,

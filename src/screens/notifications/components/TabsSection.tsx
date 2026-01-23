@@ -1,19 +1,7 @@
 import { Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NotificationsList } from "./NotificationsList";
-import { NotificationData } from "../hooks/useNotificationsLogic";
-
-interface TabsSectionProps {
-   activeTab: string;
-   onTabChange: (tab: string) => void;
-   isLoading: boolean;
-   allNotifications: NotificationData[];
-   unreadNotifications: NotificationData[];
-   readNotifications: NotificationData[];
-   markingAsRead: string | null;
-   onMarkAsRead: (id: string) => void;
-   t: (key: string) => string | undefined;
-}
+import type { TabsSectionProps } from "@/types/notifications";
 
 export const TabsSection = ({
    activeTab,

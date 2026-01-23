@@ -20,3 +20,13 @@ export interface NavLinkProps {
   onClick: () => void;
   isMobile?: boolean;
 }
+
+export interface BadgeProps {
+  count?: number;
+  isMobile?: boolean;
+}
+
+export interface NavIconProps {
+  item: NavItem;
+  isMobile?: boolean;
+}

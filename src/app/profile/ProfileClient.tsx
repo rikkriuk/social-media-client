@@ -1,15 +1,11 @@
 "use client";
 
 import ProfileScreen from "@/screens/profile/ProfileScreen";
-import type { Profile, FollowCount, Post } from "@/types/profile";
+import type { Profile, FollowCount, Post, InitialUser, ProfileScreenProps } from "@/types/profile";
 
 interface ProfileClientProps {
   initialProfile: Profile;
-  initialUser: {
-    id: string;
-    username: string;
-    createdAt: string;
-  };
+  initialUser: InitialUser;
   initialFollowCount: FollowCount;
   initialPosts?: Post[];
   isOwnProfile?: boolean;

@@ -6,7 +6,7 @@ import { useTranslationCustom } from "@/i18n/client";
 import { usePathname, useRouter } from "next/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeSwitcher from "./ThemeSwitcher";
-import type { NavItem, NavItemsListProps, NavLinkProps } from "../types/navbar";
+import type { NavIconProps, BadgeProps, NavItem, NavItemsListProps, NavLinkProps } from "../types/navbar";
 import useAuth from "@/zustand/useAuth";
 import NotificationBadge from "./NotificationBadge";
 
@@ -50,11 +50,6 @@ const useNavigation = () => {
    return { navigate, isActive };
 };
 
-interface NavIconProps {
-   item: NavItem;
-   isMobile?: boolean;
-}
-
 function NavIcon({ item, isMobile = false }: NavIconProps) {
    const iconSize = isMobile ? MOBILE_ICON_SIZE : DESKTOP_ICON_SIZE;
 
@@ -69,10 +64,6 @@ function NavIcon({ item, isMobile = false }: NavIconProps) {
    return item.icon;
 }
 
-interface BadgeProps {
-   count?: number;
-   isMobile?: boolean;
-}
 
 function NavBadge({ count, isMobile = false }: BadgeProps) {
    if (!count) return null;

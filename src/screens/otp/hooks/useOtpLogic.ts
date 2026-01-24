@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { ApiError } from "@/types/api";
-import { initialOtp } from "@/types/auth";
+import { initialOtp, UseOtpLogicProps } from "@/types/auth";
 import { webRequest } from "@/helpers/api";
-
-interface UseOtpLogicProps {
-   onSuccess?: () => void;
-   tFunc: (key: string, options?: any) => string;
-}
 
 export const useOtpLogic = ({ onSuccess, tFunc }: UseOtpLogicProps) => {
    const [loading, setLoading] = useState(false);

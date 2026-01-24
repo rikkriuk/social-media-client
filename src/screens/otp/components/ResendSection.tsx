@@ -1,10 +1,4 @@
-interface ResendSectionProps {
-   canResend: boolean;
-   timeLeft: number;
-   resending: boolean;
-   onResend: () => void;
-   tFunc: (key: string, options?: any) => string;
-}
+import { ResendSectionProps } from "@/types/auth";
 
 export const ResendSection = ({
    canResend,

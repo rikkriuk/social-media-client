@@ -1,14 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import OtpInputs from "@/components/OtpInputs";
-
-interface OtpFormProps {
-   code: string;
-   onChange: (code: string) => void;
-   onSubmit: (e: React.FormEvent) => void;
-   loading: boolean;
-   tFunc: (key: string, options?: any) => string;
-}
+import { OtpFormProps } from "@/types/auth";
 
 export const OtpForm = ({
    code,

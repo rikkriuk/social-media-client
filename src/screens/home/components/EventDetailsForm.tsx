@@ -1,17 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-interface EventDetailsFormProps {
-   eventDate: string;
-   onEventDateChange: (date: string) => void;
-   eventTime: string;
-   onEventTimeChange: (time: string) => void;
-   eventLocation: string;
-   onEventLocationChange: (location: string) => void;
-   isOnlineEvent: boolean;
-   onToggleOnlineEvent: () => void;
-   tFunc: (key: string, options?: any) => string;
-}
+import { EventDetailsFormProps } from "@/types/home";
 
 export const EventDetailsForm = ({
    eventDate,

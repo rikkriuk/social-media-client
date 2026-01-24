@@ -3,28 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { EventDetailsForm } from "./EventDetailsForm";
-
-interface CreatePostSectionProps {
-   currentProfile: any;
-   postContent: {
-      content: string;
-      mediaIds: string[];
-   };
-   onContentChange: (content: string) => void;
-   isEventPost: boolean;
-   onToggleEvent: () => void;
-   eventDate: string;
-   onEventDateChange: (date: string) => void;
-   eventTime: string;
-   onEventTimeChange: (time: string) => void;
-   eventLocation: string;
-   onEventLocationChange: (location: string) => void;
-   isOnlineEvent: boolean;
-   onToggleOnlineEvent: () => void;
-   isPosting: boolean;
-   onCreatePost: () => void;
-   tFunc: (key: string, options?: any) => string;
-}
+import { CreatePostSectionProps } from "@/types/home";
 
 export const CreatePostSection = ({
    currentProfile,

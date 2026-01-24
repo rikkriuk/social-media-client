@@ -1,13 +1,7 @@
 "use client";
 
 import HomeScreen from "@/screens/home/HomeScreen";
-import type { Post, Profile } from "@/types/profile";
-
-interface HomeClientProps {
-  initialPosts: Post[];
-  currentProfile: Profile | null;
-  onViewPostDetail?: (post: any) => void;
-}
+import { HomeClientProps } from "@/types/home";
 
 const HomeClient = ({
    initialPosts,

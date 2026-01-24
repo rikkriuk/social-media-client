@@ -3,19 +3,13 @@
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
 import { formatRelativeTime } from "@/helpers/date";
-import { Post, Profile } from "@/types/profile";
 
 import { useCreatePost } from "./hooks/useCreatePost";
 import { usePostsLike } from "./hooks/usePostsLike";
 
 import { CreatePostSection } from "./components/CreatePostSection";
 import { PostsFeed } from "./components/PostsFeed";
-
-interface HomeScreenProps {
-   initialPosts: Post[];
-   currentProfile: Profile | null;
-   onViewPostDetail?: (post: any) => void;
-}
+import { HomeScreenProps } from "@/types/home";
 
 export default function HomeScreen({
    initialPosts,

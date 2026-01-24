@@ -1,14 +1,5 @@
 import { PostCard } from "@/components/PostCard";
-import { Post, Profile } from "@/types/profile";
-
-interface PostsFeedProps {
-   posts: Post[];
-   currentProfile: Profile | null;
-   formatPostTime: (createdAt: string) => string;
-   onViewDetails?: (post: Post) => void;
-   onLikeChange: (postId: string, newLikeCount: number, isLiked: boolean) => void;
-   tFunc: (key: string, options?: any) => string;
-}
+import { PostsFeedProps } from "@/types/home";
 
 export const PostsFeed = ({
    posts,

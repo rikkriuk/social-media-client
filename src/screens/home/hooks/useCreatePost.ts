@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { Post, Profile } from "@/types/profile";
 import { webRequest } from "@/helpers/api";
-
-interface UseCreatePostProps {
-  initialPosts: Post[];
-  currentProfile: Profile | null;
-}
+import { UseCreatePostProps } from "@/types/home";
 
 export const useCreatePost = ({ initialPosts, currentProfile }: UseCreatePostProps) => {
    const [posts, setPosts] = useState<Post[]>(initialPosts);

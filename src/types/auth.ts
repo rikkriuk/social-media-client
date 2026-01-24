@@ -37,3 +37,23 @@ export interface UseOtpLogicProps {
    onSuccess?: () => void;
    tFunc: (key: string, options?: any) => string;
 }
+
+export interface LoginFormProps {
+   loading: boolean;
+   onSubmit: (data: Record<string, string>) => void;
+   tFunc: (key: string) => string;
+}
+
+export interface RegisterFormProps {
+   loading: boolean;
+   onSubmit: (data: Record<string, string>) => void;
+   tFunc: (key: string) => string;
+}
+
+export interface UseLoginProps {
+   tFunc: (key: string) => string;
+}
+
+export interface UseRegisterProps {
+   tFunc: (key: string) => string;
+}

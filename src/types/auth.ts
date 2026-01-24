@@ -16,3 +16,24 @@ export type AuthProps = {
    onSubmit: (data: Record<string, string>) => void;
    t: (key: string) => string;
 }
+
+export interface ResendSectionProps {
+   canResend: boolean;
+   timeLeft: number;
+   resending: boolean;
+   onResend: () => void;
+   tFunc: (key: string, options?: any) => string;
+}
+
+export interface OtpFormProps {
+   code: string;
+   onChange: (code: string) => void;
+   onSubmit: (e: React.FormEvent) => void;
+   loading: boolean;
+   tFunc: (key: string, options?: any) => string;
+}
+
+export interface UseOtpLogicProps {
+   onSuccess?: () => void;
+   tFunc: (key: string, options?: any) => string;
+}

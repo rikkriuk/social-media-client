@@ -3,10 +3,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/types/api";
 import { webRequest } from "@/helpers/api";
-
-interface UseRegisterProps {
-   tFunc: (key: string) => string;
-}
+import { UseRegisterProps } from "@/types/auth";
 
 export const useRegister = ({ tFunc }: UseRegisterProps) => {
    const [loading, setLoading] = useState(false);

@@ -3,10 +3,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/types/api";
 import useAuth from "@/zustand/useAuth";
-
-interface UseLoginProps {
-   tFunc: (key: string) => string;
-}
+import { UseLoginProps } from "@/types/auth";
 
 export const useLogin = ({ tFunc }: UseLoginProps) => {
    const [loading, setLoading] = useState(false);

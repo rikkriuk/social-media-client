@@ -13,7 +13,7 @@ async function getFollowers(userId: string): Promise<UserFollow[]> {
       const response = await httpRequest.get(`/user-follows/followers`, {
          params: { userId },
       });
-      return response.data?.rows || [];
+      return response.data?.payload.results || [];
    } catch (error) {
       console.error("Failed to fetch followers:", error);
       return [];
@@ -25,7 +25,7 @@ async function getFollowing(userId: string): Promise<UserFollow[]> {
       const response = await httpRequest.get(`/user-follows/following`, {
          params: { userId },
       });
-      return response.data?.rows || [];
+      return response.data?.payload.results || [];
    } catch (error) {
       console.error("Failed to fetch following:", error);
       return [];
@@ -37,7 +37,7 @@ async function getSuggestions(userId: string): Promise<UserSuggestion[]> {
       const response = await httpRequest.get(`/user-follows/suggestions`, {
          params: { userId },
       });
-      return response.data?.rows || [];
+      return response.data?.payload.results || [];
    } catch (error) {
       console.error("Failed to fetch suggestions:", error);
       return [];

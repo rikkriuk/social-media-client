@@ -11,7 +11,8 @@ interface ProfilePageProps {
 async function getProfileById(profileId: string): Promise<Profile | null> {
    try {
       const response = await httpRequest.get(`/profiles/${profileId}`);
-      return response.data?.payload || null;
+      console.log("Fetched profile:", response.data);
+      return response.data.payload || null;
    } catch (error) {
       console.error("Failed to fetch profile:", error);
       return null;
@@ -21,7 +22,7 @@ async function getProfileById(profileId: string): Promise<Profile | null> {
 async function getUserById(userId: string): Promise<any | null> {
    try {
       const response = await httpRequest.get(`/users/${userId}`);
-      return response.data || null;
+      return response.data.payload || null;
    } catch (error) {
       console.error("Failed to fetch user:", error);
       return null;
@@ -41,8 +42,8 @@ async function getFollowCount(userId: string): Promise<FollowCount> {
 
 async function getUserPosts(profileId: string, currentProfileId?: string | null): Promise<Post[]> {
    try {
-      const response = await httpRequest.get(`/posts/user/${profileId}?limit=10&offset=0`);
-      const posts = response.data?.data || response.data || [];
+      const response = await httpRequest.get(`/posts/user/${profileId}?limit=5&offset=0`);
+      const posts = response.data?.payload?.results || response.data?.data || [];
 
       if (currentProfileId && posts.length > 0) {
          const likeStatusPromises = posts.map(async (post: Post) => {
@@ -103,7 +104,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
    }
 
    const viewedProfile = await getProfileById(profileId);
-   console.log("viewedProfile", viewedProfile, profileId)
+
    if (!viewedProfile) {
       redirect("/404");
    }

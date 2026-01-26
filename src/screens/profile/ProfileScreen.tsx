@@ -26,6 +26,7 @@ export default function ProfileScreen({
    const { t } = useTranslationCustom(lng, "profile");
    const { t: tHome } = useTranslationCustom(lng, "home");
    const { t: tDate } = useTranslationCustom(lng, "date");
+   const { t: tProfile } = useTranslationCustom(lng, "profile");
 
    const profileLogic = useProfileLogic(
       initialProfile,
@@ -37,7 +38,7 @@ export default function ProfileScreen({
       t
    );
 
-   const postCreation = usePostCreation(initialPosts, tHome);
+   const postCreation = usePostCreation(initialPosts, tProfile);
 
    useEffect(() => {
       postCreation.setPosts(initialPosts);

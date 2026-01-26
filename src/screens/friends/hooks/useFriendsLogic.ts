@@ -42,7 +42,7 @@ export const useFriendsLogic = (
             currentUserId,
             },
          });
-         setSearchResults(response.data?.data?.rows || []);
+         setSearchResults(response.data?.data?.payload.results || []);
       } catch (error) {
          console.error("Search error:", error);
       } finally {
@@ -66,7 +66,7 @@ export const useFriendsLogic = (
          },
       });
 
-      const newSuggestions = response.data?.data?.rows || [];
+      const newSuggestions = response.data?.data?.payload.results || [];
       if (newSuggestions.length > 0) {
          setSuggestions((prev) => [...prev, ...newSuggestions]);
          setSuggestionsOffset((prev) => prev + ITEMS_PER_PAGE);

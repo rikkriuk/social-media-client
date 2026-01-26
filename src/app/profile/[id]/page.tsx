@@ -6,6 +6,7 @@ import { Profile, FollowCount, Post } from "@/types/profile";
 
 interface ProfilePageProps {
    params: Promise<{ id: string }>;
+   searchParams: Promise<{ page?: string }>;
 }
 
 async function getProfileById(profileId: string): Promise<Profile | null> {
@@ -40,9 +41,10 @@ async function getFollowCount(userId: string): Promise<FollowCount> {
    }
 }
 
-async function getUserPosts(profileId: string, currentProfileId?: string | null): Promise<Post[]> {
+async function getUserPosts(profileId: string, page: number = 1, currentProfileId?: string | null): Promise<{ total: number; posts: Post[] }> {
    try {
-      const response = await httpRequest.get(`/posts/user/${profileId}?limit=5&offset=0`);
+      const limit = page * 5;
+      const response = await httpRequest.get(`/posts/user/${profileId}?limit=${limit}`);
       const posts = response.data?.payload?.results || response.data?.data || [];
 
       if (currentProfileId && posts.length > 0) {
@@ -60,16 +62,24 @@ async function getUserPosts(profileId: string, currentProfileId?: string | null)
          const likeStatuses = await Promise.all(likeStatusPromises);
          const likeStatusMap = new Map(likeStatuses.map(s => [s.postId, s.isLiked]));
 
-         return posts.map((post: Post) => ({
+         const postsWithLikeStatus = posts.map((post: Post) => ({
             ...post,
             isLiked: likeStatusMap.get(post.id) || false
          }));
+
+         return {
+            total: response.data?.payload?.count,
+            posts: postsWithLikeStatus,
+         }
       }
 
-      return posts;
+      return {
+         total: response.data?.payload?.count,
+         posts,
+      };
    } catch (error) {
       console.error("Failed to fetch user posts:", error);
-      return [];
+      return { total: 0, posts: [] };
    }
 }
 
@@ -85,8 +95,11 @@ async function checkIsFollowing(followerId: string, followingId: string): Promis
    }
 }
 
-const ProfilePage = async ({ params }: ProfilePageProps) => {
+const ProfilePage = async ({ params, searchParams }: ProfilePageProps) => {
    const { id: profileId } = await params;
+   const { page: pageParam } = await searchParams;
+   const page = parseInt(pageParam || "1", 10);
+   
    const cookieStore = await cookies();
    const userCookie = cookieStore.get("user");
    const profileCookie = cookieStore.get("profile");
@@ -113,9 +126,9 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
    const isOwnProfile = currentProfile?.id === profileId;
    const targetUserId = viewedProfile.userId;
 
-   const [followCount, posts] = await Promise.all([
+   const [followCount, postData] = await Promise.all([
       targetUserId ? getFollowCount(targetUserId) : Promise.resolve({ followers: 0, following: 0 }),
-      getUserPosts(profileId, currentProfile?.id),
+      getUserPosts(profileId, page, currentProfile?.id),
    ]);
 
    let isFollowing = false;
@@ -138,7 +151,8 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
             createdAt: viewedUser?.createdAt || "",
          }}
          initialFollowCount={followCount}
-         initialPosts={posts}
+         initialPosts={postData.posts}
+         initialTotalPosts={postData.total}
          isOwnProfile={isOwnProfile}
          isFollowing={isFollowing}
          isFollowingMe={isFollowingMe}

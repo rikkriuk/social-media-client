@@ -169,6 +169,7 @@ export interface ProfileTabsSectionProps {
   isPosting: boolean;
   onCreatePost: () => void;
   currentProfileId: string | null | undefined;
+  totalPosts?: number;
   formatPostTime: (createdAt: string) => string;
   onLikeChange: (postId: string, newLikeCount: number, isLiked: boolean) => void;
   tHome: (key: string) => string | undefined;

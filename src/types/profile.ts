@@ -96,6 +96,7 @@ export interface ProfileScreenProps {
   initialUser: InitialUser;
   initialFollowCount: FollowCount;
   initialPosts?: Post[];
+  initialTotalPosts?: number;
   isOwnProfile?: boolean;
   isFollowing?: boolean;
   isFollowingMe?: boolean;

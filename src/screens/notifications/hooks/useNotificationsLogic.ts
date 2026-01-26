@@ -31,7 +31,7 @@ export const useNotificationsLogic = (t: (key: string) => string | undefined) =>
             },
          });
 
-         const rows = response.data?.rows || response.data?.data?.rows || [];
+         const rows = response.data?.payload.results || response.data?.data?.payload.results || [];
          updateNotificationLists(rows);
       } catch (error) {
          console.error("Failed to fetch notifications:", error);

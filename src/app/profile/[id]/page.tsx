@@ -11,7 +11,7 @@ interface ProfilePageProps {
 async function getProfileById(profileId: string): Promise<Profile | null> {
    try {
       const response = await httpRequest.get(`/profiles/${profileId}`);
-      return response.data || null;
+      return response.data?.payload || null;
    } catch (error) {
       console.error("Failed to fetch profile:", error);
       return null;
@@ -103,7 +103,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
    }
 
    const viewedProfile = await getProfileById(profileId);
-
+   console.log("viewedProfile", viewedProfile, profileId)
    if (!viewedProfile) {
       redirect("/404");
    }

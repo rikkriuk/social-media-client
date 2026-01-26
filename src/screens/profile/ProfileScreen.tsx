@@ -16,6 +16,7 @@ export default function ProfileScreen({
    initialUser,
    initialFollowCount,
    initialPosts = [],
+   initialTotalPosts,
    isOwnProfile = true,
    isFollowing: initialIsFollowing = false,
    isFollowingMe = false,
@@ -71,7 +72,7 @@ export default function ProfileScreen({
 
          <div className="px-4 md:px-8">
             <ProfileStats
-               postsCount={postCreation.posts.length}
+               postsCount={initialTotalPosts || 0}
                followCount={profileLogic.followCount}
                userId={initialUser.id}
                t={t}

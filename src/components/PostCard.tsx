@@ -1,7 +1,13 @@
-import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal, Edit2, Trash2, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
 import { webRequest } from "@/helpers/api";
@@ -31,8 +37,11 @@ interface PostCardProps {
    comments: number;
    shares: number;
    initialIsLiked?: boolean;
+   isOwnPost?: boolean;
    onViewDetails?: () => void;
    onLikeChange?: (postId: string, newLikeCount: number, isLiked: boolean) => void;
+   onEdit?: () => void;
+   onDelete?: () => void;
 }
 
 const previewComments: Comment[] = [
@@ -66,8 +75,11 @@ export function PostCard({
    comments,
    shares,
    initialIsLiked = false,
+   isOwnPost = false,
    onViewDetails,
-   onLikeChange
+   onLikeChange,
+   onEdit,
+   onDelete,
 }: PostCardProps) {
    const [isLiked, setIsLiked] = useState(initialIsLiked);
    const [likeCount, setLikeCount] = useState(likes);
@@ -133,9 +145,34 @@ export function PostCard({
                   <p className="text-gray-500 text-sm">{author.time}</p>
                </div>
             </div>
-            <Button variant="ghost" size="icon" className="rounded-full">
-               <MoreHorizontal className="w-5 h-5 text-gray-500" />
-            </Button>
+            {isOwnPost && (
+               <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                     <Button variant="ghost" size="icon" className="rounded-full">
+                        <MoreHorizontal className="w-5 h-5 text-gray-500" />
+                     </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40">
+                     <DropdownMenuItem onClick={onViewDetails} className="flex gap-2 cursor-pointer">
+                        <Eye className="w-4 h-4" />
+                        <span>Detail</span>
+                     </DropdownMenuItem>
+                     <DropdownMenuItem onClick={onEdit} className="flex gap-2 cursor-pointer">
+                        <Edit2 className="w-4 h-4" />
+                        <span>Edit</span>
+                     </DropdownMenuItem>
+                     <DropdownMenuItem onClick={onDelete} className="flex gap-2 cursor-pointer text-red-600">
+                        <Trash2 className="w-4 h-4" />
+                        <span>Hapus</span>
+                     </DropdownMenuItem>
+                  </DropdownMenuContent>
+               </DropdownMenu>
+            )}
+            {!isOwnPost && (
+               <Button variant="ghost" size="icon" className="rounded-full">
+                  <MoreHorizontal className="w-5 h-5 text-gray-500" />
+               </Button>
+            )}
          </div>
 
          {/* Content */}

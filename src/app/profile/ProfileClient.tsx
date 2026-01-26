@@ -8,6 +8,7 @@ interface ProfileClientProps {
   initialUser: InitialUser;
   initialFollowCount: FollowCount;
   initialPosts?: Post[];
+  initialTotalPosts?: number;
   isOwnProfile?: boolean;
   isFollowing?: boolean;
   isFollowingMe?: boolean;
@@ -21,6 +22,7 @@ export default function ProfileClient({
   initialFollowCount,
   initialPosts = [],
   isOwnProfile = true,
+  initialTotalPosts,
   isFollowing: initialIsFollowing = false,
   isFollowingMe = false,
   currentUserId = null,
@@ -32,6 +34,7 @@ export default function ProfileClient({
       initialUser={initialUser}
       initialFollowCount={initialFollowCount}
       initialPosts={initialPosts}
+      initialTotalPosts={initialTotalPosts}
       isOwnProfile={isOwnProfile}
       isFollowing={initialIsFollowing}
       isFollowingMe={isFollowingMe}

@@ -31,13 +31,13 @@ const BADGE_CLASS = "absolute bg-red-500 text-white text-xs rounded-full w-5 h-5
 const useNavigation = () => {
    const pathname = usePathname();
    const router = useRouter();
-   const { currentUser } = useAuth();
+   const { currentProfile } = useAuth();
 
    const currentPage = pathname === "/" ? "home" : pathname.split("/")[1];
 
    const navigate = (path: string) => {
-      if (path === "profile" && currentUser?.id) {
-         router.push(`/profile/${currentUser.id}`);
+      if (path === "profile" && currentProfile?.id) {
+         router.push(`/profile/${currentProfile.id}`);
       } else {
          router.push(path === "home" ? "/" : `/${path}`);
       }

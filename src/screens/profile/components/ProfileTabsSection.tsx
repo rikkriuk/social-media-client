@@ -24,6 +24,7 @@ export const ProfileTabsSection = ({
    isPosting,
    onCreatePost,
    currentProfileId,
+   totalPosts,
    formatPostTime,
    onLikeChange,
    tHome,
@@ -75,6 +76,7 @@ export const ProfileTabsSection = ({
                formatPostTime={formatPostTime}
                onLikeChange={onLikeChange}
                isOwnProfile={isOwnProfile}
+               totalPosts={totalPosts}
                t={t}
             />
          </TabsContent>

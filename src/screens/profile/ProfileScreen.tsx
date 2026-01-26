@@ -98,6 +98,7 @@ export default function ProfileScreen({
                isPosting={postCreation.isPosting}
                onCreatePost={postCreation.handleCreatePost}
                currentProfileId={currentProfileId}
+               totalPosts={initialTotalPosts}
                formatPostTime={formatPostTime}
                onLikeChange={postCreation.handleLikeChange}
                tHome={tHome}

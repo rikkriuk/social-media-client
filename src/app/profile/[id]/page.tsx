@@ -43,8 +43,9 @@ async function getFollowCount(userId: string): Promise<FollowCount> {
 
 async function getUserPosts(profileId: string, page: number = 1, currentProfileId?: string | null): Promise<{ total: number; posts: Post[] }> {
    try {
-      const limit = page * 5;
-      const response = await httpRequest.get(`/posts/user/${profileId}?limit=${limit}`);
+      const limit = 5;
+      const offset = (page - 1) * limit;
+      const response = await httpRequest.get(`/posts/user/${profileId}?limit=${limit}&offset=${offset}`);
       const posts = response.data?.payload?.results || response.data?.data || [];
 
       if (currentProfileId && posts.length > 0) {

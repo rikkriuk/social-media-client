@@ -104,6 +104,7 @@ export default function ProfileScreen({
                tHome={tHome}
                tDate={tDate}
                t={t}
+               onPostDelete={profileLogic.handleConfirmDelete}
             />
          </div>
       </div>

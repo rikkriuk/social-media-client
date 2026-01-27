@@ -41,12 +41,14 @@ async function getFollowCount(userId: string): Promise<FollowCount> {
    }
 }
 
+const ITEMS_PER_PAGE = 5;
+
 async function getUserPosts(profileId: string, page: number = 1, currentProfileId?: string | null): Promise<{ total: number; posts: Post[] }> {
    try {
-      const limit = 5;
-      const offset = (page - 1) * limit;
-      const response = await httpRequest.get(`/posts/user/${profileId}?limit=${limit}&offset=${offset}`);
+      const limit = page * ITEMS_PER_PAGE;
+      const response = await httpRequest.get(`/posts/user/${profileId}?limit=${limit}`);
       const posts = response.data?.payload?.results || response.data?.data || [];
+      const totalCount = response.data?.payload?.count || 0;
 
       if (currentProfileId && posts.length > 0) {
          const likeStatusPromises = posts.map(async (post: Post) => {
@@ -69,13 +71,13 @@ async function getUserPosts(profileId: string, page: number = 1, currentProfileI
          }));
 
          return {
-            total: response.data?.payload?.count,
+            total: totalCount,
             posts: postsWithLikeStatus,
          }
       }
 
       return {
-         total: response.data?.payload?.count,
+         total: totalCount,
          posts,
       };
    } catch (error) {

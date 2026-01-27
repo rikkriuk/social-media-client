@@ -40,5 +40,8 @@
   "delete": "Pirus",
   "postDeleted": "Postingan hasil dipirus!",
   "deleteFailed": "Gagal mipirus postingan",
-  "noMorePosts": "Taya postingan deui"
+  "noMorePosts": "Taya postingan deui",
+  "editingPost": "Ngédit postingan",
+  "postUpdated": "Postingan hasil diapdet!",
+  "postUpdateFailed": "Gagal ngapdet postingan"
 }

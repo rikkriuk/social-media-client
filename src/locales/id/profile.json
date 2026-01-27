@@ -40,5 +40,8 @@
   "delete": "Hapus",
   "postDeleted": "Postingan berhasil dihapus!",
   "deleteFailed": "Gagal menghapus postingan",
-  "noMorePosts": "Tidak ada postingan lagi"
+  "noMorePosts": "Tidak ada postingan lagi",
+  "editingPost": "Mengedit postingan",
+  "postUpdated": "Postingan berhasil diperbarui!",
+  "postUpdateFailed": "Gagal memperbarui postingan"
 }

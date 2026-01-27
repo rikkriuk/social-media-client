@@ -40,5 +40,8 @@
   "delete": "Delete",
   "postDeleted": "Post deleted successfully!",
   "deleteFailed": "Failed to delete post",
-  "noMorePosts": "No more posts"
+  "noMorePosts": "No more posts",
+  "editingPost": "Editing post",
+  "postUpdated": "Post updated successfully!",
+  "postUpdateFailed": "Failed to update post"
 }

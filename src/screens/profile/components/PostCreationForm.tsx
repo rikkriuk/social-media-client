@@ -23,7 +23,9 @@ export const PostCreationForm = ({
    isPosting,
    onCreatePost,
    tHome,
-}: PostCreationFormProps) => {
+   editingPostId,
+   onCancelEdit,
+}: PostCreationFormProps & { editingPostId?: string | null; onCancelEdit?: () => void }) => {
    const getInitialAvatarFallback = () => {
       const initial = profileData?.name
          ? profileData.name.charAt(0).toUpperCase()
@@ -33,6 +35,21 @@ export const PostCreationForm = ({
 
    return (
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-4">
+         {editingPostId && (
+            <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+               <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                     {tHome("editingPost") || "Mengedit postingan"}
+                  </p>
+                  <button
+                     onClick={onCancelEdit}
+                     className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                  >
+                     <X className="w-4 h-4" />
+                  </button>
+               </div>
+            </div>
+         )}
          <div className="flex items-start gap-3">
             <Avatar>
                <AvatarFallback>{getInitialAvatarFallback()}</AvatarFallback>
@@ -135,7 +152,7 @@ export const PostCreationForm = ({
                onClick={onCreatePost}
                disabled={!postContent.content.trim() || isPosting}
             >
-               {isPosting ? tHome("posting") : tHome("post")}
+               {isPosting ? tHome("posting") : editingPostId ? (tHome("saveChanges") || "Simpan") : tHome("post")}
             </Button>
          </div>
       </div>

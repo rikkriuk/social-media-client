@@ -195,3 +195,16 @@ export interface ProfileHeaderProps {
   tDate: (key: string) => string | undefined;
   t: (key: string) => string | undefined;
 }
+
+export interface UseInfiniteScrollProps {
+  items: any[];
+  totalItems: number;
+  itemsPerPage?: number;
+}
+
+export interface UseInfiniteScrollReturn {
+  displayItems: any[];
+  isLoadingMore: boolean;
+  endRef: React.RefObject<HTMLDivElement | null>;
+  hasMoreItems: boolean;
+}

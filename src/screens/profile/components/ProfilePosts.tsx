@@ -20,16 +20,22 @@ export const ProfilePosts = ({
    isOwnProfile,
    t,
    totalPosts = 0,
-}: ProfilePostsExtendedProps) => {
+   onPostDelete,
+}: ProfilePostsExtendedProps & { onPostDelete?: (postId: string) => Promise<{ success: boolean }> }) => {
    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [isProcessing, setIsProcessing] = useState(false);
+   const [displayPosts, setDisplayPosts] = useState(posts);
 
-   const { displayItems: displayPosts, isLoadingMore, endRef, hasMoreItems } = useInfiniteScroll({
-      items: posts,
+   const { displayItems, isLoadingMore, endRef, hasMoreItems } = useInfiniteScroll({
+      items: displayPosts,
       totalItems: totalPosts,
       itemsPerPage: 5,
    });
+
+   useEffect(() => {
+      setDisplayPosts(posts);
+   }, [posts]);
 
    const handleDeletePost = (postId: string) => {
       setSelectedPostId(postId);
@@ -41,14 +47,15 @@ export const ProfilePosts = ({
 
       setIsProcessing(true);
       try {
-         // const response = await httpRequest.delete("/post/delete", {
-         //    data: { postId: selectedPostId },
-         // });
+         const result = await onPostDelete?.(selectedPostId);
 
-         toast.success(t("postDeleted") || "Postingan berhasil dihapus");
-         setIsModalOpen(false);
+         if (result?.success) {
+            setDisplayPosts((prev) => prev.filter((p) => p.id !== selectedPostId));
+            setIsModalOpen(false);
+         }
       } catch (error: any) {
-         toast.error(error?.data?.message || t("deleteFailed"));
+         console.error("Delete error:", error);
+         toast.error(t("deleteFailed") || "Gagal menghapus postingan");
       } finally {
          setIsProcessing(false);
          setSelectedPostId(null);
@@ -88,7 +95,7 @@ export const ProfilePosts = ({
             isLoading={isProcessing}
          />
 
-         {displayPosts.map((post) => (
+         {displayItems.map((post) => (
             <PostCard
                key={post.id}
                postId={post.id}
@@ -116,7 +123,7 @@ export const ProfilePosts = ({
             {isLoadingMore && (
                <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
             )}
-            {!hasMoreItems && displayPosts.length > 0 && (
+            {!hasMoreItems && displayItems.length > 0 && (
                <p className="text-gray-500 text-sm">{t("noMorePosts")}</p>
             )}
          </div>

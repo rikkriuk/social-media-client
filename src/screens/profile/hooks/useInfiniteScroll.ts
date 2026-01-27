@@ -1,18 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-
-interface UseInfiniteScrollProps {
-   items: any[];
-   totalItems: number;
-   itemsPerPage?: number;
-}
-
-interface UseInfiniteScrollReturn {
-   displayItems: any[];
-   isLoadingMore: boolean;
-   endRef: React.RefObject<HTMLDivElement | null>;
-   hasMoreItems: boolean;
-}
+import { useRouter, useSearchParams } from "next/navigation";
+import { UseInfiniteScrollProps, UseInfiniteScrollReturn } from "@/types/profile";
 
 export const useInfiniteScroll = ({
    items,

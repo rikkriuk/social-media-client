@@ -15,6 +15,7 @@ export const usePostCreation = (
    const [eventLocation, setEventLocation] = useState("");
    const [isOnlineEvent, setIsOnlineEvent] = useState(false);
    const [isPosting, setIsPosting] = useState(false);
+   const [editingPostId, setEditingPostId] = useState<string | null>(null);
 
    const handleToggleEvent = useCallback(() => {
       setIsEventPost((prev) => !prev);
@@ -25,6 +26,16 @@ export const usePostCreation = (
          setIsOnlineEvent(false);
       }
    }, [isEventPost]);
+
+   const handleEditPost = useCallback((post: Post) => {
+      setEditingPostId(post.id);
+      setPostContent({ content: post.content, mediaIds: post.mediaIds || [] });
+      setIsEventPost(post.isEvent || false);
+      setEventDate(post.eventDate || "");
+      setEventTime(post.eventTime || "");
+      setEventLocation(post.eventLocation || "");
+      setIsOnlineEvent(post.eventLocation === "Online");
+   }, []);
 
    const handleCreatePost = useCallback(async () => {
       if (!postContent.content.trim()) return;
@@ -43,29 +54,65 @@ export const usePostCreation = (
             postData.eventLocation = isOnlineEvent ? "Online" : eventLocation;
          }
 
-         const response = await webRequest.post("/post", postData);
+         if (editingPostId) {
+            // Edit mode
+            const response = await webRequest.patch(`/post/${editingPostId}`, postData);
 
-         if (response.data.ok) {
-            const newPost = response.data.data;
-            setPosts([newPost, ...posts]);
+            if (response.data.ok) {
+               const updatedPost = response.data.data;
+               setPosts((prevPosts) =>
+                  prevPosts.map((post) =>
+                     post.id === editingPostId ? updatedPost : post
+                  )
+               );
 
-            // Reset form
-            setPostContent({ content: "", mediaIds: [] });
-            setIsEventPost(false);
-            setEventDate("");
-            setEventTime("");
-            setEventLocation("");
-            setIsOnlineEvent(false);
+               // Reset form
+               setPostContent({ content: "", mediaIds: [] });
+               setIsEventPost(false);
+               setEventDate("");
+               setEventTime("");
+               setEventLocation("");
+               setIsOnlineEvent(false);
+               setEditingPostId(null);
 
-            toast.success(t("postCreated"));
+               toast.success(t("postUpdated") || "Postingan berhasil diperbarui");
+            }
+         } else {
+            // Create mode
+            const response = await webRequest.post("/post", postData);
+
+            if (response.data.ok) {
+               const newPost = response.data.data;
+               setPosts([newPost, ...posts]);
+
+               // Reset form
+               setPostContent({ content: "", mediaIds: [] });
+               setIsEventPost(false);
+               setEventDate("");
+               setEventTime("");
+               setEventLocation("");
+               setIsOnlineEvent(false);
+
+               toast.success(t("postCreated"));
+            }
          }
       } catch (err) {
-         console.error("Error creating post:", err);
-         toast.error(t("postCreateFailed"));
+         console.error("Error creating/updating post:", err);
+         toast.error(editingPostId ? t("postUpdateFailed") : t("postCreateFailed"));
       } finally {
          setIsPosting(false);
       }
-   }, [postContent, isEventPost, eventDate, eventTime, eventLocation, isOnlineEvent, posts, t]);
+   }, [postContent, isEventPost, eventDate, eventTime, eventLocation, isOnlineEvent, posts, editingPostId, t]);
+
+   const handleCancelEdit = useCallback(() => {
+      setEditingPostId(null);
+      setPostContent({ content: "", mediaIds: [] });
+      setIsEventPost(false);
+      setEventDate("");
+      setEventTime("");
+      setEventLocation("");
+      setIsOnlineEvent(false);
+   }, []);
 
    const handleLikeChange = useCallback((postId: string, newLikeCount: number, isLiked: boolean) => {
       setPosts((prevPosts) =>
@@ -93,8 +140,11 @@ export const usePostCreation = (
       isOnlineEvent,
       setIsOnlineEvent,
       isPosting,
+      editingPostId,
       handleToggleEvent,
       handleCreatePost,
       handleLikeChange,
+      handleEditPost,
+      handleCancelEdit,
    };
 };

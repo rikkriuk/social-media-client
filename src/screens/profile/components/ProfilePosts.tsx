@@ -21,7 +21,11 @@ export const ProfilePosts = ({
    t,
    totalPosts = 0,
    onPostDelete,
-}: ProfilePostsExtendedProps & { onPostDelete?: (postId: string) => Promise<{ success: boolean }> }) => {
+   onEditPost,
+}: ProfilePostsExtendedProps & { 
+   onPostDelete?: (postId: string) => Promise<{ success: boolean }>;
+   onEditPost?: (post: any) => void;
+}) => {
    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [isProcessing, setIsProcessing] = useState(false);
@@ -63,7 +67,12 @@ export const ProfilePosts = ({
    };
 
    const handleEditPost = (postId: string) => {
-      toast.info("Edit post feature coming soon");
+      const postToEdit = displayPosts.find(p => p.id === postId);
+      if (postToEdit) {
+         onEditPost?.(postToEdit);
+         // Scroll to top where the form is
+         window.scrollTo({ top: 0, behavior: "smooth" });
+      }
    };
 
    const handleViewPostDetail = (postId: string) => {

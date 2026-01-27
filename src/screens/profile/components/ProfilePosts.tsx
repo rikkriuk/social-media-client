@@ -71,7 +71,7 @@ export const ProfilePosts = ({
       if (postToEdit) {
          onEditPost?.(postToEdit);
          // Scroll to top where the form is
-         window.scrollTo({ top: 0, behavior: "smooth" });
+         window.scrollTo({ top: 250, behavior: "smooth" });
       }
    };
 

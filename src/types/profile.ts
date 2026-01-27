@@ -34,7 +34,7 @@ export interface Post {
   id: string;
   profileId: string;
   content: string;
-  image?: string;
+  mediaIds?: string;
   isEvent?: boolean;
   eventDate?: string;
   eventTime?: string;

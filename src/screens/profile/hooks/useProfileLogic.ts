@@ -99,6 +99,31 @@ export const useProfileLogic = (
       setIsEditDialogOpen(true);
    }, [profileData]);
 
+   const handleConfirmDelete = useCallback(
+      async (selectedPostId: string) => {
+         try {
+            const response = await fetch(`/api/post/${selectedPostId}`, {
+               method: "DELETE",
+               credentials: "include",
+            });
+
+            if (response.ok) {
+               toast.success(t("postDeleted") || "Postingan berhasil dihapus");
+               return { success: true };
+            } else {
+               const errorData = await response.json();
+               toast.error(errorData.message || t("deleteFailed"));
+               return { success: false };
+            }
+         } catch (error: any) {
+            console.error("Delete error:", error);
+            toast.error(t("deleteFailed") || "Gagal menghapus postingan");
+            return { success: false };
+         }
+      },
+      [t]
+   );
+
    return {
       profileData,
       setProfileData,
@@ -113,5 +138,6 @@ export const useProfileLogic = (
       handleSaveProfile,
       handleFollowToggle,
       handleOpenEditDialog,
+      handleConfirmDelete,
    };
 };

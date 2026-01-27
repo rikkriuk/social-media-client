@@ -30,7 +30,8 @@ export const ProfileTabsSection = ({
    tHome,
    tDate,
    t,
-}: ProfileTabsSectionProps) => {
+   onPostDelete,
+}: ProfileTabsSectionProps & { onPostDelete?: (postId: string) => Promise<{ success: boolean }> }) => {
    return (
       <Tabs defaultValue="posts" className="w-full">
          <TabsList className="w-full grid grid-cols-3 rounded-xl mb-6">
@@ -78,6 +79,7 @@ export const ProfileTabsSection = ({
                isOwnProfile={isOwnProfile}
                totalPosts={totalPosts}
                t={t}
+               onPostDelete={onPostDelete}
             />
          </TabsContent>
 

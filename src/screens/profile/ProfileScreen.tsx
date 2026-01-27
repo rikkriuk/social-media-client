@@ -105,6 +105,9 @@ export default function ProfileScreen({
                tDate={tDate}
                t={t}
                onPostDelete={profileLogic.handleConfirmDelete}
+               editingPostId={postCreation.editingPostId}
+               onEditPost={postCreation.handleEditPost}
+               onCancelEdit={postCreation.handleCancelEdit}
             />
          </div>
       </div>

@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { PostCard } from "@/components/PostCard";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { httpRequest } from "@/helpers/api";
+import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import type { ProfilePostsProps } from "@/types/profile";
+
+interface ProfilePostsExtendedProps extends ProfilePostsProps {
+   totalPosts?: number;
+}
 
 export const ProfilePosts = ({
    posts,
@@ -15,56 +18,16 @@ export const ProfilePosts = ({
    onLikeChange,
    isOwnProfile,
    t,
-}: ProfilePostsProps) => {
-   const router = useRouter();
-   const pathname = usePathname();
-   const searchParams = useSearchParams();
-   const currentPage = parseInt(searchParams.get("page") || "1", 10);
-   
-   // Extract profileId from URL: /profile/[id] -> id
-   const profileId = pathname.split("/").pop() || "";
-   
-   const [displayPosts, setDisplayPosts] = useState(posts);
-   const [isLoadingMore, setIsLoadingMore] = useState(false);
+   totalPosts = 0,
+}: ProfilePostsExtendedProps) => {
    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
    const [isDeleteConfirming, setIsDeleteConfirming] = useState(false);
-   const [hasMorePosts, setHasMorePosts] = useState(posts.length >= 5);
-   const endRef = useRef<HTMLDivElement>(null);
 
-   useEffect(() => {
-      setDisplayPosts(posts);
-      setHasMorePosts(posts.length >= 5);
-   }, [posts]);
-
-   // Infinite scroll observer
-   useEffect(() => {
-      const observer = new IntersectionObserver(
-         (entries) => {
-            if (
-               entries[0].isIntersecting &&
-               hasMorePosts &&
-               !isLoadingMore
-            ) {
-               loadMorePosts();
-            }
-         },
-         { threshold: 0.1 }
-      );
-
-      if (endRef.current) {
-         observer.observe(endRef.current);
-      }
-
-      return () => observer.disconnect();
-   }, [hasMorePosts, isLoadingMore]);
-
-   const loadMorePosts = () => {
-      setIsLoadingMore(true);
-      // Update URL to next page
-      const nextPage = currentPage + 1;
-      router.push(`/profile/${profileId}?page=${nextPage}`);
-      setIsLoadingMore(false);
-   };
+   const { displayItems: displayPosts, isLoadingMore, endRef, hasMoreItems } = useInfiniteScroll({
+      items: posts,
+      totalItems: totalPosts,
+      itemsPerPage: 5,
+   });
 
    const handleDeletePost = async (postId: string) => {
       if (!isDeleteConfirming) {
@@ -73,24 +36,24 @@ export const ProfilePosts = ({
          return;
       }
 
-      try {
-         const response = await httpRequest.delete("/post/delete", {
-            data: { postId },
-         });
+      // try {
+      //    const response = await httpRequest.delete("/post/delete", {
+      //       data: { postId },
+      //    });
 
-         if (response.data.ok) {
-            toast.success(t("postDeleted") || "Postingan berhasil dihapus");
-            setDisplayPosts((prev) => prev.filter((p) => p.id !== postId));
-         } else {
-            toast.error(response.data.message || t("deleteFailed"));
-         }
-      } catch (error: any) {
-         console.error("Delete error:", error);
-         toast.error(error?.data?.message || t("deleteFailed"));
-      } finally {
-         setIsDeleteConfirming(false);
-         setSelectedPostId(null);
-      }
+      //    if (response.data.ok) {
+      //       toast.success(t("postDeleted") || "Postingan berhasil dihapus");
+      //       setDisplayPosts((prev) => prev.filter((p) => p.id !== postId));
+      //    } else {
+      //       toast.error(response.data.message || t("deleteFailed"));
+      //    }
+      // } catch (error: any) {
+      //    console.error("Delete error:", error);
+      //    toast.error(error?.data?.message || t("deleteFailed"));
+      // } finally {
+      //    setIsDeleteConfirming(false);
+      //    setSelectedPostId(null);
+      // }
    };
 
    const handleEditPost = (postId: string) => {
@@ -163,12 +126,11 @@ export const ProfilePosts = ({
             </div>
          ))}
 
-         {/* Infinite scroll trigger */}
          <div ref={endRef} className="flex justify-center py-8">
             {isLoadingMore && (
                <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
             )}
-            {!hasMorePosts && displayPosts.length > 0 && (
+            {!hasMoreItems && displayPosts.length > 0 && (
                <p className="text-gray-500 text-sm">{t("noMorePosts")}</p>
             )}
          </div>

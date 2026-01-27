@@ -34,5 +34,11 @@
   "followFailed": "Gagal ngolah aksi follow",
   "loginRequired": "Mangga login heula pikeun nuturkeun pamaké",
   "postCreated": "Postingan hasil dijieun!",
-  "postCreateFailed": "Gagal nyieun postingan"
+  "postCreateFailed": "Gagal nyieun postingan",
+  "confirmDelete": "Pirus Postingan",
+  "deletePostMessage": "Anjeun yakin hoyong pirus postingan ieu? Tindakan ieu teu bisa dibatalkeun.",
+  "delete": "Pirus",
+  "postDeleted": "Postingan hasil dipirus!",
+  "deleteFailed": "Gagal mipirus postingan",
+  "noMorePosts": "Taya postingan deui"
 }

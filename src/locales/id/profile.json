@@ -34,5 +34,11 @@
   "followFailed": "Gagal memproses aksi follow",
   "loginRequired": "Silakan login untuk mengikuti pengguna",
   "postCreated": "Postingan berhasil dibuat!",
-  "postCreateFailed": "Gagal membuat postingan"
+  "postCreateFailed": "Gagal membuat postingan",
+  "confirmDelete": "Hapus Postingan",
+  "deletePostMessage": "Anda yakin ingin menghapus postingan ini? Tindakan ini tidak dapat dibatalkan.",
+  "delete": "Hapus",
+  "postDeleted": "Postingan berhasil dihapus!",
+  "deleteFailed": "Gagal menghapus postingan",
+  "noMorePosts": "Tidak ada postingan lagi"
 }

@@ -29,7 +29,10 @@ export const usePostCreation = (
 
    const handleEditPost = useCallback((post: Post) => {
       setEditingPostId(post.id);
-      setPostContent({ content: post.content, mediaIds: post.mediaIds || [] });
+      setPostContent({ 
+         content: post.content, 
+         mediaIds: Array.isArray(post.mediaIds) ? post.mediaIds : (post.mediaIds ? [post.mediaIds] : [])
+      });
       setIsEventPost(post.isEvent || false);
       setEventDate(post.eventDate || "");
       setEventTime(post.eventTime || "");

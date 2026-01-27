@@ -25,7 +25,8 @@ export const PostCreationForm = ({
    tHome,
    editingPostId,
    onCancelEdit,
-}: PostCreationFormProps & { editingPostId?: string | null; onCancelEdit?: () => void }) => {
+   t,
+}: PostCreationFormProps & { editingPostId?: string | null; onCancelEdit?: () => void; t: (key: string) => string | undefined }) => {
    const getInitialAvatarFallback = () => {
       const initial = profileData?.name
          ? profileData.name.charAt(0).toUpperCase()
@@ -36,16 +37,16 @@ export const PostCreationForm = ({
    return (
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-4">
          {editingPostId && (
-            <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                     {tHome("editingPost") || "Mengedit postingan"}
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                     {t("editingPost") || "Mengedit postingan"}
                   </p>
                   <button
                      onClick={onCancelEdit}
-                     className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                     className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                   >
-                     <X className="w-4 h-4" />
+                     <X className="w-3 h-3" />
                   </button>
                </div>
             </div>

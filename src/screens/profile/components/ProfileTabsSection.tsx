@@ -71,6 +71,7 @@ export const ProfileTabsSection = ({
                   tHome={tHome}
                   editingPostId={editingPostId}
                   onCancelEdit={onCancelEdit}
+                  t={t}
                />
             )}
 

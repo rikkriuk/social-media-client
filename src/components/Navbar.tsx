@@ -9,6 +9,7 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import type { NavIconProps, BadgeProps, NavItem, NavItemsListProps, NavLinkProps } from "../types/navbar";
 import useAuth from "@/zustand/useAuth";
 import NotificationBadge from "./NotificationBadge";
+import { navigateTo } from "@/helpers/navigation";
 
 const NAV_ITEMS: NavItem[] = [
    { id: "home", icon: <Home className="w-5 h-5" />, path: "home" },
@@ -37,9 +38,9 @@ const useNavigation = () => {
 
    const navigate = (path: string) => {
       if (path === "profile" && currentProfile?.id) {
-         router.push(`/profile/${currentProfile.id}`);
+         navigateTo(router, `/profile/${currentProfile.id}`);
       } else {
-         router.push(path === "home" ? "/" : `/${path}`);
+         navigateTo(router, path === "home" ? "/" : `/${path}`);
       }
    };
 

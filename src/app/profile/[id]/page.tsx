@@ -149,9 +149,9 @@ const ProfilePage = async ({ params, searchParams }: ProfilePageProps) => {
       <ProfileClient
          initialProfile={viewedProfile}
          initialUser={{
-            id: viewedUser?.id || "",
-            username: viewedUser?.username || "",
-            createdAt: viewedUser?.createdAt || "",
+            id: viewedUser?.id || currentUser.id,
+            username: viewedUser?.username || currentUser.username,
+            createdAt: viewedUser?.createdAt || currentUser.createdAt,
          }}
          initialFollowCount={followCount}
          initialPosts={postData.posts}

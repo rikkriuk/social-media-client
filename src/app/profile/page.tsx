@@ -19,7 +19,7 @@ const ProfilePage = async () => {
       redirect("/login");
    }
 
-   redirect(`/profile/${currentProfile.id}`);
+   redirect(`/profile/${currentProfile?.id}`);
 };
 
 export default ProfilePage;

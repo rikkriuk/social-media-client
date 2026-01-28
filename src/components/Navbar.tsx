@@ -38,7 +38,7 @@ const useNavigation = () => {
 
    const navigate = (path: string) => {
       if (path === "profile" && currentProfile?.id) {
-         navigateTo(router, `/profile/${currentProfile.id}`);
+         navigateTo(router, `/profile/${currentProfile?.id}`);
       } else {
          navigateTo(router, path === "home" ? "/" : `/${path}`);
       }

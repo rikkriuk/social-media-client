@@ -13,5 +13,6 @@
   "location": "Location",
   "enterLocation": "Enter location",
   "online": "Online",
-  "noPosts": "No posts yet. Be the first to post!"
+  "noPosts": "No posts yet. Be the first to post!",
+  "saveChanges": "Save Changes"
 }

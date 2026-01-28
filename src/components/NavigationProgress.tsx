@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useTransition, useEffect } from "react";
 import NProgress from "nprogress";
 import useLoading from "@/zustand/useLoading";
+import useNavigation from "@/zustand/useNavigation";
 
 NProgress.configure({
    showSpinner: false,
@@ -12,32 +12,21 @@ NProgress.configure({
    trickleSpeed: 200,
 });
 
-function NavigationProgressInner() {
-   const pathname = usePathname();
-   const searchParams = useSearchParams();
+export function NavigationProgress() {
+   const [isPending] = useTransition();
    const { isLoading } = useLoading();
+   const { isNavigating } = useNavigation();
+   const isProcessing = isPending || isLoading || isNavigating;
 
    useEffect(() => {
-      NProgress.done();
-   }, [pathname, searchParams]);
-
-   useEffect(() => {
-      if (isLoading) {
+      if (isProcessing) {
          NProgress.start();
       } else {
          NProgress.done();
       }
-   }, [isLoading]);
+   }, [isProcessing]);
 
    return null;
-}
-
-export function NavigationProgress() {
-   return (
-      <Suspense fallback={null}>
-         <NavigationProgressInner />
-      </Suspense>
-   );
 }
 
 export function useNavigationProgress() {

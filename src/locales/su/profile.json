@@ -43,5 +43,8 @@
   "noMorePosts": "Taya postingan deui",
   "editingPost": "Ngédit postingan",
   "postUpdated": "Postingan hasil diapdet!",
-  "postUpdateFailed": "Gagal ngapdet postingan"
+  "postUpdateFailed": "Gagal ngapdet postingan",
+  "changeProfileImage": "Ganti Gambar Profil",
+  "changeImage": "Ganti gambar profil",
+  "imageUpdated": "Gambar profil hasil diapdet"
 }

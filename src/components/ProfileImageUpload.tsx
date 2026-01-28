@@ -6,6 +6,8 @@ import { ImageUpload } from "./ImageUpload";
 import { ImageDisplay } from "./ImageDisplay";
 import { Modal } from "./Modal";
 import { toast } from "sonner";
+import { useTranslationCustom } from "@/i18n/client";
+import useLanguage from "@/zustand/useLanguage";
 
 interface ProfileImageUploadProps {
    currentImageUrl?: string | null;
@@ -19,9 +21,11 @@ export function ProfileImageUpload({
    avatarFallback = "U",
 }: ProfileImageUploadProps) {
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const { lng } = useLanguage();
+   const { t } = useTranslationCustom(lng, "profile");
 
    const handleUploadSuccess = (fileUrl: string) => {
-      toast.success("Profile image updated successfully");
+      toast.success(t("imageUpdated"));
       onImageUploadSuccess?.(fileUrl);
       setIsModalOpen(false);
    };
@@ -45,7 +49,7 @@ export function ProfileImageUpload({
             <button
                onClick={() => setIsModalOpen(true)}
                className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-colors shadow-lg"
-               title="Change profile image"
+               title={t("changeImage")}
             >
                <Camera className="w-4 h-4" />
             </button>
@@ -54,7 +58,7 @@ export function ProfileImageUpload({
          <Modal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            title="Change Profile Image"
+            title={t("changeProfileImage")}
          >
             <div className="p-4">
                <ImageUpload

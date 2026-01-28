@@ -43,5 +43,8 @@
   "noMorePosts": "No more posts",
   "editingPost": "Editing post",
   "postUpdated": "Post updated successfully!",
-  "postUpdateFailed": "Failed to update post"
+  "postUpdateFailed": "Failed to update post",
+  "changeProfileImage": "Change Profile Image",
+  "changeImage": "Change profile image",
+  "imageUpdated": "Profile image updated successfully"
 }

@@ -1,5 +1,6 @@
-import { Camera, MapPin, Link as LinkIcon, Calendar, Edit, UserPlus, UserMinus } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useRef, useState } from "react";
+import { Camera, MapPin, Link as LinkIcon, Calendar, Edit, UserPlus, UserMinus, Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
    Dialog,
@@ -31,9 +32,14 @@ export const ProfileHeader = ({
    isFollowLoading,
    onFollowToggle,
    isFollowingMe,
+   onProfileImageUpload,
+   isUploadingImage,
    tDate,
    t,
 }: ProfileHeaderProps) => {
+   const fileInputRef = useRef<HTMLInputElement>(null);
+   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
    const getInitialAvatarFallback = () => {
       const initial = profileData?.name
          ? profileData.name.charAt(0).toUpperCase()
@@ -41,13 +47,46 @@ export const ProfileHeader = ({
       return initial;
    };
 
-   const handleCoverPhotoClick = () => {
-      // Toast notification for cover photo upload
+   const getProfileImageUrl = () => {
+      if (imagePreview) return imagePreview;
+      if (profileData.profileImage) {
+         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+         return `${baseUrl}/uploads/${profileData.profileImage}`;
+      }
+      return null;
    };
 
    const handleAvatarClick = () => {
-      // Toast notification for avatar upload
+      fileInputRef.current?.click();
    };
+
+   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      if (!allowedTypes.includes(file.type)) {
+         return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+         return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+         setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      await onProfileImageUpload(file);
+
+      if (fileInputRef.current) {
+         fileInputRef.current.value = "";
+      }
+   };
+
+   const profileImageUrl = getProfileImageUrl();
 
    return (
       <>
@@ -59,7 +98,6 @@ export const ProfileHeader = ({
                   variant="secondary"
                   size="sm"
                   className="absolute bottom-4 right-4 gap-2 rounded-xl shadow-lg hover:shadow-xl transition-all"
-                  onClick={handleCoverPhotoClick}
                >
                   <Camera className="w-4 h-4" />
                   {t("editCover")}
@@ -67,11 +105,23 @@ export const ProfileHeader = ({
             )}
          </div>
 
+         {/* Hidden file input for avatar upload */}
+         <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            onChange={handleFileChange}
+            className="hidden"
+         />
+
          {/* Profile Info */}
          <div className="px-4 md:px-8 -mt-20 relative">
             <div className="flex flex-col md:flex-row items-center md:items-end gap-4 mb-6">
                <div className="relative group">
                   <Avatar className="w-40 h-40 border-4 border-white dark:border-gray-900">
+                     {profileImageUrl && (
+                        <AvatarImage src={profileImageUrl} alt={profileData.name || initialUser.username} />
+                     )}
                      <AvatarFallback className="text-4xl">
                         {getInitialAvatarFallback()}
                      </AvatarFallback>
@@ -83,8 +133,13 @@ export const ProfileHeader = ({
                            size="icon"
                            className="absolute bottom-2 right-2 rounded-full w-10 h-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-lg"
                            onClick={handleAvatarClick}
+                           disabled={isUploadingImage}
                         >
-                           <Camera className="w-5 h-5" />
+                           {isUploadingImage ? (
+                              <Loader2 className="w-5 h-5 animate-spin" />
+                           ) : (
+                              <Camera className="w-5 h-5" />
+                           )}
                         </Button>
                      </>
                   )}

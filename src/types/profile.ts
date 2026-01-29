@@ -6,6 +6,7 @@ export interface Profile {
   bio: string;
   location: string;
   website: string;
+  profileImage?: string;
   gender?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -192,6 +193,8 @@ export interface ProfileHeaderProps {
   isFollowLoading: boolean;
   onFollowToggle: () => void;
   isFollowingMe: boolean;
+  onProfileImageUpload: (file: File) => Promise<void>;
+  isUploadingImage: boolean;
   tDate: (key: string) => string | undefined;
   t: (key: string) => string | undefined;
 }

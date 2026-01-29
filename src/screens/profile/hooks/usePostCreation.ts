@@ -16,6 +16,30 @@ export const usePostCreation = (
    const [isOnlineEvent, setIsOnlineEvent] = useState(false);
    const [isPosting, setIsPosting] = useState(false);
    const [editingPostId, setEditingPostId] = useState<string | null>(null);
+   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+   const handleImageSelect = useCallback((files: FileList) => {
+      const newFiles = Array.from(files).filter((f) => {
+         const allowed = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+         return allowed.includes(f.type) && f.size <= 10 * 1024 * 1024;
+      });
+
+      setSelectedImages((prev) => [...prev, ...newFiles]);
+
+      newFiles.forEach((file) => {
+         const reader = new FileReader();
+         reader.onloadend = () => {
+            setImagePreviews((prev) => [...prev, reader.result as string]);
+         };
+         reader.readAsDataURL(file);
+      });
+   }, []);
+
+   const handleRemoveImage = useCallback((index: number) => {
+      setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+      setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+   }, []);
 
    const handleToggleEvent = useCallback(() => {
       setIsEventPost((prev) => !prev);
@@ -41,13 +65,24 @@ export const usePostCreation = (
    }, []);
 
    const handleCreatePost = useCallback(async () => {
-      if (!postContent.content.trim()) return;
+      if (!postContent.content.trim() && selectedImages.length === 0) return;
 
       setIsPosting(true);
       try {
+         // Upload selected images first
+         const uploadedFilenames: string[] = [];
+         for (const file of selectedImages) {
+            const formData = new FormData();
+            formData.append("file", file);
+            const uploadRes = await webRequest.post("/upload/image", formData);
+            if (uploadRes.data.ok && uploadRes.data.data?.data?.filename) {
+               uploadedFilenames.push(uploadRes.data.data.data.filename);
+            }
+         }
+
          const postData: any = {
             content: postContent.content,
-            mediaIds: postContent.mediaIds,
+            mediaIds: [...postContent.mediaIds, ...uploadedFilenames],
          };
 
          if (isEventPost) {
@@ -71,6 +106,8 @@ export const usePostCreation = (
 
                // Reset form
                setPostContent({ content: "", mediaIds: [] });
+               setSelectedImages([]);
+               setImagePreviews([]);
                setIsEventPost(false);
                setEventDate("");
                setEventTime("");
@@ -90,6 +127,8 @@ export const usePostCreation = (
 
                // Reset form
                setPostContent({ content: "", mediaIds: [] });
+               setSelectedImages([]);
+               setImagePreviews([]);
                setIsEventPost(false);
                setEventDate("");
                setEventTime("");
@@ -105,11 +144,13 @@ export const usePostCreation = (
       } finally {
          setIsPosting(false);
       }
-   }, [postContent, isEventPost, eventDate, eventTime, eventLocation, isOnlineEvent, posts, editingPostId, t]);
+   }, [postContent, isEventPost, eventDate, eventTime, eventLocation, isOnlineEvent, posts, editingPostId, selectedImages, t]);
 
    const handleCancelEdit = useCallback(() => {
       setEditingPostId(null);
       setPostContent({ content: "", mediaIds: [] });
+      setSelectedImages([]);
+      setImagePreviews([]);
       setIsEventPost(false);
       setEventDate("");
       setEventTime("");
@@ -149,5 +190,8 @@ export const usePostCreation = (
       handleLikeChange,
       handleEditPost,
       handleCancelEdit,
+      imagePreviews,
+      handleImageSelect,
+      handleRemoveImage,
    };
 };

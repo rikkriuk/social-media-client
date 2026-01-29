@@ -67,6 +67,8 @@ export default function ProfileScreen({
             isFollowingMe={isFollowingMe}
             onProfileImageUpload={profileLogic.handleProfileImageUpload}
             isUploadingImage={profileLogic.isUploadingImage}
+            onCoverImageUpload={profileLogic.handleCoverImageUpload}
+            isUploadingCover={profileLogic.isUploadingCover}
             tDate={tDate}
             t={t}
          />
@@ -109,6 +111,9 @@ export default function ProfileScreen({
                editingPostId={postCreation.editingPostId}
                onEditPost={postCreation.handleEditPost}
                onCancelEdit={postCreation.handleCancelEdit}
+               imagePreviews={postCreation.imagePreviews}
+               onImageSelect={postCreation.handleImageSelect}
+               onRemoveImage={postCreation.handleRemoveImage}
             />
          </div>
       </div>

@@ -21,6 +21,7 @@ export const useProfileLogic = (
    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
    const [isSaving, setIsSaving] = useState(false);
    const [isUploadingImage, setIsUploadingImage] = useState(false);
+   const [isUploadingCover, setIsUploadingCover] = useState(false);
 
    const handleSaveProfile = useCallback(
       async (formData: Profile) => {
@@ -132,6 +133,43 @@ export const useProfileLogic = (
       [profileData, t]
    );
 
+   const handleCoverImageUpload = useCallback(
+      async (file: File) => {
+         setIsUploadingCover(true);
+         try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("profileId", profileData.id);
+
+            const response = await webRequest.post("/profile/upload-cover", formData);
+
+            if (response.data.ok) {
+               const updatedProfile = response.data.data?.payload;
+               if (updatedProfile) {
+                  setProfileData((prev) => ({
+                     ...prev,
+                     coverImage: updatedProfile.coverImage,
+                  }));
+                  Cookie.set(
+                     "profile",
+                     JSON.stringify({ ...profileData, coverImage: updatedProfile.coverImage }),
+                     { expires: 1 }
+                  );
+               }
+               toast.success(t("coverUpdated"));
+            } else {
+               toast.error(response.data.message || t("coverUpdateFailed"));
+            }
+         } catch (error: any) {
+            console.error("Cover image upload error:", error);
+            toast.error(error?.data?.message || t("coverUpdateFailed"));
+         } finally {
+            setIsUploadingCover(false);
+         }
+      },
+      [profileData, t]
+   );
+
    const handleOpenEditDialog = useCallback(() => {
       setEditFormData({ ...profileData });
       setIsEditDialogOpen(true);
@@ -179,5 +217,7 @@ export const useProfileLogic = (
       handleConfirmDelete,
       handleProfileImageUpload,
       isUploadingImage,
+      handleCoverImageUpload,
+      isUploadingCover,
    };
 };

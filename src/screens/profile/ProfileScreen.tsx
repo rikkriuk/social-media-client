@@ -65,6 +65,8 @@ export default function ProfileScreen({
             isFollowLoading={profileLogic.isFollowLoading}
             onFollowToggle={profileLogic.handleFollowToggle}
             isFollowingMe={isFollowingMe}
+            onProfileImageUpload={profileLogic.handleProfileImageUpload}
+            isUploadingImage={profileLogic.isUploadingImage}
             tDate={tDate}
             t={t}
          />

@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PostCreationForm } from "./PostCreationForm";
 import { ProfilePosts } from "./ProfilePosts";
 import { ProfileAbout } from "./ProfileAbout";
+import { MediaGrid } from "./MediaGrid";
 import type { ProfileTabsSectionProps } from "@/types/profile";
 
 export const ProfileTabsSection = ({
@@ -34,7 +35,10 @@ export const ProfileTabsSection = ({
    editingPostId,
    onEditPost,
    onCancelEdit,
-}: ProfileTabsSectionProps & { onPostDelete?: (postId: string) => Promise<{ success: boolean }>; editingPostId?: string | null; onEditPost?: (post: any) => void; onCancelEdit?: () => void }) => {
+   imagePreviews,
+   onImageSelect,
+   onRemoveImage,
+}: ProfileTabsSectionProps & { onPostDelete?: (postId: string) => Promise<{ success: boolean }>; editingPostId?: string | null; onEditPost?: (post: any) => void; onCancelEdit?: () => void; imagePreviews?: string[]; onImageSelect?: (files: FileList) => void; onRemoveImage?: (index: number) => void }) => {
    return (
       <Tabs defaultValue="posts" className="w-full">
          <TabsList className="w-full grid grid-cols-3 rounded-xl mb-6">
@@ -71,6 +75,9 @@ export const ProfileTabsSection = ({
                   tHome={tHome}
                   editingPostId={editingPostId}
                   onCancelEdit={onCancelEdit}
+                  imagePreviews={imagePreviews}
+                  onImageSelect={onImageSelect}
+                  onRemoveImage={onRemoveImage}
                   t={t}
                />
             )}
@@ -91,9 +98,7 @@ export const ProfileTabsSection = ({
          </TabsContent>
 
          <TabsContent value="media">
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 text-center shadow-sm border border-gray-100 dark:border-gray-800">
-               <p className="text-gray-500">{t("noMediaYet")}</p>
-            </div>
+            <MediaGrid posts={posts} t={t} />
          </TabsContent>
 
          <TabsContent value="about">

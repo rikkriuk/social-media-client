@@ -3,6 +3,33 @@ import { getTokenFromCookies, createAuthConfig } from "@/helpers/api.server";
 import { ApiError } from "@/types/api";
 import { NextResponse } from "next/server";
 
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+   try {
+      const postId = params.id;
+
+      if (!postId) {
+         return NextResponse.json(
+            { ok: false, message: "Post ID is required" },
+            { status: 400 }
+         );
+      }
+
+      const response = await httpRequest.get(`/posts/${postId}`);
+
+      return NextResponse.json({
+         ok: true,
+         data: response.data,
+      });
+   } catch (err: unknown) {
+      const error = err as ApiError;
+      console.error("Get post error:", error);
+      return NextResponse.json(
+         { ok: false, message: error?.data?.message || "Failed to fetch post" },
+         { status: error?.status || 400 }
+      );
+   }
+}
+
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
    try {
       const token = await getTokenFromCookies();

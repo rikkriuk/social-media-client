@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PostCard } from "@/components/PostCard";
 import { Modal } from "@/components/Modal";
 import { Loader2 } from "lucide-react";
@@ -26,6 +27,7 @@ export const ProfilePosts = ({
    onPostDelete?: (postId: string) => Promise<{ success: boolean }>;
    onEditPost?: (post: any) => void;
 }) => {
+   const router = useRouter();
    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [isProcessing, setIsProcessing] = useState(false);
@@ -76,7 +78,14 @@ export const ProfilePosts = ({
    };
 
    const handleViewPostDetail = (postId: string) => {
-      toast.info("View post detail feature coming soon");
+      router.push(`/post/${postId}`);
+   };
+
+   const getPostImageUrl = (post: any) => {
+      const mediaIds = Array.isArray(post.mediaIds) ? post.mediaIds : [];
+      if (mediaIds.length === 0) return undefined;
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+      return `${baseUrl}/uploads/${mediaIds[0]}`;
    };
 
    if (posts.length === 0) {
@@ -111,11 +120,11 @@ export const ProfilePosts = ({
                profileId={currentProfileId || undefined}
                author={{
                   name: profileData.name || initialUser.username,
-                  avatar: undefined,
+                  avatar: profileData.profileImage ? `${process.env.NEXT_PUBLIC_API_BASE_URL || ""}/uploads/${profileData.profileImage}` : undefined,
                   time: formatPostTime(post.createdAt),
                }}
                content={post.content}
-               image={post.image}
+               image={getPostImageUrl(post)}
                likes={post.likesCount}
                comments={post.commentsCount}
                shares={post.sharesCount}

@@ -20,6 +20,7 @@ export const useProfileLogic = (
    const [isFollowLoading, setIsFollowLoading] = useState(false);
    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
    const [isSaving, setIsSaving] = useState(false);
+   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
    const handleSaveProfile = useCallback(
       async (formData: Profile) => {
@@ -94,6 +95,43 @@ export const useProfileLogic = (
       }
    }, [isFollowing, currentUserId, initialUser.id, t]);
 
+   const handleProfileImageUpload = useCallback(
+      async (file: File) => {
+         setIsUploadingImage(true);
+         try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("profileId", profileData.id);
+
+            const response = await webRequest.post("/profile/upload-image", formData);
+
+            if (response.data.ok) {
+               const updatedProfile = response.data.data?.payload;
+               if (updatedProfile) {
+                  setProfileData((prev) => ({
+                     ...prev,
+                     profileImage: updatedProfile.profileImage,
+                  }));
+                  Cookie.set(
+                     "profile",
+                     JSON.stringify({ ...profileData, profileImage: updatedProfile.profileImage }),
+                     { expires: 1 }
+                  );
+               }
+               toast.success(t("profileUpdated"));
+            } else {
+               toast.error(response.data.message || t("profileUpdateFailed"));
+            }
+         } catch (error: any) {
+            console.error("Profile image upload error:", error);
+            toast.error(error?.data?.message || t("profileUpdateFailed"));
+         } finally {
+            setIsUploadingImage(false);
+         }
+      },
+      [profileData, t]
+   );
+
    const handleOpenEditDialog = useCallback(() => {
       setEditFormData({ ...profileData });
       setIsEditDialogOpen(true);
@@ -139,5 +177,7 @@ export const useProfileLogic = (
       handleFollowToggle,
       handleOpenEditDialog,
       handleConfirmDelete,
+      handleProfileImageUpload,
+      isUploadingImage,
    };
 };

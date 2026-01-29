@@ -7,6 +7,7 @@ export interface Profile {
   location: string;
   website: string;
   profileImage?: string;
+  coverImage?: string;
   gender?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -35,7 +36,7 @@ export interface Post {
   id: string;
   profileId: string;
   content: string;
-  mediaIds?: string;
+  mediaIds?: string[];
   isEvent?: boolean;
   eventDate?: string;
   eventTime?: string;
@@ -195,6 +196,8 @@ export interface ProfileHeaderProps {
   isFollowingMe: boolean;
   onProfileImageUpload: (file: File) => Promise<void>;
   isUploadingImage: boolean;
+  onCoverImageUpload: (file: File) => Promise<void>;
+  isUploadingCover: boolean;
   tDate: (key: string) => string | undefined;
   t: (key: string) => string | undefined;
 }

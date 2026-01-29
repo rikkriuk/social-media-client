@@ -46,5 +46,7 @@
   "postUpdateFailed": "Failed to update post",
   "changeProfileImage": "Change Profile Image",
   "changeImage": "Change profile image",
-  "imageUpdated": "Profile image updated successfully"
+  "imageUpdated": "Profile image updated successfully",
+  "coverUpdated": "Cover image updated successfully",
+  "coverUpdateFailed": "Failed to update cover image"
 }

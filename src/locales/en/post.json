@@ -3,5 +3,12 @@
   "comment": "Comment",
   "share": "Share",
   "viewAll": "View all",
-  "likeFailed": "Failed to like/unlike post"
+  "likeFailed": "Failed to like/unlike post",
+  "postDetail": "Post Detail",
+  "writeComment": "Write a comment...",
+  "send": "Send",
+  "noComments": "No comments yet. Be the first to comment!",
+  "commentFailed": "Failed to post comment",
+  "commentPosted": "Comment posted!",
+  "loginRequired": "Please log in to interact"
 }

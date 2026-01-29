@@ -46,5 +46,7 @@
   "postUpdateFailed": "Gagal ngapdet postingan",
   "changeProfileImage": "Ganti Gambar Profil",
   "changeImage": "Ganti gambar profil",
-  "imageUpdated": "Gambar profil hasil diapdet"
+  "imageUpdated": "Gambar profil hasil diapdet",
+  "coverUpdated": "Gambar penutup hasil diapdet",
+  "coverUpdateFailed": "Gagal ngapdet gambar penutup"
 }

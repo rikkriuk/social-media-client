@@ -3,5 +3,12 @@
   "comment": "Komentar",
   "share": "Sebarkeun",
   "viewAll": "Tingal sadaya",
-  "likeFailed": "Gagal ngalike/batal ngalike postingan"
+  "likeFailed": "Gagal ngalike/batal ngalike postingan",
+  "postDetail": "Detail Postingan",
+  "writeComment": "Nulis koméntar...",
+  "send": "Kirim",
+  "noComments": "Acan aya koméntar. Janten nu mimiti koméntar!",
+  "commentFailed": "Gagal ngirim koméntar",
+  "commentPosted": "Koméntar kakirim!",
+  "loginRequired": "Mangga lebet heula pikeun interaksi"
 }

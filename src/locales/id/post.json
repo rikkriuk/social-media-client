@@ -3,5 +3,12 @@
   "comment": "Komentar",
   "share": "Bagikan",
   "viewAll": "Lihat semua",
-  "likeFailed": "Gagal menyukai/batal menyukai postingan"
+  "likeFailed": "Gagal menyukai/batal menyukai postingan",
+  "postDetail": "Detail Postingan",
+  "writeComment": "Tulis komentar...",
+  "send": "Kirim",
+  "noComments": "Belum ada komentar. Jadilah yang pertama berkomentar!",
+  "commentFailed": "Gagal mengirim komentar",
+  "commentPosted": "Komentar terkirim!",
+  "loginRequired": "Silakan masuk untuk berinteraksi"
 }

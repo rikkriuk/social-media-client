@@ -46,5 +46,7 @@
   "postUpdateFailed": "Gagal memperbarui postingan",
   "changeProfileImage": "Ubah Gambar Profil",
   "changeImage": "Ubah gambar profil",
-  "imageUpdated": "Gambar profil berhasil diperbarui"
+  "imageUpdated": "Gambar profil berhasil diperbarui",
+  "coverUpdated": "Gambar sampul berhasil diperbarui",
+  "coverUpdateFailed": "Gagal memperbarui gambar sampul"
 }

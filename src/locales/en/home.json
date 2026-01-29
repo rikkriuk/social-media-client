@@ -14,5 +14,8 @@
   "enterLocation": "Enter location",
   "online": "Online",
   "noPosts": "No posts yet. Be the first to post!",
-  "saveChanges": "Save Changes"
+  "saveChanges": "Save Changes",
+  "addPhoto": "Add Photo",
+  "removeImage": "Remove Image",
+  "uploadingImages": "Uploading images..."
 }

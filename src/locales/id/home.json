@@ -14,5 +14,8 @@
   "enterLocation": "Masukkan lokasi",
   "online": "Online",
   "noPosts": "Belum ada postingan. Jadilah yang pertama!",
-  "saveChanges": "Simpan Perubahan"
+  "saveChanges": "Simpan Perubahan",
+  "addPhoto": "Tambah Foto",
+  "removeImage": "Hapus Gambar",
+  "uploadingImages": "Mengunggah gambar..."
 }

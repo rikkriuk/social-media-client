@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Calendar, ImagePlus, Video, Smile, X } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -25,8 +26,12 @@ export const PostCreationForm = ({
    tHome,
    editingPostId,
    onCancelEdit,
+   imagePreviews,
+   onImageSelect,
+   onRemoveImage,
    t,
-}: PostCreationFormProps & { editingPostId?: string | null; onCancelEdit?: () => void; t: (key: string) => string | undefined }) => {
+}: PostCreationFormProps & { editingPostId?: string | null; onCancelEdit?: () => void; imagePreviews?: string[]; onImageSelect?: (files: FileList) => void; onRemoveImage?: (index: number) => void; t: (key: string) => string | undefined }) => {
+   const imageInputRef = useRef<HTMLInputElement>(null);
    const getInitialAvatarFallback = () => {
       const initial = profileData?.name
          ? profileData.name.charAt(0).toUpperCase()
@@ -63,6 +68,42 @@ export const PostCreationForm = ({
                rows={2}
             />
          </div>
+
+         {/* Hidden file input for images */}
+         <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            multiple
+            onChange={(e) => {
+               if (e.target.files && onImageSelect) {
+                  onImageSelect(e.target.files);
+               }
+               if (imageInputRef.current) imageInputRef.current.value = "";
+            }}
+            className="hidden"
+         />
+
+         {/* Image previews */}
+         {imagePreviews && imagePreviews.length > 0 && (
+            <div className="mt-3 flex gap-2 flex-wrap">
+               {imagePreviews.map((preview, index) => (
+                  <div key={index} className="relative group/img w-20 h-20">
+                     <img
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="w-20 h-20 rounded-lg object-cover border border-gray-200 dark:border-gray-700"
+                     />
+                     <button
+                        onClick={() => onRemoveImage?.(index)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity"
+                     >
+                        <X className="w-3 h-3" />
+                     </button>
+                  </div>
+               ))}
+            </div>
+         )}
 
          {isEventPost && (
             <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
@@ -126,7 +167,12 @@ export const PostCreationForm = ({
 
          <div className="mt-4 flex items-center justify-between">
             <div className="flex gap-1">
-               <Button variant="ghost" size="sm" className="gap-2 rounded-xl text-gray-600 dark:text-gray-400">
+               <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 rounded-xl text-gray-600 dark:text-gray-400"
+                  onClick={() => imageInputRef.current?.click()}
+               >
                   <ImagePlus className="w-5 h-5 text-green-500" />
                   <span className="hidden sm:inline">{tHome("photo")}</span>
                </Button>

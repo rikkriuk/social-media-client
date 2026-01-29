@@ -51,15 +51,18 @@ const AvatarImage = ({
       props.onError?.("error" as unknown as React.SyntheticEvent<HTMLImageElement, Event>);
    };
 
-   return status === "loaded" ? (
+   if (status === "error") return null;
+
+   return (
       <img
          data-slot="avatar-image"
          className={cn("aspect-square size-full object-cover", className)}
+         style={status === "loading" ? { display: "none" } : undefined}
          onLoad={handleLoad}
          onError={handleError}
          {...props}
       />
-   ) : null;
+   );
 }
 
 const AvatarFallback = ({

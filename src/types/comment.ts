@@ -1,3 +1,4 @@
+import type { Post } from "@/types/profile";
 export interface CommentProfile {
    id: string;
    name: string;
@@ -20,4 +21,63 @@ export interface CommentListResponse {
    total: number;
    limit: number;
    offset: number;
+}
+
+export interface CommentInputProps {
+   value: string;
+   onChange: (value: string) => void;
+   onSubmit: () => void;
+   isSending: boolean;
+   placeholder: string;
+}
+
+export interface CommentItemProps {
+   comment: Comment;
+   currentProfileId: string | null;
+   baseUrl: string;
+   onDelete: (commentId: string) => Promise<void>;
+   tDate: (key: string) => string;
+   deleteText: string;
+}
+
+export interface CommentListProps {
+   comments: Comment[];
+   currentProfileId: string | null;
+   baseUrl: string;
+   hasMore: boolean;
+   isLoadingMore: boolean;
+   onLoadMore: () => void;
+   onDelete: (commentId: string) => Promise<void>;
+   tDate: (key: string) => string;
+   emptyText: string;
+   loadMoreText: string;
+   deleteText: string;
+}
+
+export interface PostContentProps {
+   post: Post;
+   baseUrl: string;
+   likesCount: number;
+   isLiked: boolean;
+   commentsCount: number;
+   onLikeToggle: () => void;
+   tDate: (key: string) => string;
+}
+
+export interface PostDetailHeaderProps {
+   title: string;
+}
+
+export interface UseCommentsProps {
+   postId: string;
+   initialComments: Comment[];
+   initialTotal?: number;
+   currentProfileId: string | null;
+   t: (key: string) => string;
+}
+
+export interface PostDetailScreenProps {
+   post: Post;
+   initialComments: Comment[];
+   currentProfileId: string | null;
 }

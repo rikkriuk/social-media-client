@@ -2,10 +2,11 @@
 
 import PostDetailScreen from "@/screens/post/PostDetailScreen";
 import type { Post } from "@/types/profile";
+import type { Comment } from "@/types/comment";
 
 interface PostDetailClientProps {
    post: Post;
-   comments: any[];
+   comments: Comment[];
    currentProfileId: string | null;
 }
 

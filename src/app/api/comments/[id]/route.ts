@@ -1,4 +1,6 @@
 import { httpRequest } from "@/helpers/api";
+import { getTokenFromCookies, createAuthConfig } from "@/helpers/api.server";
+import { ApiError } from "@/types/api";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
@@ -6,16 +8,25 @@ export async function DELETE(
    { params }: { params: Promise<{ id: string }> }
 ) {
    try {
+      const token = await getTokenFromCookies();
+      if (!token) {
+         return NextResponse.json(
+            { ok: false, message: "Unauthorized" },
+            { status: 401 }
+         );
+      }
+
       const { id: commentId } = await params;
+      const config = await createAuthConfig();
+      const response = await httpRequest.delete(`/comments/${commentId}`, config);
 
-      const response = await httpRequest.delete(`/comments/${commentId}`);
-
-      return NextResponse.json(response.data);
-   } catch (error) {
+      return NextResponse.json({ ok: true, data: response.data });
+   } catch (err: unknown) {
+      const error = err as ApiError;
       console.error("Failed to delete comment:", error);
       return NextResponse.json(
-         { error: "Failed to delete comment" },
-         { status: 500 }
+         { ok: false, message: error?.data?.message || "Failed to delete comment" },
+         { status: error?.status || 500 }
       );
    }
 }

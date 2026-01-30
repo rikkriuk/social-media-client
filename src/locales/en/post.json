@@ -10,5 +10,9 @@
   "noComments": "No comments yet. Be the first to comment!",
   "commentFailed": "Failed to post comment",
   "commentPosted": "Comment posted!",
+  "commentDeleted": "Comment deleted",
+  "commentDeleteFailed": "Failed to delete comment",
+  "deleteComment": "Delete",
+  "loadMore": "Load more comments",
   "loginRequired": "Please log in to interact"
 }

@@ -10,5 +10,9 @@
   "noComments": "Acan aya koméntar. Janten nu mimiti koméntar!",
   "commentFailed": "Gagal ngirim koméntar",
   "commentPosted": "Koméntar kakirim!",
+  "commentDeleted": "Koméntar geus dihapus",
+  "commentDeleteFailed": "Gagal ngahapus koméntar",
+  "deleteComment": "Hapus",
+  "loadMore": "Muat koméntar séjénna",
   "loginRequired": "Mangga lebet heula pikeun interaksi"
 }

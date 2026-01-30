@@ -10,5 +10,9 @@
   "noComments": "Belum ada komentar. Jadilah yang pertama berkomentar!",
   "commentFailed": "Gagal mengirim komentar",
   "commentPosted": "Komentar terkirim!",
+  "commentDeleted": "Komentar dihapus",
+  "commentDeleteFailed": "Gagal menghapus komentar",
+  "deleteComment": "Hapus",
+  "loadMore": "Muat komentar lainnya",
   "loginRequired": "Silakan masuk untuk berinteraksi"
 }

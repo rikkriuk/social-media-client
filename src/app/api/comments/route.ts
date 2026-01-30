@@ -1,18 +1,29 @@
 import { httpRequest } from "@/helpers/api";
+import { getTokenFromCookies, createAuthConfig } from "@/helpers/api.server";
+import { ApiError } from "@/types/api";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
    try {
+      const token = await getTokenFromCookies();
+      if (!token) {
+         return NextResponse.json(
+            { ok: false, message: "Unauthorized" },
+            { status: 401 }
+         );
+      }
+
       const body = await request.json();
+      const config = await createAuthConfig();
+      const response = await httpRequest.post("/comments", body, config);
 
-      const response = await httpRequest.post("/comments", body);
-
-      return NextResponse.json(response.data);
-   } catch (error) {
+      return NextResponse.json({ ok: true, data: response.data });
+   } catch (err: unknown) {
+      const error = err as ApiError;
       console.error("Failed to create comment:", error);
       return NextResponse.json(
-         { error: "Failed to create comment" },
-         { status: 500 }
+         { ok: false, message: error?.data?.message || "Failed to create comment" },
+         { status: error?.status || 500 }
       );
    }
 }
@@ -26,24 +37,22 @@ export async function GET(request: NextRequest) {
 
       if (!postId) {
          return NextResponse.json(
-            { error: "postId is required" },
+            { ok: false, message: "postId is required" },
             { status: 400 }
          );
       }
 
       const response = await httpRequest.get(`/comments/post/${postId}`, {
-         params: {
-            limit,
-            offset,
-         },
+         params: { limit, offset },
       });
 
-      return NextResponse.json(response.data);
-   } catch (error) {
+      return NextResponse.json({ ok: true, data: response.data });
+   } catch (err: unknown) {
+      const error = err as ApiError;
       console.error("Failed to fetch comments:", error);
       return NextResponse.json(
-         { error: "Failed to fetch comments" },
-         { status: 500 }
+         { ok: false, message: error?.data?.message || "Failed to fetch comments" },
+         { status: error?.status || 500 }
       );
    }
 }

@@ -152,14 +152,14 @@ export const ProfileHeader = ({
             type="file"
             accept="image/jpeg,image/png,image/gif,image/webp"
             onChange={handleAvatarFileChange}
-            className="hidden"
+            className="sr-only"
          />
          <input
             ref={coverInputRef}
             type="file"
             accept="image/jpeg,image/png,image/gif,image/webp"
             onChange={handleCoverFileChange}
-            className="hidden"
+            className="sr-only"
          />
 
          {/* Cover Photo */}
@@ -171,13 +171,13 @@ export const ProfileHeader = ({
                   className="absolute inset-0 w-full h-full object-cover"
                />
             )}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
 
             {isOwnProfile && !pendingCoverFile && (
                <Button
                   variant="secondary"
                   size="sm"
-                  className="absolute bottom-4 right-4 gap-2 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  className="absolute bottom-4 right-4 z-10 gap-2 rounded-xl shadow-lg hover:shadow-xl transition-all"
                   onClick={handleCoverClick}
                >
                   <Camera className="w-4 h-4" />
@@ -186,7 +186,7 @@ export const ProfileHeader = ({
             )}
 
             {pendingCoverFile && (
-               <div className="absolute bottom-4 right-4 flex gap-2">
+               <div className="absolute bottom-4 right-4 z-10 flex gap-2">
                   <Button
                      size="sm"
                      className="gap-1 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg"
@@ -229,48 +229,19 @@ export const ProfileHeader = ({
                   {isOwnProfile && (
                      <>
                         <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors" />
-                        <Button
-                           size="icon"
-                           className="absolute bottom-2 right-2 rounded-full w-10 h-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-lg"
-                           onClick={handleAvatarClick}
-                           disabled={isUploadingImage}
-                        >
-                           {isUploadingImage ? (
-                              <Loader2 className="w-5 h-5 animate-spin" />
-                           ) : (
-                              <Camera className="w-5 h-5" />
-                           )}
-                        </Button>
+                           <Button
+                              size="icon"
+                              className="absolute bottom-2 right-2 rounded-full w-10 h-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-lg"
+                              onClick={handleAvatarClick}
+                              disabled={isUploadingImage}
+                           >
+                              {isUploadingImage ? (
+                                 <Loader2 className="w-5 h-5 animate-spin" />
+                              ) : (
+                                 <Camera className="w-5 h-5" />
+                              )}
+                           </Button>
                      </>
-                  )}
-
-                  {/* Avatar Save/Cancel buttons */}
-                  {pendingAvatarFile && (
-                     <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
-                        <Button
-                           size="sm"
-                           className="gap-1 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg"
-                           onClick={handleAvatarSave}
-                           disabled={isUploadingImage}
-                        >
-                           {isUploadingImage ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                           ) : (
-                              <Check className="w-4 h-4" />
-                           )}
-                           {t("saveChanges")}
-                        </Button>
-                        <Button
-                           size="sm"
-                           variant="secondary"
-                           className="gap-1 rounded-xl shadow-lg"
-                           onClick={handleAvatarCancel}
-                           disabled={isUploadingImage}
-                        >
-                           <X className="w-4 h-4" />
-                           {t("cancel")}
-                        </Button>
-                     </div>
                   )}
                </div>
 
@@ -296,15 +267,44 @@ export const ProfileHeader = ({
 
                {isOwnProfile ? (
                   <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                     <DialogTrigger asChild>
-                        <Button
-                           className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
-                           onClick={onEditOpen}
-                        >
-                           <Edit className="w-4 h-4 mr-2" />
-                           {t("editProfile")}
-                        </Button>
-                     </DialogTrigger>
+                     {/* Avatar Save/Cancel buttons */}
+                     {pendingAvatarFile ? (
+                        <div className="flex gap-2">
+                           <Button
+                              size="sm"
+                              className="gap-1 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                              onClick={handleAvatarSave}
+                              disabled={isUploadingImage}
+                           >
+                              {isUploadingImage ? (
+                                 <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                 <Check className="w-4 h-4" />
+                              )}
+                              {t("saveChanges")}
+                           </Button>
+                           <Button
+                              size="sm"
+                              variant="secondary"
+                              className="gap-1 rounded-xl shadow-lg"
+                              onClick={handleAvatarCancel}
+                              disabled={isUploadingImage}
+                           >
+                              <X className="w-4 h-4" />
+                              {t("cancel")}
+                           </Button>
+                        </div>
+                     ) : (
+                        <DialogTrigger asChild>
+                           <Button
+                              className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+                              onClick={onEditOpen}
+                           >
+                              <Edit className="w-4 h-4 mr-2" />
+                              {t("editProfile")}
+                           </Button>
+                        </DialogTrigger>
+                     )}
 
                      <DialogContent className="sm:max-w-[500px]">
                         <DialogHeader>

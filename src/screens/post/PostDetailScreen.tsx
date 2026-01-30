@@ -103,9 +103,9 @@ export default function PostDetailScreen({
       : null;
 
    return (
-      <div className="max-w-2xl mx-auto pb-20 md:pb-6">
+      <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm max-w-4xl flex-1 mx-auto min-h-screen pb-20 md:pb-6">
          {/* Header */}
-         <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+         <div className="sticky top-0 z-10 border-b border-gray-200 dark:border-gray-800 px-4 py-3">
             <div className="flex items-center gap-3">
                <Button
                   variant="ghost"

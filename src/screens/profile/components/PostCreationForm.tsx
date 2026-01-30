@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Calendar, ImagePlus, Video, Smile, X } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,6 +32,8 @@ export const PostCreationForm = ({
    t,
 }: PostCreationFormProps & { editingPostId?: string | null; onCancelEdit?: () => void; imagePreviews?: string[]; onImageSelect?: (files: FileList) => void; onRemoveImage?: (index: number) => void; t: (key: string) => string | undefined }) => {
    const imageInputRef = useRef<HTMLInputElement>(null);
+   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+   const profileImageUrl = profileData?.profileImage ? `${baseUrl}/uploads/${profileData.profileImage}` : undefined;
    const getInitialAvatarFallback = () => {
       const initial = profileData?.name
          ? profileData.name.charAt(0).toUpperCase()
@@ -58,6 +60,7 @@ export const PostCreationForm = ({
          )}
          <div className="flex items-start gap-3">
             <Avatar>
+               <AvatarImage src={profileImageUrl} />
                <AvatarFallback>{getInitialAvatarFallback()}</AvatarFallback>
             </Avatar>
             <Textarea

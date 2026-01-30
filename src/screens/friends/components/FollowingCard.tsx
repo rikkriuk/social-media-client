@@ -15,6 +15,8 @@ export function FollowingCard({
   const profile = user?.profile;
   const name = profile?.name || user?.username || "Unknown";
   const username = user?.username || "";
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const profileImageUrl = profile?.profileImage ? `${baseUrl}/uploads/${profile.profileImage}` : undefined;
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
@@ -23,7 +25,7 @@ export function FollowingCard({
           className="w-14 h-14 cursor-pointer"
           onClick={() => profile?.id && onViewProfile(profile.id)}
         >
-          <AvatarImage src={undefined} />
+          <AvatarImage src={profileImageUrl} />
           <AvatarFallback className="text-lg">
             {name.charAt(0).toUpperCase()}
           </AvatarFallback>

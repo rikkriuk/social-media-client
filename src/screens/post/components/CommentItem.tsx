@@ -3,16 +3,7 @@ import { Trash2, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatRelativeTime } from "@/helpers/date";
-import type { Comment } from "@/types/comment";
-
-interface CommentItemProps {
-   comment: Comment;
-   currentProfileId: string | null;
-   baseUrl: string;
-   onDelete: (commentId: string) => Promise<void>;
-   tDate: (key: string) => string | undefined;
-   deleteText: string;
-}
+import type { Comment, CommentItemProps } from "@/types/comment";
 
 export const CommentItem = ({
    comment,

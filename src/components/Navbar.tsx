@@ -33,6 +33,7 @@ const useNavigation = () => {
    const pathname = usePathname();
    const router = useRouter();
    const { currentProfile } = useAuth();
+   console.log("Current Profile in Navbar:", currentProfile);
 
    const currentPage = pathname === "/" ? "home" : pathname.split("/")[1];
 

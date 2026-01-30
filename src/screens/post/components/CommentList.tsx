@@ -1,21 +1,7 @@
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CommentItem } from "./CommentItem";
-import type { Comment } from "@/types/comment";
-
-interface CommentListProps {
-   comments: Comment[];
-   currentProfileId: string | null;
-   baseUrl: string;
-   hasMore: boolean;
-   isLoadingMore: boolean;
-   onLoadMore: () => void;
-   onDelete: (commentId: string) => Promise<void>;
-   tDate: (key: string) => string | undefined;
-   emptyText: string;
-   loadMoreText: string;
-   deleteText: string;
-}
+import type { CommentListProps } from "@/types/comment";
 
 export const CommentList = ({
    comments,

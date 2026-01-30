@@ -1,10 +1,7 @@
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface PostDetailHeaderProps {
-   title: string;
-}
+import { PostDetailHeaderProps } from "@/types/comment";
 
 export const PostDetailHeader = ({ title }: PostDetailHeaderProps) => {
    const router = useRouter();

@@ -10,14 +10,7 @@ import { PostDetailHeader } from "./components/PostDetailHeader";
 import { PostContent } from "./components/PostContent";
 import { CommentInput } from "./components/CommentInput";
 import { CommentList } from "./components/CommentList";
-import type { Post } from "@/types/profile";
-import type { Comment } from "@/types/comment";
-
-interface PostDetailScreenProps {
-   post: Post;
-   initialComments: Comment[];
-   currentProfileId: string | null;
-}
+import type { PostDetailScreenProps } from "@/types/comment";
 
 export default function PostDetailScreen({
    post,

@@ -1,14 +1,7 @@
 import { Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-
-interface CommentInputProps {
-   value: string;
-   onChange: (value: string) => void;
-   onSubmit: () => void;
-   isSending: boolean;
-   placeholder: string;
-}
+import { CommentInputProps } from "@/types/comment";
 
 export const CommentInput = ({
    value,

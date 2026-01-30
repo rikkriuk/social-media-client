@@ -1,17 +1,9 @@
 import { useState, useCallback } from "react";
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
-import type { Comment } from "@/types/comment";
+import type { Comment, UseCommentsProps } from "@/types/comment";
 
 const COMMENTS_PER_PAGE = 20;
-
-interface UseCommentsProps {
-   postId: string;
-   initialComments: Comment[];
-   initialTotal?: number;
-   currentProfileId: string | null;
-   t: (key: string) => string | undefined;
-}
 
 export const useComments = ({
    postId,

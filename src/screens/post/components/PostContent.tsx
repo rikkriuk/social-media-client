@@ -1,17 +1,7 @@
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelativeTime } from "@/helpers/date";
-import type { Post } from "@/types/profile";
-
-interface PostContentProps {
-   post: Post;
-   baseUrl: string;
-   likesCount: number;
-   isLiked: boolean;
-   commentsCount: number;
-   onLikeToggle: () => void;
-   tDate: (key: string) => string | undefined;
-}
+import { PostContentProps } from "@/types/comment";
 
 export const PostContent = ({
    post,

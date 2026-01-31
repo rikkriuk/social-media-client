@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ImageLightbox } from "@/components/ImageLightbox";
 import { formatRelativeTime } from "@/helpers/date";
 import { PostContentProps } from "@/types/comment";
 
@@ -10,13 +12,23 @@ export const PostContent = ({
    isLiked,
    commentsCount,
    onLikeToggle,
+   onShare,
    tDate,
 }: PostContentProps) => {
+   const [lightboxOpen, setLightboxOpen] = useState(false);
+   const [lightboxIndex, setLightboxIndex] = useState(0);
+
    const profileName = post.profile?.name || "User";
    const profileImage = post.profile?.profileImage
       ? `${baseUrl}/uploads/${post.profile.profileImage}`
       : undefined;
    const mediaIds = Array.isArray(post.mediaIds) ? post.mediaIds : [];
+   const imageUrls = mediaIds.map((filename) => `${baseUrl}/uploads/${filename}`);
+
+   const openLightbox = (index: number) => {
+      setLightboxIndex(index);
+      setLightboxOpen(true);
+   };
 
    return (
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
@@ -50,11 +62,19 @@ export const PostContent = ({
                         key={index}
                         src={`${baseUrl}/uploads/${filename}`}
                         alt={`Post image ${index + 1}`}
-                        className="w-full object-cover max-h-96"
+                        className="w-full object-cover max-h-96 cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => openLightbox(index)}
                      />
                   ))}
                </div>
             )}
+
+            <ImageLightbox
+               images={imageUrls}
+               initialIndex={lightboxIndex}
+               open={lightboxOpen}
+               onOpenChange={setLightboxOpen}
+            />
 
             {/* Actions */}
             <div className="flex items-center gap-6 pt-3 border-t border-gray-100 dark:border-gray-800">
@@ -69,7 +89,10 @@ export const PostContent = ({
                   <MessageCircle className="w-5 h-5" />
                   <span className="text-sm">{commentsCount}</span>
                </div>
-               <button className="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-colors">
+               <button
+                  onClick={onShare}
+                  className="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-colors"
+               >
                   <Share2 className="w-5 h-5" />
                </button>
             </div>

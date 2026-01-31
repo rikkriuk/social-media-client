@@ -23,7 +23,8 @@ async function getProfileById(profileId: string): Promise<Profile | null> {
 async function getUserById(userId: string): Promise<any | null> {
    try {
       const response = await httpRequest.get(`/users/${userId}`);
-      return response.data.payload || null;
+      console.log("Fetched user:", response.data.username);
+      return response.data || null;
    } catch (error) {
       console.error("Failed to fetch user:", error);
       return null;
@@ -144,6 +145,8 @@ const ProfilePage = async ({ params, searchParams }: ProfilePageProps) => {
       isFollowing = followingStatus;
       isFollowingMe = followingMeStatus;
    }
+
+   console.log("Rendering profile page for:", viewedProfile.userId, viewedUser);
 
    return (
       <ProfileClient

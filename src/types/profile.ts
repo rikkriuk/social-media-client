@@ -214,3 +214,9 @@ export interface UseInfiniteScrollReturn {
   endRef: React.RefObject<HTMLDivElement | null>;
   hasMoreItems: boolean;
 }
+
+export interface ProfileImageUploadProps {
+  currentImageUrl?: string | null;
+  onImageUploadSuccess?: (imageUrl: string) => void;
+  avatarFallback?: string;
+}

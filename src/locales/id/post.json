@@ -17,5 +17,10 @@
   "loginRequired": "Silakan masuk untuk berinteraksi",
   "linkCopied": "Tautan disalin!",
   "reply": "Balas",
-  "replyingTo": "Membalas {name}"
+  "replyingTo": "Membalas {name}",
+  "edit": "Edit",
+  "commentEdited": "Komentar diperbarui",
+  "editFailed": "Gagal memperbarui komentar",
+  "save": "Simpan",
+  "cancel": "Batal"
 }

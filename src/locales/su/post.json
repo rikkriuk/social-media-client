@@ -17,5 +17,10 @@
   "loginRequired": "Mangga lebet heula pikeun interaksi",
   "linkCopied": "Tautan geus disalin!",
   "reply": "Waler",
-  "replyingTo": "Ngawaler {name}"
+  "replyingTo": "Ngawaler {name}",
+  "edit": "Édit",
+  "commentEdited": "Koméntar geus diropéa",
+  "editFailed": "Gagal ngropéa koméntar",
+  "save": "Simpen",
+  "cancel": "Batal"
 }

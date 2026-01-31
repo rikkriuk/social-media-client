@@ -17,5 +17,10 @@
   "loginRequired": "Please log in to interact",
   "linkCopied": "Link copied!",
   "reply": "Reply",
-  "replyingTo": "Replying to {name}"
+  "replyingTo": "Replying to {name}",
+  "edit": "Edit",
+  "commentEdited": "Comment updated",
+  "editFailed": "Failed to update comment",
+  "save": "Save",
+  "cancel": "Cancel"
 }

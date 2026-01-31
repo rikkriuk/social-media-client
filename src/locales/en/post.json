@@ -14,5 +14,8 @@
   "commentDeleteFailed": "Failed to delete comment",
   "deleteComment": "Delete",
   "loadMore": "Load more comments",
-  "loginRequired": "Please log in to interact"
+  "loginRequired": "Please log in to interact",
+  "linkCopied": "Link copied!",
+  "reply": "Reply",
+  "replyingTo": "Replying to {name}"
 }

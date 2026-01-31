@@ -14,5 +14,8 @@
   "commentDeleteFailed": "Gagal menghapus komentar",
   "deleteComment": "Hapus",
   "loadMore": "Muat komentar lainnya",
-  "loginRequired": "Silakan masuk untuk berinteraksi"
+  "loginRequired": "Silakan masuk untuk berinteraksi",
+  "linkCopied": "Tautan disalin!",
+  "reply": "Balas",
+  "replyingTo": "Membalas {name}"
 }

@@ -14,5 +14,8 @@
   "commentDeleteFailed": "Gagal ngahapus koméntar",
   "deleteComment": "Hapus",
   "loadMore": "Muat koméntar séjénna",
-  "loginRequired": "Mangga lebet heula pikeun interaksi"
+  "loginRequired": "Mangga lebet heula pikeun interaksi",
+  "linkCopied": "Tautan geus disalin!",
+  "reply": "Waler",
+  "replyingTo": "Ngawaler {name}"
 }

@@ -1,4 +1,4 @@
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CommentInputProps } from "@/types/comment";
@@ -9,6 +9,8 @@ export const CommentInput = ({
    onSubmit,
    isSending,
    placeholder,
+   replyTarget,
+   onCancelReply,
 }: CommentInputProps) => {
    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -21,6 +23,19 @@ export const CommentInput = ({
 
    return (
       <div className="px-4 py-3 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+         {replyTarget && (
+            <div className="flex items-center justify-between mb-2 px-1">
+               <p className="text-xs text-blue-600 dark:text-blue-400">
+                  Membalas <span className="font-semibold">@{replyTarget.profileName}</span>
+               </p>
+               <button
+                  onClick={onCancelReply}
+                  className="text-gray-400 hover:text-gray-600 cursor-pointer"
+               >
+                  <X className="w-4 h-4" />
+               </button>
+            </div>
+         )}
          <div className="flex gap-3">
             <Textarea
                placeholder={placeholder}

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
-import type { Comment, ReplyTarget, UseCommentsProps } from "@/types/comment";
+import type { Comment, EditingComment, ReplyTarget, UseCommentsProps } from "@/types/comment";
 
 const COMMENTS_PER_PAGE = 20;
 
@@ -18,6 +18,7 @@ export const useComments = ({
    const [isLoadingMore, setIsLoadingMore] = useState(false);
    const [total, setTotal] = useState(initialTotal ?? initialComments.length);
    const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
+   const [editingComment, setEditingComment] = useState<EditingComment | null>(null);
 
    const hasMore = comments.length < total;
 
@@ -130,6 +131,62 @@ export const useComments = ({
       setReplyTarget(null);
    }, []);
 
+   const startEdit = useCallback((commentId: string) => {
+      // Find the comment in top-level or nested replies
+      const topLevel = comments.find((c) => c.id === commentId);
+      if (topLevel) {
+         setEditingComment({ id: commentId, content: topLevel.content });
+         return;
+      }
+      for (const c of comments) {
+         const reply = c.replies?.find((r) => r.id === commentId);
+         if (reply) {
+            setEditingComment({ id: commentId, content: reply.content });
+            return;
+         }
+      }
+   }, [comments]);
+
+   const cancelEdit = useCallback(() => {
+      setEditingComment(null);
+   }, []);
+
+   const submitEdit = useCallback(async (commentId: string, newContent: string) => {
+      if (!newContent.trim()) return;
+
+      try {
+         const response = await webRequest.patch(`/comments/${commentId}`, {
+            content: newContent.trim(),
+         });
+
+         if (response.data?.ok) {
+            setComments((prev) =>
+               prev.map((c) => {
+                  if (c.id === commentId) {
+                     return { ...c, content: newContent.trim() };
+                  }
+                  if (c.replies) {
+                     return {
+                        ...c,
+                        replies: c.replies.map((r) =>
+                           r.id === commentId ? { ...r, content: newContent.trim() } : r
+                        ),
+                     };
+                  }
+                  return c;
+               })
+            );
+            setEditingComment(null);
+            toast.success(t("commentEdited"));
+         } else {
+            toast.error(response.data?.message || t("editFailed"));
+         }
+      } catch (error) {
+         console.error("Edit comment error:", error);
+         toast.error(t("editFailed"));
+      }
+   }, [t]);
+
    return {
       comments,
       commentText,
@@ -139,10 +196,14 @@ export const useComments = ({
       hasMore,
       total,
       replyTarget,
+      editingComment,
       submitComment,
       deleteComment,
       loadMore,
       startReply,
       cancelReply,
+      startEdit,
+      cancelEdit,
+      submitEdit,
    };
 };

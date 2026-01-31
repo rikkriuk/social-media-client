@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { webRequest } from "@/helpers/api";
 import { toast } from "sonner";
-import type { Comment, UseCommentsProps } from "@/types/comment";
+import type { Comment, ReplyTarget, UseCommentsProps } from "@/types/comment";
 
 const COMMENTS_PER_PAGE = 20;
 
@@ -17,6 +17,7 @@ export const useComments = ({
    const [isSending, setIsSending] = useState(false);
    const [isLoadingMore, setIsLoadingMore] = useState(false);
    const [total, setTotal] = useState(initialTotal ?? initialComments.length);
+   const [replyTarget, setReplyTarget] = useState<ReplyTarget | null>(null);
 
    const hasMore = comments.length < total;
 
@@ -25,18 +26,34 @@ export const useComments = ({
 
       setIsSending(true);
       try {
-         const response = await webRequest.post("/comments", {
+         const body: { postId: string; content: string; parentId?: string } = {
             postId,
             content: commentText.trim(),
-         });
+         };
+         if (replyTarget) {
+            body.parentId = replyTarget.commentId;
+         }
+
+         const response = await webRequest.post("/comments", body);
 
          if (response.data?.ok) {
             const newComment: Comment = response.data.data;
-            // Attach current user profile info for immediate display
             if (newComment && !newComment.profile) {
                newComment.profile = { id: currentProfileId, name: "" };
             }
-            setComments((prev) => [newComment, ...prev]);
+
+            if (replyTarget) {
+               setComments((prev) =>
+                  prev.map((c) =>
+                     c.id === replyTarget.commentId
+                        ? { ...c, replies: [...(c.replies || []), newComment] }
+                        : c
+                  )
+               );
+               setReplyTarget(null);
+            } else {
+               setComments((prev) => [{ ...newComment, replies: [] }, ...prev]);
+            }
             setTotal((prev) => prev + 1);
             setCommentText("");
             toast.success(t("commentPosted"));
@@ -49,15 +66,27 @@ export const useComments = ({
       } finally {
          setIsSending(false);
       }
-   }, [commentText, currentProfileId, postId, t]);
+   }, [commentText, currentProfileId, postId, t, replyTarget]);
 
    const deleteComment = useCallback(async (commentId: string) => {
       try {
          const response = await webRequest.delete(`/comments/${commentId}`);
 
          if (response.data?.ok) {
-            setComments((prev) => prev.filter((c) => c.id !== commentId));
-            setTotal((prev) => prev - 1);
+            const topLevel = comments.find((c) => c.id === commentId);
+            if (topLevel) {
+               const replyCount = topLevel.replies?.length || 0;
+               setComments((prev) => prev.filter((c) => c.id !== commentId));
+               setTotal((prev) => prev - 1 - replyCount);
+            } else {
+               setComments((prev) =>
+                  prev.map((c) => ({
+                     ...c,
+                     replies: c.replies?.filter((r) => r.id !== commentId),
+                  }))
+               );
+               setTotal((prev) => prev - 1);
+            }
             toast.success(t("commentDeleted"));
          } else {
             toast.error(response.data?.message || t("commentDeleteFailed"));
@@ -66,7 +95,7 @@ export const useComments = ({
          console.error("Delete comment error:", error);
          toast.error(t("commentDeleteFailed"));
       }
-   }, [t]);
+   }, [t, comments]);
 
    const loadMore = useCallback(async () => {
       if (isLoadingMore || !hasMore) return;
@@ -93,6 +122,14 @@ export const useComments = ({
       }
    }, [postId, comments.length, isLoadingMore, hasMore]);
 
+   const startReply = useCallback((commentId: string, profileName: string) => {
+      setReplyTarget({ commentId, profileName });
+   }, []);
+
+   const cancelReply = useCallback(() => {
+      setReplyTarget(null);
+   }, []);
+
    return {
       comments,
       commentText,
@@ -101,8 +138,11 @@ export const useComments = ({
       isLoadingMore,
       hasMore,
       total,
+      replyTarget,
       submitComment,
       deleteComment,
       loadMore,
+      startReply,
+      cancelReply,
    };
 };

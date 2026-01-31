@@ -12,11 +12,18 @@ export const CommentList = ({
    onLoadMore,
    onDelete,
    onReply,
+   onEdit,
+   onSubmitEdit,
+   onCancelEdit,
+   editingComment,
    tDate,
    emptyText,
    loadMoreText,
    deleteText,
+   editText,
    replyText,
+   saveText,
+   cancelText,
 }: CommentListProps) => {
    if (comments.length === 0) {
       return (
@@ -37,9 +44,16 @@ export const CommentList = ({
                   baseUrl={baseUrl}
                   onDelete={onDelete}
                   onReply={onReply}
+                  onEdit={onEdit}
+                  onSubmitEdit={onSubmitEdit}
+                  onCancelEdit={onCancelEdit}
+                  editingComment={editingComment}
                   tDate={tDate}
                   deleteText={deleteText}
+                  editText={editText}
                   replyText={replyText}
+                  saveText={saveText}
+                  cancelText={cancelText}
                />
             ))}
          </div>

@@ -11,10 +11,12 @@ export const CommentList = ({
    isLoadingMore,
    onLoadMore,
    onDelete,
+   onReply,
    tDate,
    emptyText,
    loadMoreText,
    deleteText,
+   replyText,
 }: CommentListProps) => {
    if (comments.length === 0) {
       return (
@@ -34,8 +36,10 @@ export const CommentList = ({
                   currentProfileId={currentProfileId}
                   baseUrl={baseUrl}
                   onDelete={onDelete}
+                  onReply={onReply}
                   tDate={tDate}
                   deleteText={deleteText}
+                  replyText={replyText}
                />
             ))}
          </div>

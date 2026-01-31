@@ -1,6 +1,7 @@
 import { Heart, MessageCircle, Share2, MoreHorizontal, Edit2, Trash2, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { ImageLightbox } from "./ImageLightbox";
 import { Button } from "./ui/button";
 import {
    DropdownMenu,
@@ -33,6 +34,7 @@ interface PostCardProps {
    };
    content: string;
    image?: string;
+   images?: string[];
    likes: number;
    comments: number;
    shares: number;
@@ -42,6 +44,7 @@ interface PostCardProps {
    onLikeChange?: (postId: string, newLikeCount: number, isLiked: boolean) => void;
    onEdit?: () => void;
    onDelete?: () => void;
+   onShare?: () => void;
 }
 
 const previewComments: Comment[] = [
@@ -71,6 +74,7 @@ export function PostCard({
    author,
    content,
    image,
+   images,
    likes,
    comments,
    shares,
@@ -80,10 +84,16 @@ export function PostCard({
    onLikeChange,
    onEdit,
    onDelete,
+   onShare,
 }: PostCardProps) {
    const [isLiked, setIsLiked] = useState(initialIsLiked);
    const [likeCount, setLikeCount] = useState(likes);
    const [isLikeLoading, setIsLikeLoading] = useState(false);
+   const [lightboxOpen, setLightboxOpen] = useState(false);
+   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+   // Merge images prop with legacy single image prop
+   const allImages = images && images.length > 0 ? images : image ? [image] : [];
    const { lng } = useLanguage();
    const { t } = useTranslationCustom(lng, "post");
 
@@ -180,12 +190,50 @@ export function PostCard({
          <p className="text-gray-900 dark:text-white">{content}</p>
          </div>
 
-         {/* Image */}
-         {image && (
-         <div className="w-full cursor-pointer" onClick={onViewDetails}>
-            <img src={image} alt="Post" className="w-full object-cover max-h-96 hover:opacity-95 transition-opacity" />
-         </div>
+         {/* Images */}
+         {allImages.length > 0 && (
+            <div
+               className={`w-full ${
+                  allImages.length === 1
+                     ? ""
+                     : allImages.length === 2
+                     ? "grid grid-cols-2 gap-0.5"
+                     : "grid grid-cols-2 gap-0.5"
+               }`}
+            >
+               {allImages.slice(0, 4).map((imgUrl, index) => (
+                  <div
+                     key={index}
+                     className={`relative cursor-pointer overflow-hidden ${
+                        allImages.length === 1 ? "" :
+                        allImages.length === 3 && index === 0 ? "row-span-2" : ""
+                     }`}
+                     onClick={() => {
+                        setLightboxIndex(index);
+                        setLightboxOpen(true);
+                     }}
+                  >
+                     <img
+                        src={imgUrl}
+                        alt={`Post image ${index + 1}`}
+                        className="w-full object-cover max-h-96 hover:opacity-90 transition-opacity"
+                     />
+                     {index === 3 && allImages.length > 4 && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                           <span className="text-white text-2xl font-bold">+{allImages.length - 4}</span>
+                        </div>
+                     )}
+                  </div>
+               ))}
+            </div>
          )}
+
+         <ImageLightbox
+            images={allImages}
+            initialIndex={lightboxIndex}
+            open={lightboxOpen}
+            onOpenChange={setLightboxOpen}
+         />
 
          {/* Stats */}
          <div className="px-4 py-3 flex items-center justify-between text-gray-500 text-sm border-t border-gray-100 dark:border-gray-800">
@@ -222,7 +270,11 @@ export function PostCard({
                <MessageCircle className="w-5 h-5" />
                {t("comment")}
             </Button>
-            <Button variant="ghost" className="flex-1 gap-2 rounded-xl text-gray-600 dark:text-gray-400">
+            <Button
+               variant="ghost"
+               className="flex-1 gap-2 rounded-xl text-gray-600 dark:text-gray-400"
+               onClick={onShare}
+            >
                <Share2 className="w-5 h-5" />
                {t("share")}
             </Button>

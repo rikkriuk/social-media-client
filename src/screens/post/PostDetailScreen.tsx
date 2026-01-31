@@ -37,11 +37,15 @@ export default function PostDetailScreen({
       hasMore,
       total,
       replyTarget,
+      editingComment,
       submitComment,
       deleteComment,
       loadMore,
       startReply,
       cancelReply,
+      startEdit,
+      cancelEdit,
+      submitEdit,
    } = useComments({
       postId: post.id,
       initialComments,
@@ -108,11 +112,18 @@ export default function PostDetailScreen({
                onLoadMore={loadMore}
                onDelete={deleteComment}
                onReply={startReply}
+               onEdit={startEdit}
+               onSubmitEdit={submitEdit}
+               onCancelEdit={cancelEdit}
+               editingComment={editingComment}
                tDate={tDate}
                emptyText={t("noComments") || "No comments yet."}
                loadMoreText={t("loadMore") || "Load more"}
                deleteText={t("deleteComment") || "Delete"}
+               editText={t("edit") || "Edit"}
                replyText={t("reply") || "Reply"}
+               saveText={t("save") || "Save"}
+               cancelText={t("cancel") || "Cancel"}
             />
          </div>
       </div>

@@ -14,6 +14,13 @@ export interface Comment {
    createdAt: string;
    updatedAt?: string;
    profile?: CommentProfile;
+   parentId?: string | null;
+   replies?: Comment[];
+}
+
+export interface ReplyTarget {
+   commentId: string;
+   profileName: string;
 }
 
 export interface CommentListResponse {
@@ -29,6 +36,8 @@ export interface CommentInputProps {
    onSubmit: () => void;
    isSending: boolean;
    placeholder: string;
+   replyTarget?: ReplyTarget | null;
+   onCancelReply?: () => void;
 }
 
 export interface CommentItemProps {
@@ -36,8 +45,11 @@ export interface CommentItemProps {
    currentProfileId: string | null;
    baseUrl: string;
    onDelete: (commentId: string) => Promise<void>;
+   onReply?: (commentId: string, profileName: string) => void;
    tDate: (key: string) => string;
    deleteText: string;
+   replyText?: string;
+   isReply?: boolean;
 }
 
 export interface CommentListProps {
@@ -48,10 +60,12 @@ export interface CommentListProps {
    isLoadingMore: boolean;
    onLoadMore: () => void;
    onDelete: (commentId: string) => Promise<void>;
+   onReply?: (commentId: string, profileName: string) => void;
    tDate: (key: string) => string;
    emptyText: string;
    loadMoreText: string;
    deleteText: string;
+   replyText?: string;
 }
 
 export interface PostContentProps {
@@ -61,6 +75,7 @@ export interface PostContentProps {
    isLiked: boolean;
    commentsCount: number;
    onLikeToggle: () => void;
+   onShare: () => void;
    tDate: (key: string) => string;
 }
 

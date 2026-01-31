@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PostCard } from "@/components/PostCard";
 import { Modal } from "@/components/Modal";
+import { useSharePost } from "@/hooks/useSharePost";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
@@ -28,6 +29,7 @@ export const ProfilePosts = ({
    onEditPost?: (post: any) => void;
 }) => {
    const router = useRouter();
+   const { sharePost } = useSharePost(t);
    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [isProcessing, setIsProcessing] = useState(false);
@@ -125,6 +127,11 @@ export const ProfilePosts = ({
                }}
                content={post.content}
                image={getPostImageUrl(post)}
+               images={
+                  Array.isArray(post.mediaIds) && post.mediaIds.length > 0
+                     ? post.mediaIds.map((id: string) => `${process.env.NEXT_PUBLIC_API_BASE_URL || ""}/uploads/${id}`)
+                     : undefined
+               }
                likes={post.likesCount}
                comments={post.commentsCount}
                shares={post.sharesCount}
@@ -134,6 +141,7 @@ export const ProfilePosts = ({
                onViewDetails={() => handleViewPostDetail(post.id)}
                onEdit={() => handleEditPost(post.id)}
                onDelete={() => handleDeletePost(post.id)}
+               onShare={() => sharePost(post.id)}
             />
          ))}
 

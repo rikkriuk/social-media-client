@@ -40,15 +40,27 @@ export interface CommentInputProps {
    onCancelReply?: () => void;
 }
 
+export interface EditingComment {
+   id: string;
+   content: string;
+}
+
 export interface CommentItemProps {
    comment: Comment;
    currentProfileId: string | null;
    baseUrl: string;
    onDelete: (commentId: string) => Promise<void>;
    onReply?: (commentId: string, profileName: string) => void;
+   onEdit?: (commentId: string) => void;
+   onSubmitEdit?: (commentId: string, newContent: string) => Promise<void>;
+   onCancelEdit?: () => void;
+   editingComment?: EditingComment | null;
    tDate: (key: string) => string;
    deleteText: string;
+   editText?: string;
    replyText?: string;
+   saveText?: string;
+   cancelText?: string;
    isReply?: boolean;
 }
 
@@ -61,11 +73,18 @@ export interface CommentListProps {
    onLoadMore: () => void;
    onDelete: (commentId: string) => Promise<void>;
    onReply?: (commentId: string, profileName: string) => void;
+   onEdit?: (commentId: string) => void;
+   onSubmitEdit?: (commentId: string, newContent: string) => Promise<void>;
+   onCancelEdit?: () => void;
+   editingComment?: EditingComment | null;
    tDate: (key: string) => string;
    emptyText: string;
    loadMoreText: string;
    deleteText: string;
+   editText?: string;
    replyText?: string;
+   saveText?: string;
+   cancelText?: string;
 }
 
 export interface PostContentProps {

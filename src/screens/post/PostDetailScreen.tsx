@@ -6,6 +6,7 @@ import { webRequest } from "@/helpers/api";
 import useLanguage from "@/zustand/useLanguage";
 import { useTranslationCustom } from "@/i18n/client";
 import { useComments } from "./hooks/useComments";
+import { useSharePost } from "@/hooks/useSharePost";
 import { PostDetailHeader } from "./components/PostDetailHeader";
 import { PostContent } from "./components/PostContent";
 import { CommentInput } from "./components/CommentInput";
@@ -22,6 +23,7 @@ export default function PostDetailScreen({
    const { t: tDate } = useTranslationCustom(lng, "date");
 
    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+   const { sharePost } = useSharePost(t);
 
    const [likesCount, setLikesCount] = useState(post.likesCount);
    const [isLiked, setIsLiked] = useState(post.isLiked || false);
@@ -34,9 +36,12 @@ export default function PostDetailScreen({
       isLoadingMore,
       hasMore,
       total,
+      replyTarget,
       submitComment,
       deleteComment,
       loadMore,
+      startReply,
+      cancelReply,
    } = useComments({
       postId: post.id,
       initialComments,
@@ -77,6 +82,7 @@ export default function PostDetailScreen({
             isLiked={isLiked}
             commentsCount={total}
             onLikeToggle={handleLikeToggle}
+            onShare={() => sharePost(post.id)}
             tDate={tDate}
          />
 
@@ -87,6 +93,8 @@ export default function PostDetailScreen({
                onSubmit={submitComment}
                isSending={isSending}
                placeholder={t("writeComment") || "Write a comment..."}
+               replyTarget={replyTarget}
+               onCancelReply={cancelReply}
             />
          )}
 
@@ -99,10 +107,12 @@ export default function PostDetailScreen({
                isLoadingMore={isLoadingMore}
                onLoadMore={loadMore}
                onDelete={deleteComment}
+               onReply={startReply}
                tDate={tDate}
                emptyText={t("noComments") || "No comments yet."}
                loadMoreText={t("loadMore") || "Load more"}
                deleteText={t("deleteComment") || "Delete"}
+               replyText={t("reply") || "Reply"}
             />
          </div>
       </div>

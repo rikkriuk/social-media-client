@@ -3,15 +3,18 @@ import { Trash2, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatRelativeTime } from "@/helpers/date";
-import type { Comment, CommentItemProps } from "@/types/comment";
+import type { CommentItemProps } from "@/types/comment";
 
 export const CommentItem = ({
    comment,
    currentProfileId,
    baseUrl,
    onDelete,
+   onReply,
    tDate,
    deleteText,
+   replyText,
+   isReply = false,
 }: CommentItemProps) => {
    const [isDeleting, setIsDeleting] = useState(false);
 
@@ -31,46 +34,76 @@ export const CommentItem = ({
    };
 
    return (
-      <div className="px-4 py-3 group">
-         <div className="flex gap-3">
-            <Avatar className="w-8 h-8">
-               <AvatarImage src={profileImage} alt={name} />
-               <AvatarFallback className="text-xs">
-                  {name.charAt(0).toUpperCase()}
-               </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-               <div className="bg-gray-50 dark:bg-gray-800 rounded-xl px-3 py-2">
-                  <div className="flex items-center justify-between gap-2">
-                     <p className="font-medium text-sm text-gray-900 dark:text-white truncate">
-                        {name}
+      <div>
+         <div className={`px-4 py-3 group ${isReply ? "ml-10" : ""}`}>
+            <div className="flex gap-3">
+               <Avatar className={isReply ? "w-6 h-6" : "w-8 h-8"}>
+                  <AvatarImage src={profileImage} alt={name} />
+                  <AvatarFallback className="text-xs">
+                     {name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+               </Avatar>
+               <div className="flex-1 min-w-0">
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-xl px-3 py-2">
+                     <div className="flex items-center justify-between gap-2">
+                        <p className="font-medium text-sm text-gray-900 dark:text-white truncate">
+                           {name}
+                        </p>
+                        {isOwn && (
+                           <Button
+                              variant="ghost"
+                              size="icon"
+                              className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
+                              onClick={handleDelete}
+                              disabled={isDeleting}
+                              title={deleteText}
+                           >
+                              {isDeleting ? (
+                                 <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                 <Trash2 className="w-3 h-3" />
+                              )}
+                           </Button>
+                        )}
+                     </div>
+                     <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {comment.content}
                      </p>
-                     {isOwn && (
-                        <Button
-                           variant="ghost"
-                           size="icon"
-                           className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
-                           onClick={handleDelete}
-                           disabled={isDeleting}
-                           title={deleteText}
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 ml-3">
+                     <p className="text-xs text-gray-400">
+                        {formatRelativeTime(comment.createdAt, tDate)}
+                     </p>
+                     {!isReply && onReply && replyText && (
+                        <button
+                           className="text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors cursor-pointer"
+                           onClick={() => onReply(comment.id, name)}
                         >
-                           {isDeleting ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                           ) : (
-                              <Trash2 className="w-3 h-3" />
-                           )}
-                        </Button>
+                           {replyText}
+                        </button>
                      )}
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                     {comment.content}
-                  </p>
                </div>
-               <p className="text-xs text-gray-400 mt-1 ml-3">
-                  {formatRelativeTime(comment.createdAt, tDate)}
-               </p>
             </div>
          </div>
+
+         {/* Render replies */}
+         {!isReply && comment.replies && comment.replies.length > 0 && (
+            <div>
+               {comment.replies.map((reply) => (
+                  <CommentItem
+                     key={reply.id}
+                     comment={reply}
+                     currentProfileId={currentProfileId}
+                     baseUrl={baseUrl}
+                     onDelete={onDelete}
+                     tDate={tDate}
+                     deleteText={deleteText}
+                     isReply
+                  />
+               ))}
+            </div>
+         )}
       </div>
    );
 };
